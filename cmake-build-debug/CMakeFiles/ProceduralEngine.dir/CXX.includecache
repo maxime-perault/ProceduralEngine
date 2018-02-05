@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/GIT-PROJECT/ProceduralEngine/Core/CoreTest.cpp
+iostream
+-
+CoreTest.hpp
+D:/GIT-PROJECT/ProceduralEngine/Core/CoreTest.hpp
+
+D:/GIT-PROJECT/ProceduralEngine/Core/CoreTest.hpp
+
+D:/GIT-PROJECT/ProceduralEngine/main.cpp
+iostream
+-
+Core/CoreTest.hpp
+D:/GIT-PROJECT/ProceduralEngine/Core/CoreTest.hpp
+
