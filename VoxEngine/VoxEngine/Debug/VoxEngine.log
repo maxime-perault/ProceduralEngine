@@ -1,0 +1,4 @@
+﻿     CrÚation de la bibliothÞque D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Debug\VoxEngine.lib et de l'objet D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Debug\VoxEngine.exp
+Display.obj : error LNK2019: symbole externe non rÚsolu __imp__glewInit rÚfÚrencÚ dans la fonction "public: __thiscall Display::Display(void)" (??0Display@@QAE@XZ)
+Display.obj : error LNK2001: symbole externe non rÚsolu __imp__glewExperimental
+D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Debug\VoxEngine.exe : fatal error LNK1120: 2 externes non rÚsolus
