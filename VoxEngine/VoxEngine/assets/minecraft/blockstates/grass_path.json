@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "grass_path",  "y": 0, "weight": 32 },
+			{ "model": "grass_path1", "y": 0, "weight": 32 },
+			{ "model": "grass_path2", "y": 0, "weight": 32 },
+			{ "model": "grass_path3", "y": 0, "weight": 5 }
+        ]
+    }
+}

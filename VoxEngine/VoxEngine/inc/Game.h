@@ -9,7 +9,7 @@ public:
 	Game();
 	~Game();
 
-	Display *_display;
+	Display			*_display;
 
 	void	loop(void);
 };

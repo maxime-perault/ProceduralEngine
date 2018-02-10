@@ -1,14 +1,14 @@
 ﻿  renderEngine.cpp
-src\engine\renderEngine.cpp(13): warning C4305: '=' : troncation de 'double' à 'float'
-src\engine\renderEngine.cpp(40): warning C4244: 'initialisation' : conversion de '::size_t' en 'float', perte possible de données
-src\engine\renderEngine.cpp(41): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+src\engine\renderEngine.cpp(14): warning C4305: '=' : troncation de 'double' à 'float'
+src\engine\renderEngine.cpp(43): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+src\engine\renderEngine.cpp(78): warning C4305: 'argument' : troncation de 'double' à 'float'
 SOIL.lib(SOIL.obj) : warning LNK4075: ' /EDITANDCONTINUE' ignoré à cause de la spécification '/OPT:ICF'
      Création de la bibliothèque D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Release\VoxEngine.lib et de l'objet D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Release\VoxEngine.exp
 LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'MSVCRTD' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
   Génération de code en cours
-  4 of 236 functions ( 1.7%) were compiled, the rest were copied from previous compilation.
+  0 of 691 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code
 SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' n'a pu être trouvé avec 'SOIL.lib(image_DXT.obj)' ou sur 'D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Release\SOIL.pdb' ; l'objet sera lié sans informations de débogage
 SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' n'a pu être trouvé avec 'SOIL.lib(image_helper.obj)' ou sur 'D:\GIT-PROJECT\ProceduralEngine\VoxEngine\Release\SOIL.pdb' ; l'objet sera lié sans informations de débogage

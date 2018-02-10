@@ -10,6 +10,7 @@
 # include "staticShader.h"
 # include "Camera.h"
 # include "Entity.h"
+# include "cubeFactory.h"
 
 class	renderEngine
 {
@@ -17,16 +18,15 @@ public:
 	renderEngine(std::size_t win_x, std::size_t win_y);
 	~renderEngine();
 
-	void	createProjectionMatrix(AShader *shader);
-	void	createModelMatrix(const Entity entity, AShader *shader);
-	void	createViewMatrix(Camera *cam, AShader *shader);
+	void	createProjectionMatrix(staticShader *shader);
+	void	createModelMatrix(Entity *entity, staticShader *shader);
+	void	createViewMatrix(Camera *cam, staticShader *shader);
 
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
-	void	renderEntities(const std::vector<Entity> entities);
+	void	renderEntities(void);
 
-	glm::mat4 _projMat;
-	glm::mat4 _viewMat;
+	glm::mat4	_projMat;
 
 	std::size_t	_win_y;
 	std::size_t	_win_x;
@@ -35,9 +35,12 @@ public:
 	float		_near;
 	float		_far;
 
-	staticShader	*_staticShader;
-
 	Camera		*_camera;
+
+	cubeFactory			_cubeFactory;
+	std::vector<Entity*> _entities;
+
+	staticShader	*_staticShader;
 };
 
 #endif //!RENDERENGINE_HH_

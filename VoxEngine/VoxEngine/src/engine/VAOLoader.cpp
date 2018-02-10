@@ -10,17 +10,13 @@ rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
 	const std::vector<int> &indices,
 	const std::vector<float> &texture_coord)
 {
-	//creation de la vao et bind de la vao
 	int vaoID = this->createVAO();
 
-	//vbo vertices
 	this->bindIndicesBuffer(indices);
-	this->storeData_attrList(0, 3, pos);
 
-	//vbo texture coordonnées
+	this->storeData_attrList(0, 3, pos);
 	this->storeData_attrList(1, 2, texture_coord);
 
-	//unbind de la vao
 	this->unbindVAO();
 
 	// creation du model final

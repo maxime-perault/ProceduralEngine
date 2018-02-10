@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "mycelium",   "y": 0,   "weight": 32 },
+            { "model": "mycelium1",  "y": 0,   "weight": 10 },
+            { "model": "mycelium2",  "y": 0,   "weight": 10 },
+            { "model": "mycelium3",  "y": 0,   "weight": 5 },
+		],
+        "snowy=true": { "model": "mycelium_snowed" }
+		}
+}

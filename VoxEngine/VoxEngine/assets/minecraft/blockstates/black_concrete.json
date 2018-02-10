@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "concrete/black_concrete",   "y": 0, "weight": 32 },
+			{ "model": "concrete/black_concrete1",  "y": 0, "weight": 32 },
+			{ "model": "concrete/black_concrete2",  "y": 0, "weight": 32 },
+			{ "model": "concrete/black_concrete3",  "y": 0, "weight": 5 }
+        ]
+    }
+}

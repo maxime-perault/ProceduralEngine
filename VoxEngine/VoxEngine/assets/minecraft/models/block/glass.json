@@ -1,0 +1,6 @@
+{
+	"parent": "block/backface",
+	"textures": {
+		"texture": "blocks/glass"
+	}
+}

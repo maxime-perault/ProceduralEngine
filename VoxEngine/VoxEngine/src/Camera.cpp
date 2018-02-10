@@ -19,5 +19,5 @@ void	Camera::rotate(const glm::vec3 axe, float euler)
 
 void	Camera::translate(const glm::vec3 pos)
 {
-	_viewMatrix = glm::translate(_viewMatrix, pos);
+	_viewMatrix = glm::translate(_viewMatrix, -pos);
 }

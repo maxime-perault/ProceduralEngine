@@ -19,7 +19,7 @@ void	Entity::translate(glm::vec3 pos)
 }
 void	Entity::rotation(glm::vec3 axe, float euler)
 {
-	_modelMatrix = glm::rotate(_modelMatrix, (float)(M_PI * euler / 180), axe);
+	_modelMatrix = glm::rotate(_modelMatrix, euler, axe);
 }
 
 void	Entity::scale(glm::vec3 scal)

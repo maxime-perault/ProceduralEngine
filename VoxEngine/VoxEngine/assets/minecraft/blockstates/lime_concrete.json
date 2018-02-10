@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "concrete/lime_concrete",   "y": 0, "weight": 32 },
+			{ "model": "concrete/lime_concrete1",  "y": 0, "weight": 32 },
+			{ "model": "concrete/lime_concrete2",  "y": 0, "weight": 32 },
+			{ "model": "concrete/lime_concrete3",  "y": 0, "weight": 5 }
+        ]
+    }
+}
