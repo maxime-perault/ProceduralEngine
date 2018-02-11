@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+#include <limits>
 
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
@@ -17,9 +18,10 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	_win_y = win_y;
 
 	_camera = new Camera(glm::vec3(0, 0, -5));
-
+	
 	createProjectionMatrix(_staticShader);
 	createViewMatrix(_camera, _staticShader);
+
 	_entities.push_back(_cubeFactory.getCube(cubeFactory::GRASS, glm::vec3(0, 0, 0)));
 }
 
@@ -39,17 +41,41 @@ void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
 
 void	renderEngine::createProjectionMatrix(staticShader *shader)
 {
-	float	rate(static_cast<float>(_win_x) / static_cast<float>(_win_y));
-	float	y_scale(1 / tan((_fov / 2) * M_PI / 180) * rate);
-	float x_scale(y_scale / rate);
-	float cone_len(_far - _near);
+	float	n(_near);
+	float	f(_far);
+	float	scale = tan(_fov * 0.5 * M_PI / 180) * n;
+	float	r = ((float)_win_x / (float)_win_y) * scale;
+	float	l = -r;
+	float	t = scale;
+	float	b = -t;
 
-	_projMat[0][0] = x_scale;
-	_projMat[1][1] = y_scale;
-	_projMat[2][2] = -((_far + _near) / cone_len);
+	_projMat[0][0] = n / r;
+	_projMat[1][1] = n / t;
+	_projMat[2][2] = -(f + n) / (f - n);
 	_projMat[2][3] = -1;
-	_projMat[3][2] = -((2 * _near * _far) / cone_len);
+	_projMat[3][2] = (-2 * f * n) / (f - n);
 	_projMat[3][3] = 0;
+
+	shader->start();
+	shader->loadProjectionMatrix(_projMat);
+	shader->stop();
+}
+
+void	renderEngine::createOrthographicProjectionMatrix(staticShader *shader)
+{
+	float	n(_near);
+	float	f(_far);
+	float	max = _camera->_pos.z * -1;
+	float	r = ((float)_win_x / (float)_win_y) * max;
+	float	l = -r;
+	float	t = max;
+	float	b = -t;
+
+	_projMat[0][0] = 1 / r;
+	_projMat[1][1] = 1 / t;
+	_projMat[2][2] = -2 / (f - n);
+	_projMat[3][2] = -((f + n) / (f - n));
+	_projMat[3][3] = 1;
 
 	shader->start();
 	shader->loadProjectionMatrix(_projMat);
@@ -76,17 +102,15 @@ void	renderEngine::renderEntities(void/*const std::vector<Entity*> entities*/)
 	for (std::size_t i(0); i < entities.size(); ++i)
 	{
 		_entities[i]->rotation(glm::vec3(0, 1, 0), 0.01);
+
 		this->createModelMatrix(entities[i], _staticShader);
 
 		glBindVertexArray(entities[i]->_model->_rawModel->_vao_id);
 
 		glEnableVertexAttribArray(0);
-
-
 		glEnableVertexAttribArray(1);
 
 		glActiveTexture(GL_TEXTURE0);
-
 		glBindTexture(GL_TEXTURE_2D, entities[i]->_model->_texture->_id);
 
 		glDrawElements(GL_TRIANGLES, entities[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);

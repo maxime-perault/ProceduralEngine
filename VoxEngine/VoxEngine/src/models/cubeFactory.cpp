@@ -17,7 +17,8 @@ void	cubeFactory::initCube(void)
 	/*
 	** CUBE VERTEX
 	*/
-	static const float tmp_vrtx[] = { -0.5, 0.5, -0.5,
+	static const float tmp_vrtx[] = {
+		-0.5, 0.5, -0.5,
 		-0.5, -0.5, -0.5,
 		0.5, -0.5, -0.5,
 		0.5, 0.5, -0.5,

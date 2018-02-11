@@ -19,6 +19,7 @@ public:
 	~renderEngine();
 
 	void	createProjectionMatrix(staticShader *shader);
+	void	createOrthographicProjectionMatrix(staticShader *shader);
 	void	createModelMatrix(Entity *entity, staticShader *shader);
 	void	createViewMatrix(Camera *cam, staticShader *shader);
 

@@ -13,6 +13,7 @@ public:
 	~Camera();
 
 	glm::mat4 _viewMatrix;
+	glm::vec3 _pos;
 
 	void rotate(const glm::vec3 axe, float euler);
 	void translate(const glm::vec3 pos);
