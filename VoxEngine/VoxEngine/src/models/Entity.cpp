@@ -17,7 +17,7 @@ void	Entity::translate(glm::vec3 pos)
 {
 	_modelMatrix = glm::translate(_modelMatrix, pos);
 }
-void	Entity::rotation(glm::vec3 axe, float euler)
+void	Entity::rotate(glm::vec3 axe, float euler)
 {
 	_modelMatrix = glm::rotate(_modelMatrix, euler, axe);
 }

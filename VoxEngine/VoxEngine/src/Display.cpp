@@ -1,10 +1,10 @@
 
 #include "Display.h"
 
-Display::Display()
+Display::Display(std::size_t win_x, std::size_t win_y)
 {
-	_win_x = 1280;
-	_win_y = 720;
+	_win_x = win_x;
+	_win_y = win_y;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		std::cout << "Failed to init SDL\n" << std::endl;
@@ -22,10 +22,13 @@ Display::Display()
 
 	_rend = SDL_GL_CreateContext(_win);
 
+	SDL_GetCurrentDisplayMode(0, &_mode);
+
+	SDL_SetWindowGrab(_win, SDL_TRUE);
+	SDL_WarpMouseInWindow(_win, _win_x / 2, _win_y / 2);
+
 	glewExperimental = GL_TRUE;
 	glewInit();
-
-	_renderEngine = new renderEngine(_win_x, _win_y);
 }
 
 Display::~Display()
@@ -48,7 +51,3 @@ void	Display::update(void)
 	SDL_GL_SwapWindow(_win);
 }
 
-void	Display::all(void)
-{
-	_renderEngine->renderEntities();
-}

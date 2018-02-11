@@ -14,9 +14,15 @@ public:
 
 	glm::mat4 _viewMatrix;
 	glm::vec3 _pos;
+	glm::vec3 _lookAt;
+	glm::vec3 _UpVec;
+	glm::vec3 _rightVec;
+	glm::vec3 _dir;
 
-	void rotate(const glm::vec3 axe, float euler);
-	void translate(const glm::vec3 pos);
+	void		rotate(const glm::vec3 axe, float euler);
+	void		move(const glm::vec3 delta);
+	void		update(void);
+	glm::mat4	getViewMatrix(void);
 };
 
 #endif //!CAMERA_HH_

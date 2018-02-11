@@ -18,7 +18,7 @@ public:
 	glm::mat4		_modelMatrix;
 
 	void	translate(glm::vec3 pos);
-	void	rotation(glm::vec3 axe, float euler);
+	void	rotate(glm::vec3 axe, float euler);
 
 	void	scale(glm::vec3 scal);
 };

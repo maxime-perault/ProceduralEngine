@@ -17,10 +17,7 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	_win_x = win_x;
 	_win_y = win_y;
 
-	_camera = new Camera(glm::vec3(0, 0, -5));
-	
 	createProjectionMatrix(_staticShader);
-	createViewMatrix(_camera, _staticShader);
 
 	_entities.push_back(_cubeFactory.getCube(cubeFactory::GRASS, glm::vec3(0, 0, 0)));
 }
@@ -29,7 +26,6 @@ renderEngine::~renderEngine()
 {
 	_staticShader->cleanUp();
 	delete(_staticShader);
-	delete(_camera);
 }
 
 void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
@@ -61,11 +57,11 @@ void	renderEngine::createProjectionMatrix(staticShader *shader)
 	shader->stop();
 }
 
-void	renderEngine::createOrthographicProjectionMatrix(staticShader *shader)
+void	renderEngine::createOrthographicProjectionMatrix(Camera *cam, staticShader *shader)
 {
 	float	n(_near);
 	float	f(_far);
-	float	max = _camera->_pos.z * -1;
+	float	max = cam->_pos.z * -1;
 	float	r = ((float)_win_x / (float)_win_y) * max;
 	float	l = -r;
 	float	t = max;
@@ -89,20 +85,19 @@ void	renderEngine::createModelMatrix(Entity *entity, staticShader *shader)
 
 void	renderEngine::createViewMatrix(Camera *cam, staticShader *shader)
 {
-	shader->loadViewMatrix(cam->_viewMatrix);
+	shader->loadViewMatrix(cam->getViewMatrix());
 }
 
-void	renderEngine::renderEntities(void/*const std::vector<Entity*> entities*/)
+void	renderEngine::renderEntities(Camera *cam)
 {
 	std::vector<Entity*> entities = _entities;
 
 	_staticShader->start();
-	this->createViewMatrix(_camera, _staticShader);
+	
+	this->createViewMatrix(cam, _staticShader);
 
 	for (std::size_t i(0); i < entities.size(); ++i)
 	{
-		_entities[i]->rotation(glm::vec3(0, 1, 0), 0.01);
-
 		this->createModelMatrix(entities[i], _staticShader);
 
 		glBindVertexArray(entities[i]->_model->_rawModel->_vao_id);

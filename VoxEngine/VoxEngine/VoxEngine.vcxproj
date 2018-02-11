@@ -129,6 +129,7 @@
     <ClCompile Include="src\engine\renderEngine.cpp" />
     <ClCompile Include="src\engine\VAOLoader.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\models\cubeFactory.cpp" />
     <ClCompile Include="src\models\Entity.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="inc\models\texturedModel.h" />
     <ClInclude Include="inc\shaders\AShader.h" />
     <ClInclude Include="inc\shaders\staticShader.h" />
+    <ClInclude Include="src\InputManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

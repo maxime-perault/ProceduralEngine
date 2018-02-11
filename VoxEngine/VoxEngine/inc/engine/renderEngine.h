@@ -19,13 +19,13 @@ public:
 	~renderEngine();
 
 	void	createProjectionMatrix(staticShader *shader);
-	void	createOrthographicProjectionMatrix(staticShader *shader);
+	void	createOrthographicProjectionMatrix(Camera *cam, staticShader *shader);
 	void	createModelMatrix(Entity *entity, staticShader *shader);
 	void	createViewMatrix(Camera *cam, staticShader *shader);
 
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
-	void	renderEntities(void);
+	void	renderEntities(Camera *_cam);
 
 	glm::mat4	_projMat;
 
@@ -35,8 +35,6 @@ public:
 	float		_fov;
 	float		_near;
 	float		_far;
-
-	Camera		*_camera;
 
 	cubeFactory			_cubeFactory;
 	std::vector<Entity*> _entities;
