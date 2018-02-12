@@ -27,10 +27,12 @@ void	Camera::rotate(const glm::vec3 axe, float euler)
 {
 	_lookAt -= _pos;
 
-	if (axe == glm::vec3(0, 1, 0))
+	if (axe == glm::vec3(1, 0, 0))
+			_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _rightVec);
+	else if (axe == glm::vec3(0, 1, 0))
 		_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _UpVec);
-	else if (axe == glm::vec3(1, 0, 0))
-		_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _rightVec);
+	else if (axe == glm::vec3(0, 0, 1))
+		_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _dir);
 
 	_lookAt += _pos;
 

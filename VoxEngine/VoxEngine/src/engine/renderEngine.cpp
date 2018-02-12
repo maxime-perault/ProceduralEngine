@@ -25,7 +25,7 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 renderEngine::~renderEngine()
 {
 	_staticShader->cleanUp();
-	delete(_staticShader);
+	//DELETE
 }
 
 void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)

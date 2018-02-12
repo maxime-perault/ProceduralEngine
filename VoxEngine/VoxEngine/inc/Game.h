@@ -5,6 +5,7 @@
 # include "InputManager.h"
 # include "renderEngine.h"
 # include "Camera.h"
+# include "Timer.h"
 
 class	Game
 {
@@ -16,13 +17,14 @@ public:
 	renderEngine	*_renderEngine;
 	InputManager	*_inputManager;
 	Camera			*_camera;
+	Timer			*_timer;
 
 	int		_win_x;
 	int		_win_y;
 
 	void	loop(void);
-	void	moveCamera(float elapsed);
-	double	getElapsedTime(void);
+	void	moveMouseCamera(float elapsed);
+	void	moveKeyboardCamera(float elapsed);
 };
 
 #endif // !GAME_HH_ 

@@ -25,6 +25,7 @@ Display::Display(std::size_t win_x, std::size_t win_y)
 	SDL_GetCurrentDisplayMode(0, &_mode);
 
 	SDL_SetWindowGrab(_win, SDL_TRUE);
+	SDL_ShowCursor(SDL_FALSE);
 	SDL_WarpMouseInWindow(_win, _win_x / 2, _win_y / 2);
 
 	glewExperimental = GL_TRUE;

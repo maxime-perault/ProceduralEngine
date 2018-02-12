@@ -127,6 +127,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Display.cpp" />
     <ClCompile Include="src\engine\renderEngine.cpp" />
+    <ClCompile Include="src\engine\Timer.cpp" />
     <ClCompile Include="src\engine\VAOLoader.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Display.h" />
     <ClInclude Include="inc\engine\renderEngine.h" />
+    <ClInclude Include="inc\engine\Timer.h" />
     <ClInclude Include="inc\engine\VAOLoader.h" />
     <ClInclude Include="inc\Game.h" />
     <ClInclude Include="inc\models\cubeFactory.h" />
