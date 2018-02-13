@@ -10,13 +10,24 @@
 class	InputManager
 {
 public:
+	enum e_keys
+	{
+		Z = 0,
+		Q,
+		S,
+		D,
+		LALT,
+		SPACE,
+		LCTRL,
+		ESCAPE
+	};
 	InputManager();
 	~InputManager();
 
-	bool	getKeyDown(SDL_Keycode keycode);
-	bool	getKeyUp(SDL_Keycode keycode);
+	bool	getKeyDown(e_keys key);
+	bool	getKeyUp(e_keys key);
+	bool	getRawKey(e_keys key);
 	bool	getEvent(SDL_EventType event);
-	bool	getRawKey(SDL_Scancode scancode);
 
 	glm::vec2	getMouseMotion(SDL_Window * win, int win_x, int win_y);
 
@@ -24,6 +35,10 @@ public:
 
 	SDL_Event	_event;
 	Uint8*		_keystate;
+
+	std::vector<bool>			_prevKeys;
+	std::vector<bool>			_actualKeys;
+	std::vector<SDL_Scancode>	_scancodes;
 };
 
 #endif // !INPUTMANAGER_H_

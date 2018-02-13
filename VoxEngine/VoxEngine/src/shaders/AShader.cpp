@@ -32,6 +32,11 @@ void		AShader::getAllUniformLocations(void)
 	_location_transformation_matrix = getUniformLocation("transformationMatrix");
 	_location_projection_matrix = getUniformLocation("projectionMatrix");
 	_location_view_matrix = getUniformLocation("viewMatrix");
+
+	_location_lightPos = getUniformLocation("lightPosition");
+	_location_lightColour = getUniformLocation("lightColour");
+	_location_shineDamper = getUniformLocation("shineDamper");
+	_location_ambientLevel = getUniformLocation("AmbientLevel");
 }
 
 int	AShader::getUniformLocation(const GLchar *uniformName) const
@@ -124,6 +129,15 @@ void	AShader::loadViewMatrix(const glm::mat4 &m) const
 	*/
 	this->loadMatrix(_location_view_matrix, m);
 }
+
+void	AShader::loadLight(const glm::vec3 pos, const glm::vec3 colour, const float damper, const float ambientLevel) const
+{
+	this->loadVector(_location_lightPos, pos);
+	this->loadVector(_location_lightColour, colour);
+	this->loadFloat(_location_shineDamper, damper);
+	this->loadFloat(_location_ambientLevel, ambientLevel);
+}
+
 
 int		AShader::loadShader(const std::string &file, const int &type)
 {

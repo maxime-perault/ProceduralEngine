@@ -16,7 +16,7 @@ private:
 	std::vector<Entity*>		_entities;
 	
 
-	void	initCube(void);
+	void	initCube(std::string texturePath, const bool light);
 	void	setupModels(void);
 
 public:
@@ -24,7 +24,9 @@ public:
 	{
 		GRASS = 0,
 		DIRT,
-		WATER
+		WATER,
+		SUN,
+		PLAYER
 	};
 
 	cubeFactory();

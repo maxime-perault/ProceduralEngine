@@ -28,8 +28,9 @@ public:
 	~VAOLoader();
 
 	rawModel	*loadtoVAO(const std::vector<float> &pos,
-				const std::vector<int> &indices,
-				const std::vector<float> &tex_coords);
+		const std::vector<float> &normals,
+		const std::vector<float> &texture_coord,
+		const std::vector<int> &indices);
 	/*
 	RawModel	*loadtoVAO(const std::vector<float> &pos,
 	const std::vector<int> &indices,

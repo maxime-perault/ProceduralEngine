@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
-#include <limits>
 
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
@@ -18,14 +17,11 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	_win_y = win_y;
 
 	createProjectionMatrix(_staticShader);
-
-	_entities.push_back(_cubeFactory.getCube(cubeFactory::GRASS, glm::vec3(0, 0, 0)));
 }
 
 renderEngine::~renderEngine()
 {
 	_staticShader->cleanUp();
-	//DELETE
 }
 
 void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
@@ -57,30 +53,9 @@ void	renderEngine::createProjectionMatrix(staticShader *shader)
 	shader->stop();
 }
 
-void	renderEngine::createOrthographicProjectionMatrix(Camera *cam, staticShader *shader)
-{
-	float	n(_near);
-	float	f(_far);
-	float	max = cam->_pos.z * -1;
-	float	r = ((float)_win_x / (float)_win_y) * max;
-	float	l = -r;
-	float	t = max;
-	float	b = -t;
-
-	_projMat[0][0] = 1 / r;
-	_projMat[1][1] = 1 / t;
-	_projMat[2][2] = -2 / (f - n);
-	_projMat[3][2] = -((f + n) / (f - n));
-	_projMat[3][3] = 1;
-
-	shader->start();
-	shader->loadProjectionMatrix(_projMat);
-	shader->stop();
-}
-
 void	renderEngine::createModelMatrix(Entity *entity, staticShader *shader)
 {
-	shader->loadTransformationMatrix(entity->_modelMatrix);
+	shader->loadTransformationMatrix(entity->getModelMatrix());
 }
 
 void	renderEngine::createViewMatrix(Camera *cam, staticShader *shader)
@@ -88,27 +63,66 @@ void	renderEngine::createViewMatrix(Camera *cam, staticShader *shader)
 	shader->loadViewMatrix(cam->getViewMatrix());
 }
 
-void	renderEngine::renderEntities(Camera *cam)
+void	renderEngine::renderEntities(Camera *cam, World *world)
 {
-	std::vector<Entity*> entities = _entities;
+	std::vector<Entity*>	chunks = world->getChunks();
+	Light*					sun = world->getSun();
+	Entity*					player = world->getPlayer();
 
 	_staticShader->start();
-	
 	this->createViewMatrix(cam, _staticShader);
+	
+	_staticShader->loadLight(sun->_entity->_pos, sun->_colour, sun->_damper, sun->_ambientLevel);
 
-	for (std::size_t i(0); i < entities.size(); ++i)
+	/*
+	** SUN
+	*/
+	this->createModelMatrix(sun->_entity, _staticShader);
+
+	glBindVertexArray(sun->_entity->_model->_rawModel->_vao_id);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, sun->_entity->_model->_texture->_id);
+
+	glDrawElements(GL_TRIANGLES, sun->_entity->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+
+	/*
+	** PLAYER
+	*/
+	this->createModelMatrix(player, _staticShader);
+
+	glBindVertexArray(player->_model->_rawModel->_vao_id);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, player->_model->_texture->_id);
+
+	glDrawElements(GL_TRIANGLES, player->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+
+	/*
+	** CHUNKS
+	*/
+	for (std::size_t i(0); i < chunks.size(); ++i)
 	{
-		this->createModelMatrix(entities[i], _staticShader);
+		this->createModelMatrix(chunks[i], _staticShader);
 
-		glBindVertexArray(entities[i]->_model->_rawModel->_vao_id);
+		glBindVertexArray(chunks[i]->_model->_rawModel->_vao_id);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, entities[i]->_model->_texture->_id);
+		glBindTexture(GL_TEXTURE_2D, chunks[i]->_model->_texture->_id);
 
-		glDrawElements(GL_TRIANGLES, entities[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, chunks[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
 	}
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);

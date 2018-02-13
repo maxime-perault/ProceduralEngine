@@ -3,8 +3,8 @@
 
 #include "AShader.h"
 
-# define VERTEX_FILE "shaders/vertexShader"
-# define FRAGMENT_FILE "shaders/fragmentShader"
+# define VERTEX_FILE "shaders/vertexShader.txt"
+# define FRAGMENT_FILE "shaders/fragmentShader.txt"
 
 class	AShader;
 

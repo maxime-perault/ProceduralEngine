@@ -20,6 +20,10 @@ protected:
 	int	_location_transformation_matrix;
 	int	_location_projection_matrix;
 	int	_location_view_matrix;
+	int _location_lightPos;
+	int _location_lightColour;
+	int _location_shineDamper;
+	int _location_ambientLevel;
 
 	int		loadShader(const std::string &file, const int &type);
 
@@ -42,6 +46,7 @@ public:
 	void		loadTransformationMatrix(const glm::mat4 &m) const;
 	void		loadProjectionMatrix(const glm::mat4 &m) const;
 	void		loadViewMatrix(const glm::mat4 &m) const;
+	void		loadLight(const glm::vec3 pos, const glm::vec3 colour, const float damper, const float ambientLevel) const;
 
 	void	start(void);
 	void	stop(void);

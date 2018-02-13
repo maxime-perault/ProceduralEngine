@@ -7,8 +7,9 @@ VAOLoader::VAOLoader() {}
 VAOLoader::~VAOLoader() {}
 
 rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
-	const std::vector<int> &indices,
-	const std::vector<float> &texture_coord)
+	const std::vector<float> &normals,
+	const std::vector<float> &texture_coord,
+	const std::vector<int> &indices)
 {
 	int vaoID = this->createVAO();
 
@@ -16,6 +17,7 @@ rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
 
 	this->storeData_attrList(0, 3, pos);
 	this->storeData_attrList(1, 2, texture_coord);
+	this->storeData_attrList(2, 3, normals);
 
 	this->unbindVAO();
 

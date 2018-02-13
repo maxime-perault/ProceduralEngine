@@ -129,11 +129,13 @@
     <ClCompile Include="src\engine\renderEngine.cpp" />
     <ClCompile Include="src\engine\Timer.cpp" />
     <ClCompile Include="src\engine\VAOLoader.cpp" />
+    <ClCompile Include="src\engine\World.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\models\cubeFactory.cpp" />
     <ClCompile Include="src\models\Entity.cpp" />
+    <ClCompile Include="src\models\Light.cpp" />
     <ClCompile Include="src\models\rawModel.cpp" />
     <ClCompile Include="src\models\Texture.cpp" />
     <ClCompile Include="src\models\texturedModel.cpp" />
@@ -146,9 +148,11 @@
     <ClInclude Include="inc\engine\renderEngine.h" />
     <ClInclude Include="inc\engine\Timer.h" />
     <ClInclude Include="inc\engine\VAOLoader.h" />
+    <ClInclude Include="inc\engine\World.h" />
     <ClInclude Include="inc\Game.h" />
     <ClInclude Include="inc\models\cubeFactory.h" />
     <ClInclude Include="inc\models\Entity.h" />
+    <ClInclude Include="inc\models\Light.h" />
     <ClInclude Include="inc\models\rawModel.h" />
     <ClInclude Include="inc\models\Texture.h" />
     <ClInclude Include="inc\models\texturedModel.h" />

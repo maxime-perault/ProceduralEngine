@@ -12,38 +12,38 @@ cubeFactory::~cubeFactory()
 	_loader.cleanUp();
 }
 
-void	cubeFactory::initCube(void)
+void	cubeFactory::initCube(std::string texturePath, const bool light)
 {
 	/*
 	** CUBE VERTEX
 	*/
 	static const float tmp_vrtx[] = {
-		-0.5, 0.5, -0.5,
+		-0.5, 0.5, -0.5, //FRONT
 		-0.5, -0.5, -0.5,
 		0.5, -0.5, -0.5,
 		0.5, 0.5, -0.5,
 
-		-0.5, 0.5, 0.5,
+		-0.5, 0.5, 0.5, //BACK
 		-0.5, -0.5, 0.5,
 		0.5, -0.5, 0.5,
 		0.5, 0.5, 0.5,
 
-		0.5, 0.5, -0.5,
+		0.5, 0.5, -0.5, //RIGHT
 		0.5, -0.5, -0.5,
 		0.5, -0.5, 0.5,
 		0.5, 0.5, 0.5,
 
-		-0.5, 0.5, -0.5,
+		-0.5, 0.5, -0.5, //LEFT
 		-0.5, -0.5, -0.5,
 		-0.5, -0.5, 0.5,
 		-0.5, 0.5, 0.5,
 
-		-0.5, 0.5, 0.5,
+		-0.5, 0.5, 0.5, //TOP
 		-0.5, 0.5, -0.5,
 		0.5, 0.5, -0.5,
 		0.5, 0.5, 0.5,
 
-		-0.5, -0.5, 0.5,
+		-0.5, -0.5, 0.5, //BOT
 		-0.5, -0.5, -0.5,
 		0.5, -0.5, -0.5,
 		0.5, -0.5, 0.5 };
@@ -51,7 +51,109 @@ void	cubeFactory::initCube(void)
 		cube_vrtx(tmp_vrtx, tmp_vrtx + sizeof(tmp_vrtx) / sizeof(tmp_vrtx[0]));
 
 	/*
-	** CUBE INDICES
+	** CUBE NORMALS
+	*/
+	static const float tmp_normals[] = {
+		0, 0, -1, //FRONT
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
+
+		0, 0, 1, //BACK
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+
+		1, 0, 0, //RIGHT
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+
+		-1, 0, 0, //LEFT
+		-1, 0, 0,
+		-1, 0, 0,
+		-1, 0, 0,
+
+		0, 1, 0, //TOP
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+
+		0, -1, 0, //BOT
+		0, -1, 0,
+		0, -1, 0,
+		0, -1, 0 };
+		static const std::vector<float>
+			cube_normals(tmp_normals, tmp_normals + sizeof(tmp_normals) / sizeof(tmp_normals[0]));
+
+	static const float light_normals[] = {
+		0, 0, 1, //FRONT
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+
+		0, 0, -1, //BACK
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
+
+		-1, 0, 0, //RIGHT
+		-1, 0, 0,
+		-1, 0, 0,
+		-1, 0, 0,
+
+		1, 0, 0, //LEFT
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+
+		0, -1, 0, //TOP
+		0, -1, 0,
+		0, -1, 0,
+		0, -1, 0,
+
+		0, 1, 0, //BOT
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0 };
+		static const std::vector<float>
+			cube_lightNormals(light_normals, light_normals + sizeof(light_normals) / sizeof(light_normals[0]));
+
+	//TEXTURE COORDS
+	static const float tmp_text[] = { 0, 0,
+		0, 1, //FRONT
+		1, 1,
+		1, 0,
+
+		0, 0, //BACK
+		0, 1,
+		1, 1,
+		1, 0,
+
+		0, 0, //RIGHT
+		0, 1,
+		1, 1,
+		1, 0,
+
+		0, 0, //LEFT
+		0, 1,
+		1, 1,
+		1, 0,
+
+		0, 0, //TOP
+		0, 1,
+		1, 1,
+		1, 0,
+
+		0, 0, //BOT
+		0, 1,
+		1, 1,
+		1, 0 };
+	static const std::vector<float>
+		cube_text_coord(tmp_text, tmp_text + sizeof(tmp_text) / sizeof(tmp_text[0]));
+
+	/*
+	** INDICES
 	*/
 	static const int tmp_ind[] = { 0, 1, 3,
 		3, 1, 2,
@@ -68,59 +170,40 @@ void	cubeFactory::initCube(void)
 	static const std::vector<int>
 		cube_ind(tmp_ind, tmp_ind + sizeof(tmp_ind) / sizeof(tmp_ind[0]));
 
-	//TEXTURE COORDS
-	static const float tmp_text[] = { 0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0 };
-	static const std::vector<float>
-		cube_text_coord(tmp_text, tmp_text + sizeof(tmp_text) / sizeof(tmp_text[0]));
-
 
 	/*
 	** VAO (VBO1 = obj coord with indices; VBO2 = textures uv)
 	*/
-	_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_ind, cube_text_coord));
-
+	if (light == true)
+		_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_lightNormals, cube_text_coord, cube_ind));
+	else
+		_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_normals, cube_text_coord, cube_ind));
 	/*
 	** TEXTURE + TEXTURED MODEL
 	*/
-	_textures.push_back(new Texture(_loader.loadTexture("assets/minecraft/textures/blocks/brick.png")));
+	_textures.push_back(new Texture(_loader.loadTexture(texturePath)));
 	_tex_models.push_back(new texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
 }
 
 void	cubeFactory::setupModels(void)
 {
-	this->initCube();
-	this->initCube();
-	this->initCube();
+	//GRASS
+	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_lime.png", false);
+	//DIRT
+	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_brown.png", false);
+	//WATER
+	this->initCube("assets/minecraft/textures/blocks/wool_colored_cyan.png", false);
+	//SUN
+	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_yellow.png", true);
+	//PLAYER
+	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_red.png", false);
 }
 
 Entity	*cubeFactory::getCube(const e_Type type, glm::vec3 pos)
 {
 	Entity *res = new Entity(_tex_models[type]);
 	
-	res->translate(pos);
+	res->_pos = pos;
 	
 	return (res);
 }

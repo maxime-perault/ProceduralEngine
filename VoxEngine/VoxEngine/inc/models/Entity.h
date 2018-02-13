@@ -10,17 +10,23 @@
 
 class	Entity
 {
+private:
+	glm::mat4	_modelMatrix;
+
+	void	translate(glm::vec3 pos);
+	void	rotate(glm::vec3 axe, float euler);
+	void	scale(glm::vec3 scal);
 public:
 	Entity(texturedModel *model);
 	~Entity();
 
 	texturedModel	*_model;
-	glm::mat4		_modelMatrix;
+	glm::vec3		_pos;
+	glm::vec3		_rot;
+	glm::vec3		_scale;
 
-	void	translate(glm::vec3 pos);
-	void	rotate(glm::vec3 axe, float euler);
 
-	void	scale(glm::vec3 scal);
+	glm::mat4		getModelMatrix(void);
 };
 
 #endif //!ENTITY_HH_

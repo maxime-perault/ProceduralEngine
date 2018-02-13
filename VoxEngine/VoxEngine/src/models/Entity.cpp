@@ -9,6 +9,9 @@ Entity::Entity(texturedModel *model)
 {
 	_model = model;
 	_modelMatrix = glm::mat4(1.0);
+	_pos = glm::vec3(0, 0, 0);
+	_scale = glm::vec3(1, 1, 1);
+	_rot = glm::vec3(0, 0, 0);
 }
 
 Entity::~Entity() {}
@@ -25,4 +28,17 @@ void	Entity::rotate(glm::vec3 axe, float euler)
 void	Entity::scale(glm::vec3 scal)
 {
 	_modelMatrix = glm::scale(_modelMatrix, scal);
+}
+
+glm::mat4	Entity::getModelMatrix(void)
+{
+	_modelMatrix = glm::mat4(1.0);
+
+	this->translate(_pos);
+	this->rotate(glm::vec3(1, 0, 0), _rot.x);
+	this->rotate(glm::vec3(0, 1, 0), _rot.y);
+	this->rotate(glm::vec3(0, 0, 1), _rot.z);
+	this->scale(_scale);
+
+	return(_modelMatrix);
 }

@@ -10,7 +10,7 @@
 # include "staticShader.h"
 # include "Camera.h"
 # include "Entity.h"
-# include "cubeFactory.h"
+# include "World.h"
 
 class	renderEngine
 {
@@ -19,13 +19,12 @@ public:
 	~renderEngine();
 
 	void	createProjectionMatrix(staticShader *shader);
-	void	createOrthographicProjectionMatrix(Camera *cam, staticShader *shader);
 	void	createModelMatrix(Entity *entity, staticShader *shader);
 	void	createViewMatrix(Camera *cam, staticShader *shader);
 
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
-	void	renderEntities(Camera *_cam);
+	void	renderEntities(Camera *_cam, World *_world);
 
 	glm::mat4	_projMat;
 
@@ -35,9 +34,6 @@ public:
 	float		_fov;
 	float		_near;
 	float		_far;
-
-	cubeFactory			_cubeFactory;
-	std::vector<Entity*> _entities;
 
 	staticShader	*_staticShader;
 };

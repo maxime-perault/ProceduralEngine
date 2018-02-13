@@ -3,7 +3,22 @@
 
 InputManager::InputManager()
 {
+	_keystate = (Uint8*)SDL_GetKeyboardState(NULL);
 
+	_scancodes.push_back(SDL_SCANCODE_W);
+	_scancodes.push_back(SDL_SCANCODE_A);
+	_scancodes.push_back(SDL_SCANCODE_S);
+	_scancodes.push_back(SDL_SCANCODE_D);
+	_scancodes.push_back(SDL_SCANCODE_LALT);
+	_scancodes.push_back(SDL_SCANCODE_SPACE);
+	_scancodes.push_back(SDL_SCANCODE_LCTRL);
+	_scancodes.push_back(SDL_SCANCODE_ESCAPE);
+
+	for (std::size_t i(0); i < _scancodes.size(); ++i)
+	{
+		_prevKeys.push_back(false);
+		_actualKeys.push_back(false);
+	}
 }
 
 InputManager::~InputManager()
@@ -11,30 +26,24 @@ InputManager::~InputManager()
 
 }
 
-bool	InputManager::getRawKey(SDL_Scancode scancode)
+bool	InputManager::getRawKey(e_keys key)
 {
-	if (_keystate[scancode])
+	if (_actualKeys[key])
 		return true;
 	return false;
 }
 
-bool	InputManager::getKeyDown(SDL_Keycode keycode)
+bool	InputManager::getKeyDown(e_keys key)
 {
-	if (_event.type == SDL_KEYDOWN)
-	{
-		if (_event.key.keysym.sym == keycode)
-			return true;
-	}
+	if (_actualKeys[key] && _prevKeys[key] == false)
+		return true;
 	return false;
 }
 
-bool	InputManager::getKeyUp(SDL_Keycode keycode)
+bool	InputManager::getKeyUp(e_keys key)
 {
-	if (_event.type == SDL_KEYUP)
-	{
-		if (_event.key.keysym.sym == keycode)
-			return true;
-	}
+	if (!_actualKeys[key] && _prevKeys[key] == true)
+		return true;
 	return false;
 }
 
@@ -49,6 +58,15 @@ void	InputManager::Update(void)
 {
 	SDL_PollEvent(&_event);
 	_keystate = (Uint8*)SDL_GetKeyboardState(NULL);
+
+	_prevKeys = _actualKeys;
+	for (std::size_t i(0); i < _actualKeys.size(); ++i)
+	{
+		if (_keystate[_scancodes[i]])
+			_actualKeys[i] = true;
+		else
+			_actualKeys[i] = false;
+	}
 }
 
 glm::vec2	InputManager::getMouseMotion(SDL_Window * win, int win_x, int win_y)

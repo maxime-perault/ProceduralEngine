@@ -10,7 +10,8 @@ Game::Game()
 	_display = new Display(_win_x, _win_y);
 	_renderEngine = new renderEngine(_win_x, _win_y);
 	_inputManager = new InputManager();
-	_camera = new Camera(glm::vec3(0, 0, -5));
+	_world = new World();
+	_camera = new Camera(_world->getPlayer()->_pos);
 	_timer = new Timer();
 }
 
@@ -19,24 +20,35 @@ Game::~Game()
 	//DELETE
 }
 
+void	Game::movePlayer(const glm::vec3 delta)
+{
+	_camera->move(delta);
+	_world->getPlayer()->_pos += delta;
+	
+}
+
 void	Game::moveKeyboardCamera(float elapsed)
 {
 	float	speedMove = elapsed * 20;
 
-	if (_inputManager->getRawKey(SDL_SCANCODE_A))
-		_camera->move(-glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
-	if (_inputManager->getRawKey(SDL_SCANCODE_D))
-		_camera->move(glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
+	if (_inputManager->getRawKey(InputManager::Q))
+		this->movePlayer(-glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
+	if (_inputManager->getRawKey(InputManager::D))
+		this->movePlayer(glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
 
-	if (_inputManager->getRawKey(SDL_SCANCODE_W))
-		_camera->move(glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
-	if (_inputManager->getRawKey(SDL_SCANCODE_S))
-		_camera->move(-glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
+	if (_inputManager->getRawKey(InputManager::Z))
+		this->movePlayer(glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
+	if (_inputManager->getRawKey(InputManager::S))
+		this->movePlayer(-glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
 
-	if (_inputManager->getRawKey(SDL_SCANCODE_SPACE))
-		_camera->move(glm::vec3(0, 1, 0) * speedMove);
-	if (_inputManager->getRawKey(SDL_SCANCODE_LCTRL))
-		_camera->move(-glm::vec3(0, 1, 0) * speedMove);
+	if (_inputManager->getRawKey(InputManager::SPACE))
+		this->movePlayer(glm::vec3(0, 1, 0) * speedMove);
+	if (_inputManager->getRawKey(InputManager::LCTRL))
+		this->movePlayer(-glm::vec3(0, 1, 0) * speedMove);
+
+	if (_inputManager->getKeyDown(InputManager::LALT))
+		_camera->changeView(_world->getPlayer()->_pos);
+	
 }
 
 void	Game::moveMouseCamera(float elapsed)
@@ -53,8 +65,8 @@ void	Game::moveMouseCamera(float elapsed)
 
 	delta = pos - lastPos;
 
-	_camera->rotate(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 300.f));
-	_camera->rotate(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 300.f));
+	_camera->rotateIG(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 300.f));
+	_camera->rotateIG(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 300.f));
 }
 
 void Game::loop(void)
@@ -66,7 +78,7 @@ void Game::loop(void)
 	{
 		_inputManager->Update();
 
-		if (_inputManager->getEvent(SDL_QUIT) || _inputManager->getKeyDown(SDLK_ESCAPE))
+		if (_inputManager->getEvent(SDL_QUIT) || _inputManager->getKeyDown(InputManager::ESCAPE))
 			return;
 		
 		elapsed = _timer->getElapsedSeconds(true);
@@ -74,7 +86,8 @@ void Game::loop(void)
 		this->moveKeyboardCamera(elapsed);
 		
 		_display->clear();
-		_renderEngine->renderEntities(_camera);
+		_world->update(elapsed);
+		_renderEngine->renderEntities(_camera, _world);
 		_display->update();
 
 		++frame;

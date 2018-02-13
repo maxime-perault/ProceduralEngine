@@ -12,15 +12,22 @@ public:
 	Camera(const glm::vec3 pos);
 	~Camera();
 
-	glm::mat4 _viewMatrix;
-	glm::vec3 _pos;
-	glm::vec3 _lookAt;
-	glm::vec3 _UpVec;
-	glm::vec3 _rightVec;
-	glm::vec3 _dir;
+	glm::mat4	_viewMatrix;
+	glm::vec3	_pos;
+	glm::vec3	_lookAt;
+	glm::vec3	_UpVec;
+	glm::vec3	_rightVec;
+	glm::vec3	_dir;
+
+	bool		_tps;
 
 	void		rotate(const glm::vec3 axe, float euler);
+	void		rotateAround(const glm::vec3 axe, float euler);
+	void		rotateIG(const glm::vec3 axe, float euler);
 	void		move(const glm::vec3 delta);
+
+	void		changeView(glm::vec3 pos);
+
 	void		update(void);
 	glm::mat4	getViewMatrix(void);
 };

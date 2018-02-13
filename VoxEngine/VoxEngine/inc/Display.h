@@ -6,7 +6,6 @@
 # include <GL/glu.h>
 # include <SDL2/SDL.h>
 
-
 class	Display
 {
 public:
@@ -16,7 +15,7 @@ public:
 	std::size_t		_win_y;
 	std::size_t		_win_x;
 
-	SDL_DisplayMode	_mode;
+	SDL_DisplayMode		_mode;
 
 	Display(std::size_t win_x, std::size_t win_y);
 	~Display();
