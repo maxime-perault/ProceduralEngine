@@ -28,7 +28,7 @@ void	staticShader::bindAttributes(void)
 {
 	this->bindAttribute(0, "position");
 	this->bindAttribute(1, "textureCoords");
-	this->bindAttribute(1, "normal");
+	this->bindAttribute(2, "normal");
 }
 
 void		staticShader::getAllUniformLocations(void)
