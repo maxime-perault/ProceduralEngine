@@ -13,6 +13,7 @@ InputManager::InputManager()
 	_scancodes.push_back(SDL_SCANCODE_SPACE);
 	_scancodes.push_back(SDL_SCANCODE_LCTRL);
 	_scancodes.push_back(SDL_SCANCODE_ESCAPE);
+	_scancodes.push_back(SDL_SCANCODE_TAB);
 
 	for (std::size_t i(0); i < _scancodes.size(); ++i)
 	{

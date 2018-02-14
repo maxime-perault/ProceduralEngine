@@ -19,7 +19,8 @@ public:
 		LALT,
 		SPACE,
 		LCTRL,
-		ESCAPE
+		ESCAPE,
+		TAB
 	};
 	InputManager();
 	~InputManager();

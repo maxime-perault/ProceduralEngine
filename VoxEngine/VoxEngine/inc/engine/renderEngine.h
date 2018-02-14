@@ -8,6 +8,7 @@
 # include <SDL2/SDL.h>
 # include <vector>
 # include "staticShader.h"
+# include "fontShader.h"
 # include "Camera.h"
 # include "Entity.h"
 # include "World.h"
@@ -24,7 +25,15 @@ public:
 
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
-	void	renderEntities(Camera *_cam, World *_world);
+	void	renderVAO_oneTime(Entity* entity);
+	void	renderVAO_multipleTime(std::vector<Entity*> entity);
+	void	renderWorld(Camera *_cam, World *_world, const bool debug);
+
+	void	renderAxis(std::vector<Entity*> axis);
+	void	renderText(const std::vector<Entity*> text);
+
+	void	start(void);
+	void	stop(void);
 
 	glm::mat4	_projMat;
 
@@ -36,6 +45,7 @@ public:
 	float		_far;
 
 	staticShader	*_staticShader;
+	fontShader		*_fontShader;
 };
 
 #endif //!RENDERENGINE_HH_

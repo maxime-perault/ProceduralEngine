@@ -12,6 +12,7 @@ Entity::Entity(texturedModel *model)
 	_pos = glm::vec3(0, 0, 0);
 	_scale = glm::vec3(1, 1, 1);
 	_rot = glm::vec3(0, 0, 0);
+	_colour = glm::vec3(1, 1, 1);
 }
 
 Entity::~Entity() {}

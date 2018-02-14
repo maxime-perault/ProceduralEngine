@@ -11,17 +11,17 @@
 class	VAOLoader
 {
 private:
-	std::vector<GLuint>	_vaos;
-	std::vector<GLuint>	_vbos;
-	std::vector<GLuint>	_textures;
+	std::vector<GLuint>					_vaos;
+	std::vector<std::vector<GLuint>>	_vbos;
+	std::vector<GLuint>					_textures;
 
-	int				createVAO(void);
-	void			storeData_attrList(const int &attrNum,
+	GLuint			bindIndicesBuffer(const std::vector<int> &indices);
+	GLuint			storeData_attrList(const int &attrNum,
 					const int &dimension,
 					const std::vector<float> &data);
 
+	int				createVAO(void);
 	void			unbindVAO(void);
-	void			bindIndicesBuffer(const std::vector<int> &indices);
 
 public:
 	VAOLoader();
@@ -31,15 +31,18 @@ public:
 		const std::vector<float> &normals,
 		const std::vector<float> &texture_coord,
 		const std::vector<int> &indices);
-	/*
-	RawModel	*loadtoVAO(const std::vector<float> &pos,
-	const std::vector<int> &indices,
-	const std::vector<float> &tex_coords,
-	const std::vector<int> &tex_indices);
-	*/
+
+	rawModel	*loadtoVAO(const std::vector<float> &pos,
+				const std::vector<float> &texture_coord,
+				const std::vector<int> &indices);
+
+	rawModel	*loadtoVAO(const std::vector<float> &pos,
+		const std::vector<int> &indices);
+
 	int	loadTexture(const std::string &file);
 
-	void			cleanUp(void);
+	void	cleanUp(void);
+	void	deleteVAO(const GLuint vao);
 };
 
 #endif //!VAOLOADER_HH_

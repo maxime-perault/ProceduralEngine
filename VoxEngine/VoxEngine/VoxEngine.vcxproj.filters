@@ -84,6 +84,15 @@
     <ClCompile Include="src\models\Light.cpp">
       <Filter>Fichiers sources\models</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\FntParser.cpp">
+      <Filter>Fichiers sources\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\models\FontFactory.cpp">
+      <Filter>Fichiers sources\models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\fontShader.cpp">
+      <Filter>Fichiers sources\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Game.h">
@@ -133,6 +142,15 @@
     </ClInclude>
     <ClInclude Include="inc\models\Light.h">
       <Filter>Fichiers d%27en-tête\models</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\engine\FntParser.h">
+      <Filter>Fichiers d%27en-tête\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\models\FontFactory.h">
+      <Filter>Fichiers d%27en-tête\models</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\shaders\fontShader.h">
+      <Filter>Fichiers d%27en-tête\shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

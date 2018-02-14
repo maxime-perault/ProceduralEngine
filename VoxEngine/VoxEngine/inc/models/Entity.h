@@ -25,6 +25,7 @@ public:
 	glm::vec3		_rot;
 	glm::vec3		_scale;
 
+	glm::vec3		_colour;
 
 	glm::mat4		getModelMatrix(void);
 };

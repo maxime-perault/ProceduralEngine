@@ -13,9 +13,9 @@ private:
 	std::vector<rawModel*>		_models;
 	std::vector<Texture*>		_textures;
 	std::vector<texturedModel*>	_tex_models;
-	std::vector<Entity*>		_entities;
 	
 
+	void	initLine(void);
 	void	initCube(std::string texturePath, const bool light);
 	void	setupModels(void);
 
@@ -26,13 +26,15 @@ public:
 		DIRT,
 		WATER,
 		SUN,
-		PLAYER
+		PLAYER,
+		LINE
 	};
 
 	cubeFactory();
 	~cubeFactory();
 
 	Entity	*getCube(const e_Type type, glm::vec3 pos);
+	Entity	*getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot);
 };
 
 #endif //!CUBEFACTORY_HH_

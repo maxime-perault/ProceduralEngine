@@ -10,9 +10,11 @@ Game::Game()
 	_display = new Display(_win_x, _win_y);
 	_renderEngine = new renderEngine(_win_x, _win_y);
 	_inputManager = new InputManager();
-	_world = new World();
+	_world = new World(_win_x, _win_y);
 	_camera = new Camera(_world->getPlayer()->_pos);
 	_timer = new Timer();
+
+	_debug = true;
 }
 
 Game::~Game()
@@ -48,6 +50,9 @@ void	Game::moveKeyboardCamera(float elapsed)
 
 	if (_inputManager->getKeyDown(InputManager::LALT))
 		_camera->changeView(_world->getPlayer()->_pos);
+
+	if (_inputManager->getKeyDown(InputManager::TAB))
+		_debug = !_debug;
 	
 }
 
@@ -73,6 +78,7 @@ void Game::loop(void)
 {
 	float	elapsed, totalTime = 0;
 	int		frame = 0;
+	int		fps = -1;
 
 	while (true)
 	{
@@ -86,15 +92,15 @@ void Game::loop(void)
 		this->moveKeyboardCamera(elapsed);
 		
 		_display->clear();
-		_world->update(elapsed);
-		_renderEngine->renderEntities(_camera, _world);
+		_world->update(elapsed, _camera, fps, _debug);
+		_renderEngine->renderWorld(_camera, _world, _debug);
 		_display->update();
 
 		++frame;
 		totalTime += elapsed;
 		if (totalTime >= 1)
 		{
-			std::cout << frame << " FPS." << std::endl;
+			fps = frame;
 			frame = 0;
 			totalTime = 0;
 		}

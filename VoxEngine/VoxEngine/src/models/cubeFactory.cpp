@@ -172,7 +172,7 @@ void	cubeFactory::initCube(std::string texturePath, const bool light)
 
 
 	/*
-	** VAO (VBO1 = obj coord with indices; VBO2 = textures uv)
+	** VAO (VBO1 = obj coord with indices, VBO2 = normals, VBO3 = textures uv)
 	*/
 	if (light == true)
 		_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_lightNormals, cube_text_coord, cube_ind));
@@ -182,6 +182,36 @@ void	cubeFactory::initCube(std::string texturePath, const bool light)
 	** TEXTURE + TEXTURED MODEL
 	*/
 	_textures.push_back(new Texture(_loader.loadTexture(texturePath)));
+	_tex_models.push_back(new texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
+}
+
+void	cubeFactory::initLine(void)
+{
+	/*
+	** LINE VERTEX
+	*/
+	static const float tmp_vrtx[] = {
+		0, 0, 0,
+		0, 1, 0};
+	static const std::vector<float>
+		line_vrtx(tmp_vrtx, tmp_vrtx + sizeof(tmp_vrtx) / sizeof(tmp_vrtx[0]));
+
+	/*
+	** INDICES
+	*/
+	static const int tmp_ind[] = {0, 1};
+	static const std::vector<int>
+		line_ind(tmp_ind, tmp_ind + sizeof(tmp_ind) / sizeof(tmp_ind[0]));
+
+
+	/*
+	** VAO (VBO1 = obj coord with indices, VBO2 = normals, VBO3 = textures uv)
+	*/
+		_models.push_back(_loader.loadtoVAO(line_vrtx, line_ind));
+	/*
+	** TEXTURE + TEXTURED MODEL
+	*/
+	_textures.push_back(new Texture(-1));
 	_tex_models.push_back(new texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
 }
 
@@ -197,6 +227,8 @@ void	cubeFactory::setupModels(void)
 	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_yellow.png", true);
 	//PLAYER
 	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_red.png", false);
+	//LINE
+	this->initLine();
 }
 
 Entity	*cubeFactory::getCube(const e_Type type, glm::vec3 pos)
@@ -207,3 +239,15 @@ Entity	*cubeFactory::getCube(const e_Type type, glm::vec3 pos)
 	
 	return (res);
 }
+
+Entity	*cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot)
+{
+	Entity *res = new Entity(_tex_models[LINE]);
+
+	res->_colour = colour;
+	res->_pos = pos;
+	res->_rot = rot;
+
+	return (res);
+}
+
