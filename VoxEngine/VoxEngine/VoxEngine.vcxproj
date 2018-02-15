@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libpng16.lib;libcurl.lib;openal32.lib;glew32.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libcurl.lib;openal32.lib;glew32.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>
  %(AdditionalOptions)</AdditionalOptions>
@@ -108,7 +108,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libpng16.lib;libcurl.lib;openal32.lib;glew32.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libcurl.lib;openal32.lib;glew32.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>
  %(AdditionalOptions)</AdditionalOptions>

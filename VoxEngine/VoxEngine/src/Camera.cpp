@@ -42,10 +42,14 @@ void	Camera::changeView(glm::vec3 playerPos)
 
 void	Camera::rotate(const glm::vec3 axe, float euler)
 {
+	static glm::vec3 prevLookAt;
+
+	prevLookAt = _lookAt;
+
 	_lookAt -= _pos;
 
 	if (axe == glm::vec3(1, 0, 0))
-			_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _rightVec);
+		_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _rightVec);
 	else if (axe == glm::vec3(0, 1, 0))
 		_lookAt = glm::rotate(_lookAt, (float)(euler * M_PI / 180), _UpVec);
 	else if (axe == glm::vec3(0, 0, 1))
@@ -53,11 +57,20 @@ void	Camera::rotate(const glm::vec3 axe, float euler)
 
 	_lookAt += _pos;
 
-	this->update();
+	//Check for Gimbal lock
+	if ((_lookAt.x < (_pos.x + 0.3)) && (_lookAt.x > (_pos.x - 0.3))
+		&& (_lookAt.z < (_pos.z + 0.3)) && (_lookAt.z > (_pos.z - 0.3)))
+		_lookAt = prevLookAt;
+	else
+		this->update();
 }
 
 void	Camera::rotateAround(const glm::vec3 axe, float euler)
 {
+	static glm::vec3 prevPos;
+
+	prevPos = _pos;
+
 	_pos -= _lookAt;
 
 	if (axe == glm::vec3(1, 0, 0))
@@ -69,15 +82,20 @@ void	Camera::rotateAround(const glm::vec3 axe, float euler)
 
 	_pos += _lookAt;
 
-	this->update();
+	//Check for Gimbal lock
+	if ((_lookAt.x < (_pos.x + 0.3)) && (_lookAt.x >(_pos.x - 0.3))
+		&& (_lookAt.z < (_pos.z + 0.3)) && (_lookAt.z >(_pos.z - 0.3)))
+		_pos = prevPos;
+	else
+		this->update();
 }
 
 void	Camera::rotateIG(const glm::vec3 axe, float euler)
 {
 	if (_tps == true)
-		rotateAround(axe, euler);
+		this->rotateAround(axe, euler);
 	else
-		rotate(axe, euler);
+		this->rotate(axe, euler);
 }
 
 void	Camera::move(const glm::vec3 delta)

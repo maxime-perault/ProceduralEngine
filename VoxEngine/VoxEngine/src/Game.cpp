@@ -19,7 +19,7 @@ Game::Game()
 
 Game::~Game()
 {
-	//DELETE
+	//DELETEs
 }
 
 void	Game::movePlayer(const glm::vec3 delta)
