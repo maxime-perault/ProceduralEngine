@@ -3,14 +3,11 @@
 
 chunkFactory::chunkFactory() {}
 
-chunkFactory::chunkFactory(cubeFactory& cubeFactory)
+chunkFactory::~chunkFactory() {}
+
+void		chunkFactory::setCubeFactory(cubeFactory& cubeFactory)
 {
 	_cubeFactory = cubeFactory;
-}
-
-chunkFactory::~chunkFactory()
-{
-
 }
 
 bool	chunkFactory::test_hidden(glm::vec3 pos, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z])

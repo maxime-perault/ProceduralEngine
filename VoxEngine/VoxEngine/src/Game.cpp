@@ -9,7 +9,8 @@ Game::Game()
 	_win_x = 1280; _win_y = 720;
 	_display = new Display(_win_x, _win_y);
 	_renderEngine = new renderEngine(_win_x, _win_y);
-	_world = new World(_win_x, _win_y);
+	_world = new World();
+	_world->setWin(glm::vec2(_win_x, _win_y));
 	_camera = Camera(_world->getPlayer()._pos);
 
 	_debug = true;

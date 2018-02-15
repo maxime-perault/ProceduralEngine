@@ -13,7 +13,6 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glCullFace(GL_BACK);
 
 	_projMat = glm::mat4(1.0);
 
@@ -195,7 +194,6 @@ void	renderEngine::fontRender(World *world, const bool debug)
 
 
 	_fontShader.start();
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, text[0]._model._texture._id);
 

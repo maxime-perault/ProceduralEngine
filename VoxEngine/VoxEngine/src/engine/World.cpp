@@ -1,16 +1,12 @@
 
 #include "World.h"
 
-World::World() {}
-
-World::World(const int winx, const int winy)
+World::World()
 {
-	_chunkFactory = new chunkFactory(_cubeFactory);
+	_chunkFactory.setCubeFactory(_cubeFactory);
 	for (std::size_t x(0); x < 4; ++x)
 		for (std::size_t z(0); z < 4; ++z)
-		{
-			_chunks.push_back(_chunkFactory->getChunk(glm::vec3(x, 0, z)));
-		}
+			_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, 0, z)));
 
 	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(20, 20, 20)), glm::vec3(1, 1, 1), 50, 0.5);
 	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5));
@@ -23,7 +19,7 @@ World::World(const int winx, const int winy)
 	_axis[1]._scale = glm::vec3(0.05, 0.05, 0.05);
 	_axis[2]._scale = glm::vec3(0.05, 0.05, 0.05);
 
-	_win.x = winx; _win.y = winy;
+	_win.x = 1280; _win.y = 720;
 
 	_text.push_back(_fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS));
 	_text.push_back(_fontFactory.getText(std::string("XYZ: Loading"), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::XYZ));
@@ -63,6 +59,12 @@ glm::vec3 World::getScreenPos(const glm::vec3 pos)
 	glm::vec3 res(pos.x / _win.x * 2, -pos.y / _win.y * 2, 0);
 
 	return (res);
+}
+
+void	World::setWin(glm::vec2& win)
+{
+	_win.x = win.x;
+	_win.y = win.y;
 }
 
 void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)

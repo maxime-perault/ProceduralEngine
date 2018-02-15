@@ -13,7 +13,7 @@ class	World
 {
 private:
 	cubeFactory		_cubeFactory;
-	chunkFactory	*_chunkFactory;
+	chunkFactory	_chunkFactory;
 	FontFactory		_fontFactory;
 
 	Light					_sun;
@@ -24,9 +24,9 @@ private:
 
 public:
 	World();
-	World(const int winx, const int winy);
 	~World();
 
+	void	setWin(glm::vec2& win);
 	void	update(float elapsed, Camera& camera, const int fps, const bool debug);
 
 	Light	&getSun(void);

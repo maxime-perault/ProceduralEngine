@@ -33,9 +33,9 @@ public:
 		WATER,
 	};
 	chunkFactory();
-	chunkFactory(cubeFactory& cubeFactory);
 	~chunkFactory();
 
+	void		setCubeFactory(cubeFactory& cubeFactory);
 	s_chunk		getChunk(glm::vec3 pos);
 };
 
