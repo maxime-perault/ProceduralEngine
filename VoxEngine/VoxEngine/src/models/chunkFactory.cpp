@@ -68,9 +68,12 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 		for (float y = 0; y < CHUNK_Y; y++)
 			for (float z = 0; z < CHUNK_Z; z++)
 			{
-				if (_perlin.noise(x / CHUNK_X * 2, y / CHUNK_Y * 2, z / CHUNK_Z * 2) < 0)
+				if (_perlin.noise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
+									(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
+									(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2) < 0)
 				{
-					cube = _cubeFactory.getCube(cubeFactory::GRASS, glm::vec3(x, y, z));
+					cube = _cubeFactory.getCube(cubeFactory::GRASS,
+						glm::vec3(x + (pos.x * CHUNK_X), y + (pos.y * CHUNK_Y), z + (pos.z * CHUNK_Z)));
 					cube->_draw = true;
 					res.chunkInfos[(int)x][(int)y][(int)z] = GRASS;
 
@@ -82,7 +85,8 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 				}
 				else
 				{
-					cube = _cubeFactory.getCube(cubeFactory::VOID, glm::vec3(x, y, z));
+					cube = _cubeFactory.getCube(cubeFactory::VOID,
+						glm::vec3(x + (pos.x * CHUNK_X), y + (pos.y * CHUNK_Y), z + (pos.z * CHUNK_Z)));
 					cube->_draw = false;
 					res.chunkInfos[(int)x][(int)y][(int)z] = VOID;
 

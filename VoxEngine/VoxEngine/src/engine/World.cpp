@@ -4,7 +4,11 @@
 World::World(const int winx, const int winy)
 {
 	_chunkFactory = new chunkFactory(_cubeFactory);
-	_chunks.push_back(_chunkFactory->getChunk(glm::vec3(0, 0, 0)));
+	for (std::size_t x(0); x < 4; ++x)
+		for (std::size_t z(0); z < 4; ++z)
+		{
+			_chunks.push_back(_chunkFactory->getChunk(glm::vec3(x, 0, z)));
+		}
 
 	_sun = new Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(20, 20, 20)), glm::vec3(1, 1, 1), 50, 0.5);
 	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5));
