@@ -93,6 +93,9 @@
     <ClCompile Include="src\shaders\fontShader.cpp">
       <Filter>Fichiers sources\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\models\chunkFactory.cpp">
+      <Filter>Fichiers sources\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Game.h">
@@ -151,6 +154,12 @@
     </ClInclude>
     <ClInclude Include="inc\shaders\fontShader.h">
       <Filter>Fichiers d%27en-tête\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\models\chunkFactory.h">
+      <Filter>Fichiers d%27en-tête\models</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\engine\perlin.h">
+      <Filter>Fichiers d%27en-tête\engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,6 +27,8 @@ public:
 
 	glm::vec3		_colour;
 
+	bool			_draw;
+
 	glm::mat4		getModelMatrix(void);
 };
 

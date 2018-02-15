@@ -24,6 +24,7 @@ public:
 	{
 		GRASS = 0,
 		DIRT,
+		VOID,
 		WATER,
 		SUN,
 		PLAYER,

@@ -71,6 +71,8 @@ void	renderEngine::createViewMatrix(Camera *cam, staticShader *shader)
 
 void	renderEngine::renderVAO_oneTime(Entity* entity)
 {
+	if (entity->_draw == false)
+		return;
 	this->createModelMatrix(entity, _staticShader);
 
 	glBindVertexArray(entity->_model->_rawModel->_vao_id);
@@ -101,8 +103,11 @@ void	renderEngine::renderVAO_multipleTime(std::vector<Entity*> entities)
 
 	for (std::size_t i(0); i < entities.size(); ++i)
 	{
-		this->createModelMatrix(entities[i], _staticShader);
-		glDrawElements(GL_TRIANGLES, entities[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+		if (entities[i]->_draw == true)
+		{
+			this->createModelMatrix(entities[i], _staticShader);
+			glDrawElements(GL_TRIANGLES, entities[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+		}
 	}
 }
 
@@ -163,19 +168,30 @@ void	renderEngine::stop(void)
 
 void	renderEngine::renderWorld(Camera *cam, World *world, const bool debug)
 {
-	std::vector<Entity*>	chunks = world->getChunks();
+	std::vector<s_chunk>	chunks = world->getChunks();
 	Light*					sun = world->getSun();
 	Entity*					player = world->getPlayer();
 
 	this->start();
 
 	this->createViewMatrix(cam, _staticShader);
+	//render sun
 	_staticShader->loadLight(sun->_entity->_pos, sun->_colour, sun->_damper, sun->_ambientLevel);
-
 	this->renderVAO_oneTime(sun->_entity);
-	this->renderVAO_oneTime(player);
-	this->renderVAO_multipleTime(chunks);
 
+	//render player
+	this->renderVAO_oneTime(player);
+
+	//render chunk
+	std::vector<std::vector<Entity*>>::iterator chunkVAO_it;
+
+	for (std::size_t i(0); i < chunks.size(); ++i)
+	{
+		for (chunkVAO_it = chunks[i].VAOChunk.begin(); chunkVAO_it < chunks[i].VAOChunk.end(); ++chunkVAO_it)
+		this->renderVAO_multipleTime(*chunkVAO_it);
+	}
+
+	//render infos with tab
 	if (debug == true)
 		this->renderAxis(world->getAxis());
 	this->stop();

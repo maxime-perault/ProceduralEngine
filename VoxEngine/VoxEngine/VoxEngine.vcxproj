@@ -138,6 +138,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\models\chunkFactory.cpp" />
     <ClCompile Include="src\models\cubeFactory.cpp" />
     <ClCompile Include="src\models\Entity.cpp" />
     <ClCompile Include="src\models\Light.cpp" />
@@ -153,11 +154,13 @@
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Display.h" />
     <ClInclude Include="inc\engine\FntParser.h" />
+    <ClInclude Include="inc\engine\perlin.h" />
     <ClInclude Include="inc\engine\renderEngine.h" />
     <ClInclude Include="inc\engine\Timer.h" />
     <ClInclude Include="inc\engine\VAOLoader.h" />
     <ClInclude Include="inc\engine\World.h" />
     <ClInclude Include="inc\Game.h" />
+    <ClInclude Include="inc\models\chunkFactory.h" />
     <ClInclude Include="inc\models\cubeFactory.h" />
     <ClInclude Include="inc\models\Entity.h" />
     <ClInclude Include="inc\models\FontFactory.h" />

@@ -221,6 +221,8 @@ void	cubeFactory::setupModels(void)
 	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_lime.png", false);
 	//DIRT
 	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_brown.png", false);
+	//VOID
+	this->initCube("assets/minecraft/textures/blocks/stone_diorite_smooth.png", false);
 	//WATER
 	this->initCube("assets/minecraft/textures/blocks/wool_colored_cyan.png", false);
 	//SUN
