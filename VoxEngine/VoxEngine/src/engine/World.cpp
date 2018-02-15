@@ -5,10 +5,11 @@ World::World()
 {
 	_chunkFactory.setCubeFactory(_cubeFactory);
 	for (std::size_t x(0); x < 4; ++x)
-		for (std::size_t z(0); z < 4; ++z)
-			_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, 0, z)));
+			for (std::size_t z(0); z < 4; ++z)
+				_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, 0, z)));
 
 	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(20, 20, 20)), glm::vec3(1, 1, 1), 50, 0.5);
+	_sun._entity.setModelMatrix();
 	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5));
 
 	_axis.push_back(_cubeFactory.getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2)));

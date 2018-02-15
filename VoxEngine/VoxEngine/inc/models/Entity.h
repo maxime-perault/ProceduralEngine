@@ -30,6 +30,7 @@ public:
 
 	bool			_draw;
 
+	void			setModelMatrix(void);
 	glm::mat4		getModelMatrix(void);
 
 	glm::vec3&		getPos(void);

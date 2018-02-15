@@ -94,6 +94,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 						isVAO[1] = true;
 					}
 				}
+				cube.setModelMatrix();
 				cubes.push_back(cube);
 			}
 	this->disableHiddenCubes(cubes, res.chunkInfos);

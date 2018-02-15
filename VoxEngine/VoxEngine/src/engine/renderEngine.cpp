@@ -166,6 +166,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	_staticShader.start();
 
 	this->createViewMatrix(cam, _staticShader);
+
 	//render sun
 	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
 	this->renderVAO_oneTime(sun._entity);
@@ -194,6 +195,7 @@ void	renderEngine::fontRender(World *world, const bool debug)
 
 
 	_fontShader.start();
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, text[0]._model._texture._id);
 

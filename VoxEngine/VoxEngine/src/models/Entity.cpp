@@ -39,7 +39,7 @@ glm::vec3&		Entity::getPos(void)
 	return _pos;
 }
 
-glm::mat4	Entity::getModelMatrix(void)
+void	Entity::setModelMatrix(void)
 {
 	_modelMatrix = glm::mat4(1.0);
 
@@ -48,6 +48,9 @@ glm::mat4	Entity::getModelMatrix(void)
 	this->rotate(glm::vec3(0, 1, 0), _rot.y);
 	this->rotate(glm::vec3(0, 0, 1), _rot.z);
 	this->scale(_scale);
+}
 
+glm::mat4	Entity::getModelMatrix(void)
+{
 	return(_modelMatrix);
 }

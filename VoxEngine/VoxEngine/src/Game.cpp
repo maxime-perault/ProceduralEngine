@@ -27,6 +27,7 @@ void	Game::movePlayer(const glm::vec3 delta)
 {
 	_camera.move(delta);
 	_world->getPlayer()._pos += delta;
+	_world->getPlayer().setModelMatrix();
 }
 
 void	Game::moveKeyboardCamera(float elapsed)
