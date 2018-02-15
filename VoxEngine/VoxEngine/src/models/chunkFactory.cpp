@@ -50,6 +50,29 @@ void	chunkFactory::disableHiddenCubes(std::vector<Entity>& cubes, int chunk[CHUN
 			}
 }
 
+int	chunkFactory::setPile(std::vector<Entity>& cubes, int (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z])
+{
+	static glm::vec3 pos;
+	int res = -1;
+
+	for (int x = 0; x < CHUNK_X; x++)
+		for (int y = 0; y < CHUNK_Y; y++)
+			for (int z = 0; z < CHUNK_Z; z++)
+			{
+				if ((y < (CHUNK_Y - 1) && chunk[x][y][z] == DIRT && chunk[x][y + 1][z] == VOID)
+					|| (y == (CHUNK_Y - 1) && chunk[x][y][z] == DIRT))
+				{
+					chunk[x][y][z] = GRASS;
+					pos = cubes[z + y * CHUNK_Y + x * CHUNK_Y * CHUNK_X]._pos;
+					cubes[z + y * CHUNK_Y + x * CHUNK_Y * CHUNK_X] = _cubeFactory.getCube(cubeFactory::GRASS, pos);
+					cubes[z + y * CHUNK_Y + x * CHUNK_Y * CHUNK_X].setModelMatrix();
+					if (res == -1)
+						res = cubes[z + y * CHUNK_Y + x * CHUNK_Y * CHUNK_X]._model._rawModel._vao_id;
+				}
+			}
+	return res;
+}
+
 
 s_chunk chunkFactory::getChunk(glm::vec3 pos)
 {
@@ -57,7 +80,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 	std::vector<Entity>		cubes;
 	std::vector<GLuint>		vaos;
 
-	bool	isVAO[4] = { false };
+	int	VAO[4] = { -1, -1, -1, -1 };
 	
 	Entity	cube;
 
@@ -70,15 +93,15 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 									(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
 									(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2) < 0)
 				{
-					cube = _cubeFactory.getCube(cubeFactory::GRASS,
+					cube = _cubeFactory.getCube(cubeFactory::DIRT,
 						glm::vec3(x + (pos.x * CHUNK_X), y + (pos.y * CHUNK_Y), z + (pos.z * CHUNK_Z)));
 					cube._draw = true;
-					res.chunkInfos[(int)x][(int)y][(int)z] = GRASS;
+					res.chunkInfos[(int)x][(int)y][(int)z] = DIRT;
 
-					if (isVAO[0] == false)
+					if (VAO[DIRT] == -1)
 					{
 						vaos.push_back(cube._model._rawModel._vao_id);
-						isVAO[0] = true;
+						VAO[DIRT] = cube._model._rawModel._vao_id;
 					}
 				}
 				else
@@ -88,16 +111,24 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 					cube._draw = false;
 					res.chunkInfos[(int)x][(int)y][(int)z] = VOID;
 
-					if (isVAO[1] == false)
+					if (VAO[VOID] == -1)
 					{
 						vaos.push_back(cube._model._rawModel._vao_id);
-						isVAO[1] = true;
+						VAO[VOID] = cube._model._rawModel._vao_id;
 					}
 				}
 				cube.setModelMatrix();
 				cubes.push_back(cube);
 			}
+	
 	this->disableHiddenCubes(cubes, res.chunkInfos);
+
+	int grass_vao;
+	if ((grass_vao = this->setPile(cubes, res.chunkInfos)) != -1)
+	{
+		vaos.push_back(grass_vao);
+		VAO[GRASS] = grass_vao;
+	}
 
 	// DIVIDE CHUNK BY VAO
 	std::vector<Entity> ChunkVAO;
@@ -112,5 +143,6 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 				ChunkVAO.push_back(cubes[cube_it]);
 		res.VAOChunk.push_back(ChunkVAO);
 	}
+
 	return res;
 }

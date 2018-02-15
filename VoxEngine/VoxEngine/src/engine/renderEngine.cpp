@@ -90,7 +90,7 @@ void	renderEngine::renderVAO_oneTime(Entity& entity)
 
 void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 {
-	if (entities.size() == 0)
+	if (entities.size() == 0 || entities[0]._draw == false)
 		return;
 
 	glBindVertexArray(entities[0]._model._rawModel._vao_id);

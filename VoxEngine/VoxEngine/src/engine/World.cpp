@@ -17,8 +17,11 @@ World::World()
 	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0)));
 
 	_axis[0]._scale = glm::vec3(0.05, 0.05, 0.05);
+	_axis[0].setModelMatrix();
 	_axis[1]._scale = glm::vec3(0.05, 0.05, 0.05);
+	_axis[1].setModelMatrix();
 	_axis[2]._scale = glm::vec3(0.05, 0.05, 0.05);
+	_axis[2].setModelMatrix();
 
 	_win.x = 1280; _win.y = 720;
 
@@ -90,8 +93,11 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 			_text[FontFactory::FPS]._colour = glm::vec3(1, 0, 0);
 
 		_axis[0]._pos = cam._pos + cam._dir;
+		_axis[0].setModelMatrix();
 		_axis[1]._pos = cam._pos + cam._dir;
+		_axis[1].setModelMatrix();
 		_axis[2]._pos = cam._pos + cam._dir;
+		_axis[2].setModelMatrix();
 	}
 	return;
 }

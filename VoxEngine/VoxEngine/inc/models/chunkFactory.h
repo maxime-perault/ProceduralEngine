@@ -23,6 +23,7 @@ private:
 
 	bool	test_hidden(glm::vec3 pos, int info[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 	void	disableHiddenCubes(std::vector<Entity>& cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z]);
+	int		setPile(std::vector<Entity>& cubes, int (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 
 public:
 	enum e_id
