@@ -27,16 +27,16 @@ public:
 	VAOLoader();
 	~VAOLoader();
 
-	rawModel	*loadtoVAO(const std::vector<float> &pos,
+	rawModel	loadtoVAO(const std::vector<float> &pos,
 		const std::vector<float> &normals,
 		const std::vector<float> &texture_coord,
 		const std::vector<int> &indices);
 
-	rawModel	*loadtoVAO(const std::vector<float> &pos,
+	rawModel	loadtoVAO(const std::vector<float> &pos,
 				const std::vector<float> &texture_coord,
 				const std::vector<int> &indices);
 
-	rawModel	*loadtoVAO(const std::vector<float> &pos,
+	rawModel	loadtoVAO(const std::vector<float> &pos,
 		const std::vector<int> &indices);
 
 	int	loadTexture(const std::string &file);

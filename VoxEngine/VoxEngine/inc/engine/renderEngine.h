@@ -16,23 +16,27 @@
 class	renderEngine
 {
 public:
+	renderEngine();
 	renderEngine(std::size_t win_x, std::size_t win_y);
 	~renderEngine();
 
-	void	createProjectionMatrix(staticShader *shader);
-	void	createModelMatrix(Entity *entity, staticShader *shader);
-	void	createViewMatrix(Camera *cam, staticShader *shader);
+	void	createProjectionMatrix(staticShader& shader);
+	void	createModelMatrix(Entity entity, staticShader& shader);
+	void	createViewMatrix(Camera& cam, staticShader& shader);
 
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
-	void	renderVAO_oneTime(Entity* entity);
-	void	renderVAO_multipleTime(std::vector<Entity*> entity);
-	void	renderWorld(Camera *_cam, World *_world, const bool debug);
+	void	renderVAO_oneTime(Entity& entity);
+	void	renderVAO_multipleTime(std::vector<Entity>& entity);
 
-	void	renderAxis(std::vector<Entity*> axis);
-	void	renderText(const std::vector<Entity*> text);
+	void	renderAxis(std::vector<Entity> axis);
+	void	renderText(std::vector<Entity> text);
 
-	void	start(void);
+	void	staticRender(Camera& cam, World *world, const bool debug);
+	void	fontRender(World *world, const bool debug);
+
+	void	renderWorld(Camera& cam, World *world, const bool debug);
+
 	void	stop(void);
 
 	glm::mat4	_projMat;
@@ -44,8 +48,8 @@ public:
 	float		_near;
 	float		_far;
 
-	staticShader	*_staticShader;
-	fontShader		*_fontShader;
+	staticShader	_staticShader;
+	fontShader		_fontShader;
 };
 
 #endif //!RENDERENGINE_HH_

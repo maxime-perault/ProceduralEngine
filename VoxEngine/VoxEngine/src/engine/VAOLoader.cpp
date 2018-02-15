@@ -6,7 +6,7 @@ VAOLoader::VAOLoader() {}
 
 VAOLoader::~VAOLoader() {}
 
-rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
+rawModel	VAOLoader::loadtoVAO(const std::vector<float> &pos,
 	const std::vector<float> &normals,
 	const std::vector<float> &texture_coord,
 	const std::vector<int> &indices)
@@ -23,10 +23,10 @@ rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
 
 	this->unbindVAO();
 
-	return (new rawModel(vaoID, indices.size()));
+	return (rawModel(vaoID, indices.size()));
 }
 
-rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos, const std::vector<float> &texture_coord, const std::vector<int> &indices)
+rawModel	VAOLoader::loadtoVAO(const std::vector<float> &pos, const std::vector<float> &texture_coord, const std::vector<int> &indices)
 {
 	std::vector<GLuint> vbos;
 	int vaoID = this->createVAO();
@@ -39,10 +39,10 @@ rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos, const std::vector<
 
 	this->unbindVAO();
 
-	return (new rawModel(vaoID, pos.size()));
+	return (rawModel(vaoID, pos.size()));
 }
 
-rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
+rawModel	VAOLoader::loadtoVAO(const std::vector<float> &pos,
 	const std::vector<int> &indices)
 {
 	std::vector<GLuint> vbos;
@@ -55,7 +55,7 @@ rawModel	*VAOLoader::loadtoVAO(const std::vector<float> &pos,
 
 	this->unbindVAO();
 
-	return (new rawModel(vaoID, indices.size()));
+	return (rawModel(vaoID, indices.size()));
 }
 
 int    	VAOLoader::createVAO(void)

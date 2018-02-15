@@ -17,10 +17,11 @@ private:
 	void	rotate(glm::vec3 axe, float euler);
 	void	scale(glm::vec3 scal);
 public:
-	Entity(texturedModel *model);
+	Entity(texturedModel& model);
+	Entity();
 	~Entity();
 
-	texturedModel	*_model;
+	texturedModel	_model;
 	glm::vec3		_pos;
 	glm::vec3		_rot;
 	glm::vec3		_scale;
@@ -30,6 +31,8 @@ public:
 	bool			_draw;
 
 	glm::mat4		getModelMatrix(void);
+
+	glm::vec3&		getPos(void);
 };
 
 #endif //!ENTITY_HH_

@@ -2,7 +2,7 @@
 #include <iostream>
 
 fontShader::fontShader()
-	: AShader(VERTEX_FILE, FRAGMENT_FILE)
+	: AShader("shaders/fontVertex.txt", "shaders/fontFragment.txt")
 {
 	if ((_program_id = glCreateProgram()) == 0)
 		std::cout << "could not create the shader program" << std::endl;

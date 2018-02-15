@@ -16,9 +16,9 @@ public:
 
 	Display			*_display;
 	renderEngine	*_renderEngine;
-	InputManager	*_inputManager;
-	Camera			*_camera;
-	Timer			*_timer;
+	InputManager	_inputManager;
+	Camera			_camera;
+	Timer			_timer;
 	World			*_world;
 
 	int		_win_x;

@@ -5,6 +5,7 @@
 class	Texture
 {
 public:
+	Texture();
 	Texture(const int &id);
 	~Texture();
 

@@ -1,7 +1,9 @@
 
 #include "texturedModel.h"
 
-texturedModel::texturedModel(rawModel *rawModel, Texture *texture)
+texturedModel::texturedModel() {}
+
+texturedModel::texturedModel(rawModel& rawModel, Texture& texture)
 {
 
 	_rawModel = rawModel;

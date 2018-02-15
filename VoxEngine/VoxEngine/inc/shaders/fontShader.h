@@ -3,9 +3,6 @@
 
 #include "AShader.h"
 
-# define VERTEX_FILE "shaders/fontVertex.txt"
-# define FRAGMENT_FILE "shaders/fontFragment.txt"
-
 class	AShader;
 
 class	fontShader : public AShader

@@ -10,9 +10,9 @@ class	cubeFactory
 private:
 	VAOLoader		_loader;
 	
-	std::vector<rawModel*>		_models;
-	std::vector<Texture*>		_textures;
-	std::vector<texturedModel*>	_tex_models;
+	std::vector<rawModel>		_models;
+	std::vector<Texture>		_textures;
+	std::vector<texturedModel>	_tex_models;
 	
 
 	void	initLine(void);
@@ -34,8 +34,8 @@ public:
 	cubeFactory();
 	~cubeFactory();
 
-	Entity	*getCube(const e_Type type, glm::vec3 pos);
-	Entity	*getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot);
+	Entity	getCube(const e_Type type, glm::vec3 pos);
+	Entity	getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot);
 };
 
 #endif //!CUBEFACTORY_HH_

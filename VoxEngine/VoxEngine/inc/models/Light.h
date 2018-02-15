@@ -8,10 +8,11 @@
 class	Light
 {
 public:
-	Light(Entity *entity, glm::vec3 colour, float damper, float ambientLevel);
+	Light();
+	Light(Entity &entity, glm::vec3 colour, float damper, float ambientLevel);
 	~Light();
 
-	Entity		*_entity;
+	Entity		_entity;
 	glm::vec3	_colour;
 	float		_damper;
 	float		_ambientLevel;

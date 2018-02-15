@@ -5,7 +5,7 @@ FontFactory::FontFactory()
 {
 	_loader = VAOLoader();
 	_fnt = new FntParser("assets/Fonts/roboto_light.fnt");
-	_texture = new Texture(_loader.loadTexture("assets/Fonts/roboto_light.png"));
+	_texture = Texture(_loader.loadTexture("assets/Fonts/roboto_light.png"));
 
 	this->initText("FPS: Loading", true, FPS);
 	this->initText("XYZ: Loading", true, XYZ);
@@ -74,41 +74,36 @@ void	FontFactory::initText(const std::string txt, bool create, const e_texts typ
 
 	if (create == false)
 	{
-		delete(_models[type]);
 		_models[type] = _loader.loadtoVAO(text_vtx, text_uv, text_ind);
-
-		delete(_tex_models[type]);
-		_tex_models[type] = new texturedModel(_models[type], _texture);
-
-		delete(_entities[type]);
-		_entities[type] = new Entity(_tex_models[type]);
+		_tex_models[type] = texturedModel(_models[type], _texture);
+		_entities[type] = Entity(_tex_models[type]);
 	}
 	else
 	{
 		_models.push_back(_loader.loadtoVAO(text_vtx, text_uv, text_ind));
-		_tex_models.push_back(new texturedModel(_models[type], _texture));
-		_entities.push_back(new Entity(_tex_models[type]));
+		_tex_models.push_back(texturedModel(_models[type], _texture));
+		_entities.push_back(Entity(_tex_models[type]));
 	}
 }
 
-Entity	*FontFactory::getText(const std::string text, const glm::vec3 pos, const e_texts type)
+Entity	FontFactory::getText(std::string text, glm::vec3 pos, const e_texts type)
 {
 	static std::string s_text[2] = { "" };
-	Entity *res;
+	Entity	res;
 
 	if (s_text[type] == text)
 	{
 		res = _entities[type];
-		res->_pos = pos;
-		return _entities[type];
+		res._pos = pos;
+		return res;
 	}
 
-	_loader.deleteVAO(_models[type]->_vao_id);
+	_loader.deleteVAO(_models[type]._vao_id);
 	
 	this->initText(text, false, type);
 	
 	res = _entities[type];
-	res->_pos = pos;
+	res._pos = pos;
 
 	s_text[type] = text;
 	return (res);

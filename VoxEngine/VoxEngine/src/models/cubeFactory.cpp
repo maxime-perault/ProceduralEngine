@@ -181,8 +181,8 @@ void	cubeFactory::initCube(std::string texturePath, const bool light)
 	/*
 	** TEXTURE + TEXTURED MODEL
 	*/
-	_textures.push_back(new Texture(_loader.loadTexture(texturePath)));
-	_tex_models.push_back(new texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
+	_textures.push_back(Texture(_loader.loadTexture(texturePath)));
+	_tex_models.push_back(texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
 }
 
 void	cubeFactory::initLine(void)
@@ -211,8 +211,8 @@ void	cubeFactory::initLine(void)
 	/*
 	** TEXTURE + TEXTURED MODEL
 	*/
-	_textures.push_back(new Texture(-1));
-	_tex_models.push_back(new texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
+	_textures.push_back(Texture(-1));
+	_tex_models.push_back(texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
 }
 
 void	cubeFactory::setupModels(void)
@@ -233,22 +233,22 @@ void	cubeFactory::setupModels(void)
 	this->initLine();
 }
 
-Entity	*cubeFactory::getCube(const e_Type type, glm::vec3 pos)
+Entity	cubeFactory::getCube(const e_Type type, glm::vec3 pos)
 {
-	Entity *res = new Entity(_tex_models[type]);
+	Entity res = Entity(_tex_models[type]);
 	
-	res->_pos = pos;
+	res._pos = pos;
 	
 	return (res);
 }
 
-Entity	*cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot)
+Entity	cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot)
 {
-	Entity *res = new Entity(_tex_models[LINE]);
+	Entity res = Entity(_tex_models[LINE]);
 
-	res->_colour = colour;
-	res->_pos = pos;
-	res->_rot = rot;
+	res._colour = colour;
+	res._pos = pos;
+	res._rot = rot;
 
 	return (res);
 }

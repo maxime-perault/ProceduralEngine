@@ -7,6 +7,7 @@
 class	rawModel
 {
 public:
+	rawModel();
 	rawModel(const std::size_t vao_id, const std::size_t vertex_count);
 	~rawModel();
 

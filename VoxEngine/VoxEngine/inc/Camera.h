@@ -9,6 +9,7 @@
 class	Camera
 {
 public:
+	Camera();
 	Camera(const glm::vec3 pos);
 	~Camera();
 

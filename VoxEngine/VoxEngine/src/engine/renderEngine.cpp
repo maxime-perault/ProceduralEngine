@@ -4,6 +4,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
+renderEngine::renderEngine()
+{
+
+}
+
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
 	glEnable(GL_BLEND);
@@ -11,9 +16,6 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	glCullFace(GL_BACK);
 
 	_projMat = glm::mat4(1.0);
-
-	_staticShader = new staticShader();
-	_fontShader = new fontShader();
 
 	_fov = 70;
 	_near = (float)0.1;
@@ -26,8 +28,8 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 
 renderEngine::~renderEngine()
 {
-	_staticShader->cleanUp();
-	_fontShader->cleanUp();
+	_staticShader.cleanUp();
+	_fontShader.cleanUp();
 }
 
 void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
@@ -37,7 +39,7 @@ void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
 	this->createProjectionMatrix(_staticShader);
 }
 
-void	renderEngine::createProjectionMatrix(staticShader *shader)
+void	renderEngine::createProjectionMatrix(staticShader& shader)
 {
 	float	n(_near);
 	float	f(_far);
@@ -54,107 +56,96 @@ void	renderEngine::createProjectionMatrix(staticShader *shader)
 	_projMat[3][2] = (-2 * f * n) / (f - n);
 	_projMat[3][3] = 0;
 
-	shader->start();
-	shader->loadProjectionMatrix(_projMat);
-	shader->stop();
+	shader.start();
+	shader.loadProjectionMatrix(_projMat);
+	shader.stop();
 }
 
-void	renderEngine::createModelMatrix(Entity *entity, staticShader *shader)
+void	renderEngine::createModelMatrix(Entity entity, staticShader& shader)
 {
-	shader->loadTransformationMatrix(entity->getModelMatrix());
+	shader.loadTransformationMatrix(entity.getModelMatrix());
 }
 
-void	renderEngine::createViewMatrix(Camera *cam, staticShader *shader)
+void	renderEngine::createViewMatrix(Camera& cam, staticShader& shader)
 {
-	shader->loadViewMatrix(cam->getViewMatrix());
+	shader.loadViewMatrix(cam.getViewMatrix());
 }
 
-void	renderEngine::renderVAO_oneTime(Entity* entity)
+void	renderEngine::renderVAO_oneTime(Entity& entity)
 {
-	if (entity->_draw == false)
+	if (entity._draw == false)
 		return;
 	this->createModelMatrix(entity, _staticShader);
 
-	glBindVertexArray(entity->_model->_rawModel->_vao_id);
+	glBindVertexArray(entity._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, entity->_model->_texture->_id);
+	glBindTexture(GL_TEXTURE_2D, entity._model._texture._id);
 
-	glDrawElements(GL_TRIANGLES, entity->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, entity._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 }
 
-void	renderEngine::renderVAO_multipleTime(std::vector<Entity*> entities)
+void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 {
 	if (entities.size() == 0)
 		return;
 
-	glBindVertexArray(entities[0]->_model->_rawModel->_vao_id);
+	glBindVertexArray(entities[0]._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, entities[0]->_model->_texture->_id);
+	glBindTexture(GL_TEXTURE_2D, entities[0]._model._texture._id);
 
 	for (std::size_t i(0); i < entities.size(); ++i)
 	{
-		if (entities[i]->_draw == true)
+		if (entities[i]._draw == true)
 		{
 			this->createModelMatrix(entities[i], _staticShader);
-			glDrawElements(GL_TRIANGLES, entities[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, entities[i]._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 		}
 	}
 }
 
-void	renderEngine::renderAxis(std::vector<Entity*> axis)
+void	renderEngine::renderAxis(std::vector<Entity> axis)
 {
 	if (axis.size() == 0)
 		return;
 
-	glBindVertexArray(axis[0]->_model->_rawModel->_vao_id);
+	glBindVertexArray(axis[0]._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 
 	for (std::size_t i(0); i < axis.size(); ++i)
 	{
 		this->createModelMatrix(axis[i], _staticShader);
-		_staticShader->loadRawColour(axis[i]->_colour);
-		glDrawElements(GL_LINES, axis[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+		_staticShader.loadRawColour(axis[i]._colour);
+		glDrawElements(GL_LINES, axis[i]._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 	}
-	_staticShader->unloadRawColour();
+	_staticShader.unloadRawColour();
 }
 
-void	renderEngine::renderText(const std::vector<Entity*> text)
+void	renderEngine::renderText(std::vector<Entity> text)
 {
-	_fontShader->start();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, text[0]->_model->_texture->_id);
-
+	
 	for (std::size_t i(0); i < text.size(); ++i)
 	{
-		_fontShader->loadColour(text[i]->_colour);
-		_fontShader->loadPos(glm::vec2(text[i]->_pos.x, text[i]->_pos.y));
+		_fontShader.loadColour(text[i]._colour);
+		_fontShader.loadPos(glm::vec2(text[i]._pos.x, text[i]._pos.y));
 
-		glBindVertexArray(text[i]->_model->_rawModel->_vao_id);
+		glBindVertexArray(text[i]._model._rawModel._vao_id);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
-		glDrawElements(GL_TRIANGLES, text[i]->_model->_rawModel->_vertex_count, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, text[i]._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 	}
-
-	_fontShader->stop();
-}
-
-void	renderEngine::start(void)
-{
-	_staticShader->start();
 }
 
 void	renderEngine::stop(void)
@@ -163,21 +154,22 @@ void	renderEngine::stop(void)
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
-	_staticShader->stop();
 }
 
-void	renderEngine::renderWorld(Camera *cam, World *world, const bool debug)
+void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 {
-	std::vector<s_chunk>	chunks = world->getChunks();
-	Light*					sun = world->getSun();
-	Entity*					player = world->getPlayer();
+	std::vector<s_chunk>&	chunks = world->getChunks();
+	Light&					sun = world->getSun();
+	Entity&					player = world->getPlayer();
+	std::vector<Entity>&	axis = world->getAxis();
+	std::vector<Entity>&	text = world->getText();
 
-	this->start();
+	_staticShader.start();
 
 	this->createViewMatrix(cam, _staticShader);
 	//render sun
-	_staticShader->loadLight(sun->_entity->_pos, sun->_colour, sun->_damper, sun->_ambientLevel);
-	this->renderVAO_oneTime(sun->_entity);
+	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
+	this->renderVAO_oneTime(sun._entity);
 
 	//render player
 	this->renderVAO_oneTime(player);
@@ -187,15 +179,38 @@ void	renderEngine::renderWorld(Camera *cam, World *world, const bool debug)
 
 	for (std::size_t i(0); i < chunks.size(); ++i)
 	{
-		for (chunkVAO_it = chunks[i].VAOChunk.begin(); chunkVAO_it < chunks[i].VAOChunk.end(); ++chunkVAO_it)
-		this->renderVAO_multipleTime(*chunkVAO_it);
+		for (std::size_t VAO_id = 0; VAO_id < chunks[i].VAOChunk.size(); ++VAO_id)
+			this->renderVAO_multipleTime(chunks[i].VAOChunk[VAO_id]);
 	}
-
-	//render infos with tab
+	//render Axis
 	if (debug == true)
-		this->renderAxis(world->getAxis());
+		this->renderAxis(axis);
+
+	_staticShader.stop();
+}
+
+void	renderEngine::fontRender(World *world, const bool debug)
+{
+	std::vector<Entity>&	text = world->getText();
+
+
+	_fontShader.start();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, text[0]._model._texture._id);
+
+	this->renderText(text);
+
+	_fontShader.stop();
+}
+
+void	renderEngine::renderWorld(Camera& cam, World *world, const bool debug)
+{
+
+	this->staticRender(cam, world, debug);
+
+	if (debug == true)
+		this->fontRender(world, debug);
+
 	this->stop();
-
-	if (debug == true)
-		this->renderText(world->getText());
 }

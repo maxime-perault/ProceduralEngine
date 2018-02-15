@@ -11,7 +11,7 @@
 
 struct	s_chunk
 {
-	std::vector<std::vector<Entity*>> VAOChunk;
+	std::vector<std::vector<Entity>> VAOChunk;
 	int chunkInfos[CHUNK_X][CHUNK_Y][CHUNK_Z];
 };
 
@@ -21,8 +21,8 @@ private:
 	cubeFactory	_cubeFactory;
 	PerlinNoise _perlin;
 
-	bool					test_hidden(glm::vec3 pos, int info[CHUNK_X][CHUNK_Y][CHUNK_Z]);
-	std::vector<Entity*>	disableHiddenCubes(std::vector<Entity*> cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z]);
+	bool	test_hidden(glm::vec3 pos, int info[CHUNK_X][CHUNK_Y][CHUNK_Z]);
+	void	disableHiddenCubes(std::vector<Entity>& cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 
 public:
 	enum e_id
@@ -32,10 +32,11 @@ public:
 		DIRT,
 		WATER,
 	};
+	chunkFactory();
 	chunkFactory(cubeFactory& cubeFactory);
 	~chunkFactory();
 
-	s_chunk	getChunk(glm::vec3 pos);
+	s_chunk		getChunk(glm::vec3 pos);
 };
 
 #endif //!CHUNKFACTORY_HH_

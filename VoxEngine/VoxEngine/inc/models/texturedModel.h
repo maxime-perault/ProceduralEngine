@@ -8,11 +8,12 @@
 class	texturedModel
 {
 public:
-	texturedModel(rawModel *rawModel, Texture *texture);
+	texturedModel();
+	texturedModel(rawModel& rawModel, Texture& texture);
 	~texturedModel();
 
-	rawModel	*_rawModel;
-	Texture		*_texture;
+	rawModel	_rawModel;
+	Texture		_texture;
 };
 
 #endif //!TEXTUREDMODEL_HH_

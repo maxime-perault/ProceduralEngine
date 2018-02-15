@@ -5,6 +5,8 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <SDL2/SDL.h>
 
+Camera::Camera() {}
+
 Camera::Camera(const glm::vec3 pos)
 {
 	_viewMatrix = glm::mat4(1.0);

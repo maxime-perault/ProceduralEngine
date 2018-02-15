@@ -9,49 +9,48 @@ Game::Game()
 	_win_x = 1280; _win_y = 720;
 	_display = new Display(_win_x, _win_y);
 	_renderEngine = new renderEngine(_win_x, _win_y);
-	_inputManager = new InputManager();
 	_world = new World(_win_x, _win_y);
-	_camera = new Camera(_world->getPlayer()->_pos);
-	_timer = new Timer();
+	_camera = Camera(_world->getPlayer()._pos);
 
 	_debug = true;
 }
 
 Game::~Game()
 {
-	//DELETEs
+	delete(_world);
+	delete(_renderEngine);
+	delete(_display);
 }
 
 void	Game::movePlayer(const glm::vec3 delta)
 {
-	_camera->move(delta);
-	_world->getPlayer()->_pos += delta;
-	
+	_camera.move(delta);
+	_world->getPlayer()._pos += delta;
 }
 
 void	Game::moveKeyboardCamera(float elapsed)
 {
 	float	speedMove = elapsed * 20;
 
-	if (_inputManager->getRawKey(InputManager::Q))
-		this->movePlayer(-glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
-	if (_inputManager->getRawKey(InputManager::D))
-		this->movePlayer(glm::vec3(_camera->_rightVec.x, 0, _camera->_rightVec.z) * speedMove);
+	if (_inputManager.getRawKey(InputManager::Q))
+		this->movePlayer(-glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove);
+	if (_inputManager.getRawKey(InputManager::D))
+		this->movePlayer(glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove);
 
-	if (_inputManager->getRawKey(InputManager::Z))
-		this->movePlayer(glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
-	if (_inputManager->getRawKey(InputManager::S))
-		this->movePlayer(-glm::vec3(_camera->_dir.x, 0, _camera->_dir.z) * speedMove);
+	if (_inputManager.getRawKey(InputManager::Z))
+		this->movePlayer(glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove);
+	if (_inputManager.getRawKey(InputManager::S))
+		this->movePlayer(-glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove);
 
-	if (_inputManager->getRawKey(InputManager::SPACE))
+	if (_inputManager.getRawKey(InputManager::SPACE))
 		this->movePlayer(glm::vec3(0, 1, 0) * speedMove);
-	if (_inputManager->getRawKey(InputManager::LCTRL))
+	if (_inputManager.getRawKey(InputManager::LCTRL))
 		this->movePlayer(-glm::vec3(0, 1, 0) * speedMove);
 
-	if (_inputManager->getKeyDown(InputManager::LALT))
-		_camera->changeView(_world->getPlayer()->_pos);
+	if (_inputManager.getKeyDown(InputManager::LALT))
+		_camera.changeView(_world->getPlayer()._pos);
 
-	if (_inputManager->getKeyDown(InputManager::TAB))
+	if (_inputManager.getKeyDown(InputManager::TAB))
 		_debug = !_debug;
 	
 }
@@ -63,15 +62,15 @@ void	Game::moveMouseCamera(float elapsed)
 	static glm::vec2		delta;
 	static const glm::vec2	lastPos(_display->_mode.w / 2, _display->_mode.h / 2);
 
-	pos = _inputManager->getMouseMotion(_display->_win, _win_x, _win_y);
+	pos = _inputManager.getMouseMotion(_display->_win, _win_x, _win_y);
 
 	if (pos.x == -1 && pos.y == -1)
 		return;
 
 	delta = pos - lastPos;
 
-	_camera->rotateIG(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 50.f));
-	_camera->rotateIG(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 50.f));
+	_camera.rotateIG(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 50.f));
+	_camera.rotateIG(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 50.f));
 }
 
 void Game::loop(void)
@@ -82,12 +81,12 @@ void Game::loop(void)
 
 	while (true)
 	{
-		_inputManager->Update();
+		_inputManager.Update();
 
-		if (_inputManager->getEvent(SDL_QUIT) || _inputManager->getKeyDown(InputManager::ESCAPE))
+		if (_inputManager.getEvent(SDL_QUIT) || _inputManager.getKeyDown(InputManager::ESCAPE))
 			return;
 		
-		elapsed = _timer->getElapsedSeconds(true);
+		elapsed = _timer.getElapsedSeconds(true);
 		this->moveMouseCamera(elapsed);
 		this->moveKeyboardCamera(elapsed);
 		

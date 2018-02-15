@@ -15,10 +15,10 @@ public:
 		XYZ
 	};
 
-	Entity	*getText(const std::string text, const glm::vec3 pos, const e_texts type);
+	Entity	getText(std::string text, glm::vec3 pos, const e_texts type);
 	void	initText(const std::string, bool create, const e_texts type);
 
-	std::vector<Entity*>		_entities;
+	std::vector<Entity>		_entities;
 	int		_size;
 
 	FontFactory();
@@ -26,11 +26,11 @@ public:
 private:
 	VAOLoader		_loader;
 
-	Texture		*_texture;
+	Texture		_texture;
 	FntParser	*_fnt;
 
-	std::vector<rawModel*>		_models;
-	std::vector<texturedModel*>	_tex_models;
+	std::vector<rawModel>		_models;
+	std::vector<texturedModel>	_tex_models;
 };
 
 #endif //!FONTFACTORY_HH_
