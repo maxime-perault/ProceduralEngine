@@ -21,8 +21,8 @@ private:
 	cubeFactory	_cubeFactory;
 	PerlinNoise _perlin;
 
-	bool test_hidden(int x, int y, int z);
-	void disableHiddenCubes(std::vector<Entity*> &list);
+	bool					test_hidden(glm::vec3 pos, int info[CHUNK_X][CHUNK_Y][CHUNK_Z]);
+	std::vector<Entity*>	disableHiddenCubes(std::vector<Entity*> cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 
 public:
 	enum e_id

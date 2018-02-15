@@ -10,72 +10,48 @@ chunkFactory::~chunkFactory()
 {
 
 }
-/*
-bool	chunkFactory::test_hidden(int x, int y, int z)
+
+bool	chunkFactory::test_hidden(glm::vec3 pos, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z])
 {
-	NYCube * cubeXPrev = NULL;
-	NYCube * cubeXNext = NULL;
-	NYCube * cubeYPrev = NULL;
-	NYCube * cubeYNext = NULL;
-	NYCube * cubeZPrev = NULL;
-	NYCube * cubeZNext = NULL;
-
-	if (x == 0 && Voisins[0] != NULL)
-		cubeXPrev = &(Voisins[0]->_Cubes[CHUNK_SIZE - 1][y][z]);
-	else if (x > 0)
-		cubeXPrev = &(_Cubes[x - 1][y][z]);
-
-	if (x == CHUNK_SIZE - 1 && Voisins[1] != NULL)
-		cubeXNext = &(Voisins[1]->_Cubes[0][y][z]);
-	else if (x < CHUNK_SIZE - 1)
-		cubeXNext = &(_Cubes[x + 1][y][z]);
-
-	if (y == 0 && Voisins[2] != NULL)
-		cubeYPrev = &(Voisins[2]->_Cubes[x][CHUNK_SIZE - 1][z]);
-	else if (y > 0)
-		cubeYPrev = &(_Cubes[x][y - 1][z]);
-
-	if (y == CHUNK_SIZE - 1 && Voisins[3] != NULL)
-		cubeYNext = &(Voisins[3]->_Cubes[x][0][z]);
-	else if (y < CHUNK_SIZE - 1)
-		cubeYNext = &(_Cubes[x][y + 1][z]);
-
-	if (z == 0 && Voisins[4] != NULL)
-		cubeZPrev = &(Voisins[4]->_Cubes[x][y][CHUNK_SIZE - 1]);
-	else if (z > 0)
-		cubeZPrev = &(_Cubes[x][y][z - 1]);
-
-	if (z == CHUNK_SIZE - 1 && Voisins[5] != NULL)
-		cubeZNext = &(Voisins[5]->_Cubes[x][y][0]);
-	else if (z < CHUNK_SIZE - 1)
-		cubeZNext = &(_Cubes[x][y][z + 1]);
-
-	if (cubeXPrev == NULL || cubeXNext == NULL ||
-		cubeYPrev == NULL || cubeYNext == NULL ||
-		cubeZPrev == NULL || cubeZNext == NULL)
+	if (pos.x == 0 || pos.x == (CHUNK_X - 1) ||
+		pos.y == 0 || pos.y == (CHUNK_Y - 1) ||
+		pos.z == 0 || pos.z == (CHUNK_Z - 1))
 		return false;
 
-	if (cubeXPrev->isSolid() == true && //droite
-		cubeXNext->isSolid() == true && //gauche
-		cubeYPrev->isSolid() == true && //haut
-		cubeYNext->isSolid() == true && //bas
-		cubeZPrev->isSolid() == true && //devant
-		cubeZNext->isSolid() == true)  //derriere
+	int top = chunk[(int)pos.x][(int)pos.y + 1][(int)pos.z];
+	int bot = chunk[(int)pos.x][(int)pos.y - 1][(int)pos.z];
+	int right = chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z];
+	int left = chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z];
+	int front = chunk[(int)pos.x][(int)pos.y][(int)pos.z - 1];
+	int back = chunk[(int)pos.x][(int)pos.y][(int)pos.z + 1];
+
+	if (top != WATER && top != VOID &&
+		bot != WATER && bot != VOID &&
+		right != WATER && right != VOID &&
+		left != WATER && left != VOID &&
+		front != WATER && front != VOID &&
+		back != WATER && back != VOID)
 		return true;
+
 	return false;
 }
 
-void	chunkFactory::disableHiddenCubes(std::vector<Entity*> &list)
+std::vector<Entity*>	chunkFactory::disableHiddenCubes(std::vector<Entity*> cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z])
 {
-	for (int x = 0; x < _size.y; y++)
-		for (int y = 0; y < _size.z; z++)
-			for (int z = 0; z < _size.x; x++)
-			{
-				if (this->test_hidden(list))
+	glm::vec3	pos;
 
+	for (int x = 0; x < CHUNK_X; x++)
+		for (int y = 0; y < CHUNK_Y; y++)
+			for (int z = 0; z < CHUNK_Z; z++)
+			{
+				if (this->test_hidden(glm::vec3(x, y, z), chunk) == true)
+				{
+					cubes[z + y * CHUNK_Y + x * CHUNK_Y * CHUNK_X]->_draw = false;
+				}
 			}
+	return cubes;
 }
-*/
+
 
 s_chunk chunkFactory::getChunk(glm::vec3 pos)
 {
@@ -88,9 +64,9 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 	Entity *cube;
 
 	//CONSTRUCT CHUNK
-	for (float y = 0; y < CHUNK_Y; y++)
-		for (float z = 0; z < CHUNK_Z; z++)
-			for (float x = 0; x < CHUNK_X; x++)
+	for (float x = 0; x < CHUNK_X; x++)
+		for (float y = 0; y < CHUNK_Y; y++)
+			for (float z = 0; z < CHUNK_Z; z++)
 			{
 				if (_perlin.noise(x / CHUNK_X * 2, y / CHUNK_Y * 2, z / CHUNK_Z * 2) < 0)
 				{
@@ -118,6 +94,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 				}
 				cubes.push_back(cube);
 			}
+	cubes = disableHiddenCubes(cubes, res.chunkInfos);
 
 	// DIVIDE CHUNK BY VAO
 	std::vector<Entity*> ChunkVAO;
@@ -132,5 +109,6 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 				ChunkVAO.push_back(*cube_it);
 		res.VAOChunk.push_back(ChunkVAO);
 	}
+
 	return res;
 }
