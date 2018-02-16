@@ -90,7 +90,7 @@ void	renderEngine::renderVAO_oneTime(Entity& entity)
 
 void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 {
-	if (entities.size() == 0 || entities[0]._draw == false)
+	if (entities.size() == 0)
 		return;
 
 	glBindVertexArray(entities[0]._model._rawModel._vao_id);
@@ -180,7 +180,10 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	for (std::size_t i(0); i < chunks.size(); ++i)
 	{
 		for (std::size_t VAO_id = 0; VAO_id < chunks[i].VAOChunk.size(); ++VAO_id)
-			this->renderVAO_multipleTime(chunks[i].VAOChunk[VAO_id]);
+		{
+			if ((chunks[i].type[VAO_id] != chunkFactory::VOID) && (chunks[i].type[VAO_id] != chunkFactory::WATER))
+				this->renderVAO_multipleTime(chunks[i].VAOChunk[VAO_id]);
+		}
 	}
 	//render Axis
 	if (debug == true)

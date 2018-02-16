@@ -3,6 +3,10 @@
 #include <gl/glew.h>
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 Game::Game()
 {
@@ -73,6 +77,9 @@ void	Game::moveMouseCamera(float elapsed)
 
 	_camera.rotateIG(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 50.f));
 	_camera.rotateIG(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 50.f));
+
+	_world->getPlayer()._rot.y = -atan(_camera._dir.z / _camera._dir.x);
+	_world->getPlayer().setModelMatrix();
 }
 
 void Game::loop(void)

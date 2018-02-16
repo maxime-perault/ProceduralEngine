@@ -10,7 +10,7 @@ void		chunkFactory::setCubeFactory(cubeFactory& cubeFactory)
 	_cubeFactory = cubeFactory;
 }
 
-bool	chunkFactory::test_hidden(glm::vec3 pos, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z])
+bool	chunkFactory::test_hidden(glm::vec3 pos, int (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z])
 {
 	if (pos.x == 0 || pos.x == (CHUNK_X - 1) ||
 		pos.y == 0 || pos.y == (CHUNK_Y - 1) ||
@@ -35,7 +35,7 @@ bool	chunkFactory::test_hidden(glm::vec3 pos, int chunk[CHUNK_X][CHUNK_Y][CHUNK_
 	return false;
 }
 
-void	chunkFactory::disableHiddenCubes(std::vector<Entity>& cubes, int chunk[CHUNK_X][CHUNK_Y][CHUNK_Z])
+void	chunkFactory::disableHiddenCubes(std::vector<Entity>& cubes, int(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z])
 {
 	glm::vec3	pos;
 
@@ -89,9 +89,9 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 		for (float y = 0; y < CHUNK_Y; y++)
 			for (float z = 0; z < CHUNK_Z; z++)
 			{
-				if (_perlin.noise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
-									(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-									(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2) < 0)
+				if (_perlin.noise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 4,
+									(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 4,
+									(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 4) < 0)
 				{
 					cube = _cubeFactory.getCube(cubeFactory::DIRT,
 						glm::vec3(x + (pos.x * CHUNK_X), y + (pos.y * CHUNK_Y), z + (pos.z * CHUNK_Z)));
@@ -135,6 +135,10 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 	std::size_t	cube_it;
 	std::size_t	vaoID_it;
 
+	for (std::size_t i(0); i < 4; ++i)
+		if (VAO[i] != -1)
+			res.type.push_back(i);
+
 	for (vaoID_it = 0; vaoID_it < vaos.size(); ++vaoID_it)
 	{
 		ChunkVAO.clear();
@@ -143,6 +147,5 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 				ChunkVAO.push_back(cubes[cube_it]);
 		res.VAOChunk.push_back(ChunkVAO);
 	}
-
 	return res;
 }
