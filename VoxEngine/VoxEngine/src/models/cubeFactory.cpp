@@ -3,8 +3,7 @@
 
 cubeFactory::cubeFactory()
 {
-	_loader = VAOLoader();
-	this->setupModels();
+	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain.png"));
 }
 
 cubeFactory::~cubeFactory()
@@ -12,243 +11,326 @@ cubeFactory::~cubeFactory()
 	_loader.cleanUp();
 }
 
-void	cubeFactory::initCube(std::string texturePath, const bool light)
+void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::vector<float>& vtx,
+		std::vector<float>& normals, glm::vec3 pos, e_face face, e_Type type, bool light, int nbFace)
 {
-	/*
-	** CUBE VERTEX
-	*/
-	static const float tmp_vrtx[] = {
-		-0.5, 0.5, -0.5, //FRONT
-		-0.5, -0.5, -0.5,
-		0.5, -0.5, -0.5,
-		0.5, 0.5, -0.5,
+	//Determine offsets for uv offsets in Terrain.png
+	static glm::vec2 pos_side;
+	static glm::vec2 pos_top;
+	static glm::vec2 pos_bot;
 
-		-0.5, 0.5, 0.5, //BACK
-		-0.5, -0.5, 0.5,
-		0.5, -0.5, 0.5,
-		0.5, 0.5, 0.5,
+	switch (type)
+	{
+		case DIRT:
+		{
+			pos_side.x = 5;
+			pos_side.y = 13;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case GRASS:
+		{
+			pos_side.x = 6;
+			pos_side.y = 13;
+			pos_top.x = 5;
+			pos_top.y = 11;
+			pos_bot.x = 5;
+			pos_bot.y = 13;
+			break;
+		}
+		case SUN:
+		{
+			pos_side.x = 14;
+			pos_side.y = 12;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case PLAYER:
+		{
+			pos_side.x = 13;
+			pos_side.y = 6;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		default: break;
+	}
 
-		0.5, 0.5, -0.5, //RIGHT
-		0.5, -0.5, -0.5,
-		0.5, -0.5, 0.5,
-		0.5, 0.5, 0.5,
-
-		-0.5, 0.5, -0.5, //LEFT
-		-0.5, -0.5, -0.5,
-		-0.5, -0.5, 0.5,
-		-0.5, 0.5, 0.5,
-
-		-0.5, 0.5, 0.5, //TOP
-		-0.5, 0.5, -0.5,
-		0.5, 0.5, -0.5,
-		0.5, 0.5, 0.5,
-
-		-0.5, -0.5, 0.5, //BOT
-		-0.5, -0.5, -0.5,
-		0.5, -0.5, -0.5,
-		0.5, -0.5, 0.5 };
-	static const std::vector<float>
-		cube_vrtx(tmp_vrtx, tmp_vrtx + sizeof(tmp_vrtx) / sizeof(tmp_vrtx[0]));
-
-	/*
-	** CUBE NORMALS
-	*/
-	static const float tmp_normals[] = {
-		0, 0, -1, //FRONT
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-
-		0, 0, 1, //BACK
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-
-		1, 0, 0, //RIGHT
-		1, 0, 0,
-		1, 0, 0,
-		1, 0, 0,
-
-		-1, 0, 0, //LEFT
-		-1, 0, 0,
-		-1, 0, 0,
-		-1, 0, 0,
-
-		0, 1, 0, //TOP
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0,
-
-		0, -1, 0, //BOT
-		0, -1, 0,
-		0, -1, 0,
-		0, -1, 0 };
-		static const std::vector<float>
-			cube_normals(tmp_normals, tmp_normals + sizeof(tmp_normals) / sizeof(tmp_normals[0]));
-
-	static const float light_normals[] = {
-		0, 0, 1, //FRONT
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-
-		0, 0, -1, //BACK
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-
-		-1, 0, 0, //RIGHT
-		-1, 0, 0,
-		-1, 0, 0,
-		-1, 0, 0,
-
-		1, 0, 0, //LEFT
-		1, 0, 0,
-		1, 0, 0,
-		1, 0, 0,
-
-		0, -1, 0, //TOP
-		0, -1, 0,
-		0, -1, 0,
-		0, -1, 0,
-
-		0, 1, 0, //BOT
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0 };
-		static const std::vector<float>
-			cube_lightNormals(light_normals, light_normals + sizeof(light_normals) / sizeof(light_normals[0]));
-
-	//TEXTURE COORDS
-	static const float tmp_text[] = { 0, 0,
-		0, 1, //FRONT
-		1, 1,
-		1, 0,
-
-		0, 0, //BACK
-		0, 1,
-		1, 1,
-		1, 0,
-
-		0, 0, //RIGHT
-		0, 1,
-		1, 1,
-		1, 0,
-
-		0, 0, //LEFT
-		0, 1,
-		1, 1,
-		1, 0,
-
-		0, 0, //TOP
-		0, 1,
-		1, 1,
-		1, 0,
-
-		0, 0, //BOT
-		0, 1,
-		1, 1,
-		1, 0 };
-	static const std::vector<float>
-		cube_text_coord(tmp_text, tmp_text + sizeof(tmp_text) / sizeof(tmp_text[0]));
-
-	/*
-	** INDICES
-	*/
-	static const int tmp_ind[] = { 0, 1, 3,
-		3, 1, 2,
-		4, 5, 7,
-		7, 5, 6,
-		8, 9, 11,
-		11, 9, 10,
-		12, 13, 15,
-		15, 13, 14,
-		16, 17, 19,
-		19, 17, 18,
-		20, 21, 23,
-		23, 21, 22 };
-	static const std::vector<int>
-		cube_ind(tmp_ind, tmp_ind + sizeof(tmp_ind) / sizeof(tmp_ind[0]));
-
-
-	/*
-	** VAO (VBO1 = obj coord with indices, VBO2 = normals, VBO3 = textures uv)
-	*/
-	if (light == true)
-		_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_lightNormals, cube_text_coord, cube_ind));
-	else
-		_models.push_back(_loader.loadtoVAO(cube_vrtx, cube_normals, cube_text_coord, cube_ind));
-	/*
-	** TEXTURE + TEXTURED MODEL
-	*/
-	_textures.push_back(Texture(_loader.loadTexture(texturePath)));
-	_tex_models.push_back(texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
+	switch (face)
+	{
+		case FRONT:
+		{
+			vtx.insert(vtx.end(), {
+				-0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z,
+				-0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					0, 0, -1,
+					0, 0, -1,
+					0, 0, -1,
+					0, 0, -1 });
+			else
+				normals.insert(normals.end(), {
+					0, 0, 1,
+					0, 0, 1,
+					0, 0, 1,
+					0, 0, 1 });
+			uv.insert(uv.end(), {
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4, });
+			break;
+		}
+		case BACK:
+		{
+			vtx.insert(vtx.end(), {
+				-0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z,
+				-0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z,
+				0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					0, 0, 1,
+					0, 0, 1,
+					0, 0, 1,
+					0, 0, 1 });
+			else
+				normals.insert(normals.end(), {
+					0, 0, -1,
+					0, 0, -1,
+					0, 0, -1,
+					0, 0, -1 });
+			uv.insert(uv.end(), {
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+			break;
+		}
+		case RIGHT:
+		{
+			vtx.insert(vtx.end(), {
+				0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z,
+				0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					1, 0, 0,
+					1, 0, 0,
+					1, 0, 0,
+					1, 0, 0 });
+			else
+				normals.insert(normals.end(), {
+					-1, 0, 0,
+					-1, 0, 0,
+					-1, 0, 0,
+					-1, 0, 0 });
+			uv.insert(uv.end(), {
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+			break;
+		}
+		case LEFT:
+		{
+			vtx.insert(vtx.end(), {
+				-0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z,
+				-0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				-0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z,
+				-0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					-1, 0, 0,
+					-1, 0, 0,
+					-1, 0, 0,
+					-1, 0, 0 });
+			else
+				normals.insert(normals.end(), {
+					1, 0, 0,
+					1, 0, 0,
+					1, 0, 0,
+					1, 0, 0 });
+			uv.insert(uv.end(), {
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+			break;
+		}
+		case TOP:
+		{
+			vtx.insert(vtx.end(), {
+				-0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z,
+				-0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, 0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, 0.5f + pos.y, 0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					0, 1, 0,
+					0, 1, 0,
+					0, 1, 0,
+					0, 1, 0 });
+			else
+				normals.insert(normals.end(), {
+					0, -1, 0,
+					0, -1, 0,
+					0, -1, 0,
+					0, -1, 0 });
+			uv.insert(uv.end(), {
+				pos_top.x * (1.f / 16.f) + (1.f / 256.f), pos_top.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_top.x * (1.f / 16.f) + (1.f / 256.f), (pos_top.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_top.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_top.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_top.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_top.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+			break;
+		}
+		case BOT:
+		{
+			vtx.insert(vtx.end(), {
+				-0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z,
+				-0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, -0.5f + pos.z,
+				0.5f + pos.x, -0.5f + pos.y, 0.5f + pos.z });
+			if (!light)
+				normals.insert(normals.end(), {
+					0, -1, 0,
+					0, -1, 0,
+					0, -1, 0,
+					0, -1, 0 });
+			else
+				normals.insert(normals.end(), {
+					0, 1, 0,
+					0, 1, 0,
+					0, 1, 0,
+					0, 1, 0 });
+			uv.insert(uv.end(), {
+				pos_bot.x * (1.f / 16.f) + (1.f / 256.f), pos_bot.y * (1.f / 17.f) + (1.f / 272.f),
+				pos_bot.x * (1.f / 16.f) + (1.f / 256.f), (pos_bot.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_bot.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_bot.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
+				(pos_bot.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_bot.y * (1.f / 17.f) + (1.f / 272.f) });
+			ind.insert(ind.end(), {
+				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
+				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+			break;
+		}
+		default: break;
+	}
 }
 
-void	cubeFactory::initLine(void)
+//make sure that the enums for the type of cubes are the same values in cubeFactory and chunkFactory
+Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[16][16][16], GLuint vao)
 {
-	/*
-	** LINE VERTEX
-	*/
-	static const float tmp_vrtx[] = {
-		0, 0, 0,
-		0, 1, 0};
-	static const std::vector<float>
-		line_vrtx(tmp_vrtx, tmp_vrtx + sizeof(tmp_vrtx) / sizeof(tmp_vrtx[0]));
+	std::vector<int>	ind;
+	std::vector<float>	uv;
+	std::vector<float>	vtx;
+	std::vector<float>	normals;
 
-	/*
-	** INDICES
-	*/
-	static const int tmp_ind[] = {0, 1};
-	static const std::vector<int>
-		line_ind(tmp_ind, tmp_ind + sizeof(tmp_ind) / sizeof(tmp_ind[0]));
+	std::size_t i(0);
+	for (std::size_t x = 0; x < 16; ++x)
+		for (std::size_t y = 0; y < 16; ++y)
+			for (std::size_t z = 0; z < 16; ++z)
+			{
+				if (chunkInfos[x][y][z].first != VOID && chunkInfos[x][y][z].first != WATER && chunkInfos[x][y][z].second == true)
+				{
+					if (chunkInfos[x][y][z].first == GRASS)
+					{
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), FRONT, GRASS, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BACK, GRASS, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), RIGHT, GRASS, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), LEFT, GRASS, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), TOP, GRASS, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BOT, GRASS, false, i++);
+					}
+					else if (chunkInfos[x][y][z].first == DIRT)
+					{
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), FRONT, DIRT, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BACK, DIRT, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), RIGHT, DIRT, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), LEFT, DIRT, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), TOP, DIRT, false, i++);
+						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BOT, DIRT, false, i++);
+					}
+				}
+			}
 
+	if (vao != -1)
+		_loader.deleteVAO(vao);
+	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
 
-	/*
-	** VAO (VBO1 = obj coord with indices, VBO2 = normals, VBO3 = textures uv)
-	*/
-		_models.push_back(_loader.loadtoVAO(line_vrtx, line_ind));
-	/*
-	** TEXTURE + TEXTURED MODEL
-	*/
-	_textures.push_back(Texture(-1));
-	_tex_models.push_back(texturedModel(_models[_models.size() - 1], _textures[_textures.size() - 1]));
+	res._pos = pos;
+	res.setModelMatrix();
+
+	return (res);
 }
 
-void	cubeFactory::setupModels(void)
+Entity	cubeFactory::getCube(const e_Type type, glm::vec3 pos, GLuint vao)
 {
-	//GRASS
-	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_lime.png", false);
-	//DIRT
-	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_brown.png", false);
-	//VOID
-	this->initCube("assets/minecraft/textures/blocks/stone_diorite_smooth.png", false);
-	//WATER
-	this->initCube("assets/minecraft/textures/blocks/wool_colored_cyan.png", false);
-	//SUN
-	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_yellow.png", true);
-	//PLAYER
-	this->initCube("assets/minecraft/textures/blocks/hardened_clay_stained_red.png", false);
-	//LINE
-	this->initLine();
-}
+	std::vector<int>	ind;
+	std::vector<float>	uv;
+	std::vector<float>	vtx;
+	std::vector<float>	normals;
+	bool light = false;
 
-Entity	cubeFactory::getCube(const e_Type type, glm::vec3 pos)
-{
-	Entity res = Entity(_tex_models[type]);
+	if (type == SUN)
+		light = true;
+
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), FRONT, type, light, 0);
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), BACK, type, light, 1);
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), RIGHT, type, light, 2);
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), LEFT, type, light, 3);
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), TOP, type, light, 4);
+	this->setFace(ind, uv, vtx, normals, glm::vec3(0, 0, 0), BOT, type, light, 5);
+
+	if (vao != -1)
+		_loader.deleteVAO(vao);
+	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
 	
 	res._pos = pos;
+	res.setModelMatrix();
 	
 	return (res);
 }
 
-Entity	cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot)
+Entity	cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot, GLuint vao)
 {
-	Entity res = Entity(_tex_models[LINE]);
+	std::vector<int>	ind;
+	std::vector<float>	vtx;
+
+	vtx.insert(vtx.end(), {
+		0, 0, 0,
+		0, 1, 0 });
+	ind.insert(ind.end(), { 0, 1 });
+
+	if (vao != -1)
+		_loader.deleteVAO(vao);
+	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, ind), Texture(-1)));
 
 	res._colour = colour;
 	res._pos = pos;
 	res._rot = rot;
+
+	res.setModelMatrix();
 
 	return (res);
 }

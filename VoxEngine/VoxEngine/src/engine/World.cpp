@@ -4,17 +4,18 @@
 World::World()
 {
 	_chunkFactory.setCubeFactory(_cubeFactory);
-	for (std::size_t x(0); x < 2; ++x)
-			for (std::size_t z(0); z < 2; ++z)
-				_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, 0, z)));
+	for (std::size_t x(0); x < 8; ++x)
+		for (std::size_t y(0); y < 2; ++y)
+			for (std::size_t z(0); z < 8; ++z)
+				_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, y, z)));
 
-	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(100, 100, 100)), glm::vec3(1, 1, 1), 50, 0.5);
+	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(100, 100, 100), -1), glm::vec3(1, 1, 1), 50, 0.5);
 	_sun._entity.setModelMatrix();
-	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5));
+	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5), -1);
 
-	_axis.push_back(_cubeFactory.getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2)));
-	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0)));
-	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0)));
+	_axis.push_back(_cubeFactory.getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2), -1));
+	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1));
+	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0), -1));
 
 	_axis[0]._scale = glm::vec3(0.05, 0.05, 0.05);
 	_axis[0].setModelMatrix();

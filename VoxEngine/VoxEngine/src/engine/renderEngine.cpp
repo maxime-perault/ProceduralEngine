@@ -82,9 +82,6 @@ void	renderEngine::renderVAO_oneTime(Entity& entity)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, entity._model._texture._id);
-
 	glDrawElements(GL_TRIANGLES, entity._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 }
 
@@ -98,9 +95,6 @@ void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, entities[0]._model._texture._id);
 
 	for (std::size_t i(0); i < entities.size(); ++i)
 	{
@@ -118,7 +112,6 @@ void	renderEngine::renderAxis(std::vector<Entity> axis)
 		return;
 
 	glBindVertexArray(axis[0]._model._rawModel._vao_id);
-
 	glEnableVertexAttribArray(0);
 
 	for (std::size_t i(0); i < axis.size(); ++i)
@@ -155,6 +148,24 @@ void	renderEngine::stop(void)
 	glBindVertexArray(0);
 }
 
+void	renderEngine::renderChunks(std::vector<s_chunk>& chunks)
+{
+	if (chunks.size() < 1)
+		return;
+
+	for (std::size_t i(0); i < chunks.size(); ++i)
+	{
+		glBindVertexArray(chunks[i].Chunk._model._rawModel._vao_id);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		this->createModelMatrix(chunks[i].Chunk, _staticShader);
+		glDrawElements(GL_TRIANGLES, chunks[i].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+	}
+}
+
 void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 {
 	std::vector<s_chunk>&	chunks = world->getChunks();
@@ -167,6 +178,9 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	this->createViewMatrix(cam, _staticShader);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, player._model._texture._id);
+
 	//render sun
 	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
 	this->renderVAO_oneTime(sun._entity);
@@ -175,16 +189,8 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	this->renderVAO_oneTime(player);
 
 	//render chunk
-	std::vector<std::vector<Entity*>>::iterator chunkVAO_it;
+	this->renderChunks(chunks);
 
-	for (std::size_t i(0); i < chunks.size(); ++i)
-	{
-		for (std::size_t VAO_id = 0; VAO_id < chunks[i].VAOChunk.size(); ++VAO_id)
-		{
-			if ((chunks[i].type[VAO_id] != chunkFactory::VOID) && (chunks[i].type[VAO_id] != chunkFactory::WATER))
-				this->renderVAO_multipleTime(chunks[i].VAOChunk[VAO_id]);
-		}
-	}
 	//render Axis
 	if (debug == true)
 		this->renderAxis(axis);

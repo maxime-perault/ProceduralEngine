@@ -20,14 +20,6 @@ FntParser::FntParser(const std::string path)
 		if (strncmp(line.c_str(), "char ", strlen("char ")) == 0)
 			this->getInfo(line);
 	}
-	/*
-	for (std::size_t i(0); i < _infos.size(); ++i)
-	{
-		std::cout << _infos[i].id << "; " << _infos[i].x << "; " << _infos[i].y << "; "
-			<< _infos[i].w << "; " << _infos[i].h << "; "
-			<< _infos[i].xo << "; " << _infos[i].yo << "; " << _infos[i].xa << std::endl;
-	}
-	*/
 }
 
 FntParser::~FntParser()

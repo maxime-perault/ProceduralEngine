@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "bottom": "blocks/brick4",
-        "top": "blocks/brick_top3",
-        "side": "blocks/brick4"
-    }
-}
