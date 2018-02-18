@@ -78,7 +78,7 @@ void	Game::moveMouseCamera(float elapsed)
 	_camera.rotateIG(glm::vec3(0, 1, 0), -(float)delta.x * (elapsed * 50.f));
 	_camera.rotateIG(glm::vec3(1, 0, 0), -(float)delta.y * (elapsed * 50.f));
 
-	_world->getPlayer()._rot.y = -atan(_camera._dir.z / _camera._dir.x);
+	_world->getPlayer()._rot.y = -atan2(_camera._dir.z, _camera._dir.x);
 	_world->getPlayer().setModelMatrix();
 }
 

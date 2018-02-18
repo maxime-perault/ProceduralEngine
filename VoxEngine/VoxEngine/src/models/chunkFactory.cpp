@@ -50,19 +50,25 @@ void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHU
 			}
 }
 
-void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z])
+void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos)
 {
-	static glm::vec3 pos;
 	int res = -1;
 
-	for (int x = 0; x < CHUNK_X; x++)
-		for (int y = 0; y < CHUNK_Y; y++)
-			for (int z = 0; z < CHUNK_Z; z++)
+	for (float x = 0; x < CHUNK_X; x++)
+		for (float y = 0; y < CHUNK_Y; y++)
+			for (float z = 0; z < CHUNK_Z; z++)
 			{
-				if ((y < (CHUNK_Y - 1) && chunk[x][y][z].first == cubeFactory::DIRT && chunk[x][y + 1][z].first == cubeFactory::VOID)
-					|| (y == (CHUNK_Y - 1) && chunk[x][y][z].first == cubeFactory::DIRT))
+				if ((y == (CHUNK_Y - 1)
+					&& chunk[(int)x][(int)y][(int)z].first == cubeFactory::DIRT)
+					&& powf(((_perlin.octaveNoise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
+													(y + 1.f + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
+													(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + 1.f + (pos.y * CHUNK_Y)) / 10.f) <= 0.5)
 				{
-					chunk[x][y][z].first = cubeFactory::GRASS;
+					chunk[(int)x][(int)y][(int)z].first = cubeFactory::GRASS;
+				}
+				else if ((y < (CHUNK_Y - 1) && chunk[(int)x][(int)y][(int)z].first == cubeFactory::DIRT && chunk[(int)x][(int)y + 1][(int)z].first == cubeFactory::VOID))
+				{
+					chunk[(int)x][(int)y][(int)z].first = cubeFactory::GRASS;
 				}
 			}
 }
@@ -70,7 +76,7 @@ void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK
 
 s_chunk chunkFactory::getChunk(glm::vec3 pos)
 {
-	s_chunk					res;
+	s_chunk		res;
 
 
 	//CONSTRUCT CHUNK INFOS
@@ -78,11 +84,10 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 		for (float y = 0; y < CHUNK_Y; y++)
 			for (float z = 0; z < CHUNK_Z; z++)
 			{
-				if (_perlin.noise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
-									(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-									(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2) < 0)
+				if (powf(((_perlin.octaveNoise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
+												(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
+												(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + (pos.y * CHUNK_Y)) / 10.f) > 0.5)
 				{
-					
 					res.chunkInfos[(int)x][(int)y][(int)z].first = cubeFactory::DIRT;
 					res.chunkInfos[(int)x][(int)y][(int)z].second = true;
 				}
@@ -94,7 +99,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 			}
 	
 	this->disableHiddenCubes(res.chunkInfos);
-	this->setPile(res.chunkInfos);
+	this->setPile(res.chunkInfos, pos);
 
 	res.Chunk = _cubeFactory.getChunk(glm::vec3(pos.x * CHUNK_X, pos.y * CHUNK_Y, pos.z * CHUNK_Z), res.chunkInfos, -1);
 

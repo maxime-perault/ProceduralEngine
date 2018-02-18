@@ -23,7 +23,7 @@ private:
 
 	bool	test_hidden(glm::vec3 pos, std::pair<int, bool> (&info)[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 	void	disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z]);
-	void	setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z]);
+	void	setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos);
 
 public:
 	chunkFactory();

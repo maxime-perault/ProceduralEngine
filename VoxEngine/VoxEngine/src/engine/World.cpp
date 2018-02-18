@@ -4,9 +4,9 @@
 World::World()
 {
 	_chunkFactory.setCubeFactory(_cubeFactory);
-	for (std::size_t x(0); x < 8; ++x)
-		for (std::size_t y(0); y < 2; ++y)
-			for (std::size_t z(0); z < 8; ++z)
+	for (std::size_t x(0); x < 12; ++x)
+		for (std::size_t y(0); y < 4; ++y)
+			for (std::size_t z(0); z < 12; ++z)
 				_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, y, z)));
 
 	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(100, 100, 100), -1), glm::vec3(1, 1, 1), 50, 0.5);
