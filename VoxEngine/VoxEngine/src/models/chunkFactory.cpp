@@ -19,7 +19,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y + 1.f + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + 1.f + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + 1.f + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			top = cubeFactory::VOID;
 		else
 			top = cubeFactory::DIRT;
@@ -29,7 +29,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y - 1.f + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y - 1.f + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y - 1.f + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			bot = cubeFactory::VOID;
 		else
 			bot = cubeFactory::DIRT;
@@ -46,7 +46,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x + 1.f + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			right = cubeFactory::VOID;
 		else
 			right = cubeFactory::DIRT;
@@ -56,7 +56,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x - 1.f + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			left = cubeFactory::VOID;
 		else
 			left = cubeFactory::DIRT;
@@ -73,7 +73,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z + 1.f + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z + 1.f + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			back = cubeFactory::VOID;
 		else
 			back = cubeFactory::DIRT;
@@ -83,7 +83,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	{
 		if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 										(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-										(pos.z - 1.f + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+										(pos.z - 1.f + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 			front = cubeFactory::VOID;
 		else
 			front = cubeFactory::DIRT;
@@ -131,7 +131,7 @@ void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK
 					&& chunk[(int)x][(int)y][(int)z].first == cubeFactory::DIRT)
 					&& powf(((_perlin.octaveNoise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 													(y + 1.f + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-													(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + 1.f + (pos.y * CHUNK_Y)) / 10.f) <= 0.5)
+													(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + 1.f + (pos.y * CHUNK_Y)) / 15.f) <= 0.5)
 				{
 					chunk[(int)x][(int)y][(int)z].first = cubeFactory::GRASS;
 				}
@@ -155,7 +155,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 			{
 				if (powf(((_perlin.octaveNoise(	(x + (pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 												(y + (pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-												(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + (pos.y * CHUNK_Y)) / 10.f) > 0.5)
+												(z + (pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (y + (pos.y * CHUNK_Y)) / 15.f) > 0.5)
 				{
 					res.chunkInfos[(int)x][(int)y][(int)z].first = cubeFactory::DIRT;
 					res.chunkInfos[(int)x][(int)y][(int)z].second = true;

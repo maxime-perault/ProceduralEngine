@@ -3,7 +3,7 @@
 
 cubeFactory::cubeFactory()
 {
-	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain.png"));
+	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2_256.png"));
 }
 
 cubeFactory::~cubeFactory()
@@ -80,10 +80,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					0, 0, 1,
 					0, 0, 1 });
 			uv.insert(uv.end(), {
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_side.x * (1.f / 16.f), pos_side.y * (1.f / 17.f),
+				pos_side.x * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4, });
@@ -109,10 +109,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					0, 0, -1,
 					0, 0, -1 });
 			uv.insert(uv.end(), {
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_side.x * (1.f / 16.f), pos_side.y * (1.f / 17.f),
+				pos_side.x * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
@@ -138,10 +138,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					-1, 0, 0,
 					-1, 0, 0 });
 			uv.insert(uv.end(), {
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_side.x * (1.f / 16.f), pos_side.y * (1.f / 17.f),
+				pos_side.x * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
@@ -167,10 +167,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					1, 0, 0,
 					1, 0, 0 });
 			uv.insert(uv.end(), {
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_side.x * (1.f / 16.f) + (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_side.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_side.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_side.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_side.x * (1.f / 16.f), pos_side.y * (1.f / 17.f),
+				pos_side.x * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
+				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
@@ -196,10 +196,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					0, -1, 0,
 					0, -1, 0 });
 			uv.insert(uv.end(), {
-				pos_top.x * (1.f / 16.f) + (1.f / 256.f), pos_top.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_top.x * (1.f / 16.f) + (1.f / 256.f), (pos_top.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_top.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_top.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_top.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_top.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_top.x * (1.f / 16.f), pos_top.y * (1.f / 17.f),
+				pos_top.x * (1.f / 16.f), (pos_top.y + 1.f) * (1.f / 17.f),
+				(pos_top.x + 1.f) * (1.f / 16.f), (pos_top.y + 1.f) * (1.f / 17.f),
+				(pos_top.x + 1.f) * (1.f / 16.f), pos_top.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
@@ -225,10 +225,10 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 					0, 1, 0,
 					0, 1, 0 });
 			uv.insert(uv.end(), {
-				pos_bot.x * (1.f / 16.f) + (1.f / 256.f), pos_bot.y * (1.f / 17.f) + (1.f / 272.f),
-				pos_bot.x * (1.f / 16.f) + (1.f / 256.f), (pos_bot.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_bot.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), (pos_bot.y + 1.f) * (1.f / 17.f) - (1.f / 272.f),
-				(pos_bot.x + 1.f) * (1.f / 16.f) - (1.f / 256.f), pos_bot.y * (1.f / 17.f) + (1.f / 272.f) });
+				pos_bot.x * (1.f / 16.f), pos_bot.y * (1.f / 17.f),
+				pos_bot.x * (1.f / 16.f), (pos_bot.y + 1.f) * (1.f / 17.f),
+				(pos_bot.x + 1.f) * (1.f / 16.f), (pos_bot.y + 1.f) * (1.f / 17.f),
+				(pos_bot.x + 1.f) * (1.f / 16.f), pos_bot.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
 				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
 				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
