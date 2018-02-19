@@ -8,7 +8,8 @@ FontFactory::FontFactory()
 	_texture = Texture(_loader.loadTexture("assets/Fonts/roboto_light.png"));
 
 	this->initText("FPS: Loading", true, FPS);
-	this->initText("XYZ: Loading", true, XYZ);
+	this->initText("PLAYER XYZ: Loading", true, XYZ);
+	this->initText("CHUNK XYZ: Loading", true, CHUNK);
 
 	//define it also in getText
 	_size = 2;
@@ -88,7 +89,7 @@ void	FontFactory::initText(const std::string txt, bool create, const e_texts typ
 
 Entity	FontFactory::getText(std::string text, glm::vec3 pos, const e_texts type)
 {
-	static std::string s_text[2] = { "" };
+	static std::string s_text[3] = { "" };
 	Entity	res;
 
 	if (s_text[type] == text)

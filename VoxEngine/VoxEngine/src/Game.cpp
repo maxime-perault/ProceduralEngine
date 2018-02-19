@@ -88,6 +88,7 @@ void Game::loop(void)
 	int		frame = 0;
 	int		fps = -1;
 
+	elapsed = _timer.getElapsedSeconds(true);
 	while (true)
 	{
 		_inputManager.Update();

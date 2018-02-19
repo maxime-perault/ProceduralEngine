@@ -27,7 +27,8 @@ World::World()
 	_win.x = 1280; _win.y = 720;
 
 	_text.push_back(_fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS));
-	_text.push_back(_fontFactory.getText(std::string("XYZ: Loading"), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::XYZ));
+	_text.push_back(_fontFactory.getText(std::string("PLAYER XYZ: Loading"), this->getScreenPos(glm::vec3(10, 50, 0)), FontFactory::XYZ));
+	_text.push_back(_fontFactory.getText(std::string("CHUNK XYZ: Loading"), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::CHUNK));
 }
 
 World::~World()
@@ -78,10 +79,16 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	{
 		glm::vec3 pos = _player._pos;
 
-		_text[FontFactory::XYZ] = _fontFactory.getText(std::string("XYZ: "
+		_text[FontFactory::XYZ] = _fontFactory.getText(std::string("PLAYER XYZ: "
 			+ std::to_string(pos.x) + "; "
 			+ std::to_string(pos.y) + "; "
-			+ std::to_string(pos.z)), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::XYZ);
+			+ std::to_string(pos.z)), this->getScreenPos(glm::vec3(10, 50, 0)), FontFactory::XYZ);
+
+		_text[FontFactory::CHUNK] = _fontFactory.getText(std::string("CHUNK XYZ: "
+			+ std::to_string((int)(pos.x / CHUNK_X)) + "; "
+			+ std::to_string((int)(pos.y / CHUNK_Y)) + "; "
+			+ std::to_string((int)(pos.z / CHUNK_Z))), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::CHUNK);
+		
 		if (fps == -1)
 			_text[FontFactory::FPS] = _fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS);
 		else
@@ -90,6 +97,8 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 			_text[FontFactory::FPS]._colour = glm::vec3(0, 1, 0);
 		else if (fps > 100)
 			_text[FontFactory::FPS]._colour = glm::vec3(1, 0.8, 0);
+		else if (fps == -1)
+			_text[FontFactory::FPS]._colour = glm::vec3(0.1, 0, 1);
 		else
 			_text[FontFactory::FPS]._colour = glm::vec3(1, 0, 0);
 

@@ -12,7 +12,8 @@ public:
 	enum e_texts
 	{
 		FPS = 0,
-		XYZ
+		XYZ,
+		CHUNK
 	};
 
 	Entity	getText(std::string text, glm::vec3 pos, const e_texts type);
