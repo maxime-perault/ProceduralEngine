@@ -29,6 +29,22 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 			pos_bot = pos_top;
 			break;
 		}
+		case STONE:
+		{
+			pos_side.x = 9;
+			pos_side.y = 5;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case COAL:
+		{
+			pos_side.x = 6;
+			pos_side.y = 7;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
 		case GRASS:
 		{
 			pos_side.x = 6;

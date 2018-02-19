@@ -14,6 +14,8 @@ public:
 		WATER,
 		GRASS,
 		DIRT,
+		STONE,
+		COAL,
 		SUN,
 		PLAYER,
 		LINE

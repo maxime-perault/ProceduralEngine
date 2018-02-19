@@ -21,9 +21,12 @@ private:
 	cubeFactory	_cubeFactory;
 	PerlinNoise _perlin;
 
+	bool	isSolid(glm::vec3 pos, glm::vec3 chunk_pos);
+
 	bool	test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<int, bool> (&info)[CHUNK_X][CHUNK_Y][CHUNK_Z]);
 	void	disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos);
-	void	setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos);
+	void	setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos);
+	void	mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos);
 
 public:
 	chunkFactory();
