@@ -1,7 +1,11 @@
 
 #include "chunkFactory.h"
+#include <ctime>
 
-chunkFactory::chunkFactory() {}
+chunkFactory::chunkFactory()
+{
+	srand(time(NULL));
+}
 
 chunkFactory::~chunkFactory() {}
 
@@ -10,16 +14,17 @@ void		chunkFactory::setCubeFactory(cubeFactory& cubeFactory)
 	_cubeFactory = cubeFactory;
 }
 
+//determine if the block is Air or Solid
 bool	chunkFactory::isSolid(glm::vec3 pos, glm::vec3 chunk_pos)
 {
 	if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
 									(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
 									(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) > 0.5)
 		return true;
-	else
-		return false;
+	return false;
 }
 
+//test if the block can be visible
 bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z])
 {
 	static int top, bot, right, left, front, back;
@@ -104,6 +109,7 @@ bool	chunkFactory::test_hidden(glm::vec3& pos, glm::vec3& chunk_pos, std::pair<i
 	return false;
 }
 
+//disable non visible blocks
 void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos)
 {
 	for (int x = 0; x < CHUNK_X; x++)
@@ -117,6 +123,7 @@ void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHU
 			}
 }
 
+//Set grass top of the dirt pile
 void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos)
 {
 	int res = -1;
@@ -138,6 +145,7 @@ void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK
 			}
 }
 
+//Mix dirt with stones and other special blocks
 void	chunkFactory::mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos)
 {
 	for (float x = 0; x < CHUNK_X; x++)
@@ -163,7 +171,7 @@ void	chunkFactory::mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUN
 			{
 				if (chunk[(int)x][(int)y][(int)z].first == cubeFactory::STONE)
 				{
-					if ((rand() % 100) <= 10 && (y + chunk_pos.y * CHUNK_Y) < 24)
+					if ((rand() % 100) <= 4 && (y + chunk_pos.y * CHUNK_Y) < 24)
 					{
 						chunk[(int)x][(int)y][(int)z].first = cubeFactory::COAL;
 					}
@@ -176,8 +184,6 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 {
 	s_chunk		res;
 
-
-	//CONSTRUCT CHUNK INFOS
 	for (float x = 0; x < CHUNK_X; x++)
 		for (float y = 0; y < CHUNK_Y; y++)
 			for (float z = 0; z < CHUNK_Z; z++)

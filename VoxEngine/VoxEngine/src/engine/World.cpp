@@ -4,14 +4,26 @@
 World::World()
 {
 	_chunkFactory.setCubeFactory(_cubeFactory);
-	for (std::size_t x(0); x < 12; ++x)
-		for (int y(0); y < 6; ++y)
-			for (std::size_t z(0); z < 12; ++z)
-				_chunks.push_back(_chunkFactory.getChunk(glm::vec3(x, y, z)));
+	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+				_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z));
 
 	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(100, 100, 100), -1), glm::vec3(1, 1, 1), 50, 0.5);
 	_sun._entity.setModelMatrix();
-	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(0, 0, 5), -1);
+
+	int onGrass = 0;
+
+	for (int y(CHUNK_SIZE_Y * CHUNK_Y - 1); y > 0; --y)
+		if (this->getBlockOnChunk(glm::vec3((CHUNK_X * CHUNK_SIZE_X) / 2, y, (CHUNK_Z * CHUNK_SIZE_Z) / 2)) == cubeFactory::GRASS)
+		{
+			onGrass = y + 1;
+		}
+
+	_player = _cubeFactory.getCube(cubeFactory::PLAYER, glm::vec3(
+		(CHUNK_X * CHUNK_SIZE_X) / 2,
+		onGrass,
+		(CHUNK_Z * CHUNK_SIZE_Z) / 2), -1);
 
 	_axis.push_back(_cubeFactory.getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2), -1));
 	_axis.push_back(_cubeFactory.getLine(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1));
@@ -55,9 +67,9 @@ std::vector<Entity>&	World::getText(void)
 	return _text;
 }
 
-std::vector<s_chunk>&	World::getChunks(void)
+int	World::getBlockOnChunk(glm::vec3 pos)
 {
-	return _chunks;
+	return (_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].first);
 }
 
 glm::vec3 World::getScreenPos(const glm::vec3 pos)

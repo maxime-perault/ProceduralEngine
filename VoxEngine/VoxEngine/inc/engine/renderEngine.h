@@ -31,7 +31,7 @@ public:
 
 	void	renderAxis(std::vector<Entity> axis);
 	void	renderText(std::vector<Entity> text);
-	void	renderEngine::renderChunks(std::vector<s_chunk>& chunks);
+	void	renderEngine::renderChunks(s_chunk (&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z]);
 
 	void	staticRender(Camera& cam, World *world, const bool debug);
 	void	fontRender(World *world, const bool debug);

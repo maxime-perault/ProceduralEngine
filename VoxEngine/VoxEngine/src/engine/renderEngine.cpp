@@ -4,15 +4,16 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-renderEngine::renderEngine()
-{
-
-}
+renderEngine::renderEngine() {}
 
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	*/
 
 	_projMat = glm::mat4(1.0);
 
@@ -148,27 +149,25 @@ void	renderEngine::stop(void)
 	glBindVertexArray(0);
 }
 
-void	renderEngine::renderChunks(std::vector<s_chunk>& chunks)
+void	renderEngine::renderChunks(s_chunk(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z])
 {
-	if (chunks.size() < 1)
-		return;
+	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+			{
+				glBindVertexArray(chunks[x][y][z].Chunk._model._rawModel._vao_id);
 
-	for (std::size_t i(0); i < chunks.size(); ++i)
-	{
-		glBindVertexArray(chunks[i].Chunk._model._rawModel._vao_id);
+				glEnableVertexAttribArray(0);
+				glEnableVertexAttribArray(1);
+				glEnableVertexAttribArray(2);
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-
-		this->createModelMatrix(chunks[i].Chunk, _staticShader);
-		glDrawElements(GL_TRIANGLES, chunks[i].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
-	}
+				this->createModelMatrix(chunks[x][y][z].Chunk, _staticShader);
+				glDrawElements(GL_TRIANGLES, chunks[x][y][z].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+			}
 }
 
 void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 {
-	std::vector<s_chunk>&	chunks = world->getChunks();
 	Light&					sun = world->getSun();
 	Entity&					player = world->getPlayer();
 	std::vector<Entity>&	axis = world->getAxis();
@@ -189,7 +188,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	this->renderVAO_oneTime(player);
 
 	//render chunk
-	this->renderChunks(chunks);
+	this->renderChunks(world->_chunks);
 
 	//render Axis
 	if (debug == true)

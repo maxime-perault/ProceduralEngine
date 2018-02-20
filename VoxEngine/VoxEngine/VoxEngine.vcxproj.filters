@@ -134,9 +134,6 @@
     <ClInclude Include="inc\models\cubeFactory.h">
       <Filter>Fichiers d%27en-tête\models</Filter>
     </ClInclude>
-    <ClInclude Include="src\InputManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="inc\engine\Timer.h">
       <Filter>Fichiers d%27en-tête\engine</Filter>
     </ClInclude>
@@ -160,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="inc\engine\perlin.h">
       <Filter>Fichiers d%27en-tête\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\InputManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

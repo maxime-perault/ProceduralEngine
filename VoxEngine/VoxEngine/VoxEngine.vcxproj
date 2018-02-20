@@ -160,6 +160,7 @@
     <ClInclude Include="inc\engine\VAOLoader.h" />
     <ClInclude Include="inc\engine\World.h" />
     <ClInclude Include="inc\Game.h" />
+    <ClInclude Include="inc\InputManager.h" />
     <ClInclude Include="inc\models\chunkFactory.h" />
     <ClInclude Include="inc\models\cubeFactory.h" />
     <ClInclude Include="inc\models\Entity.h" />
@@ -171,7 +172,6 @@
     <ClInclude Include="inc\shaders\AShader.h" />
     <ClInclude Include="inc\shaders\fontShader.h" />
     <ClInclude Include="inc\shaders\staticShader.h" />
-    <ClInclude Include="src\InputManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

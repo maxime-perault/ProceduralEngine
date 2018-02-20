@@ -47,26 +47,35 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 		}
 		case GRASS:
 		{
+			
 			pos_side.x = 6;
 			pos_side.y = 13;
 			pos_top.x = 5;
 			pos_top.y = 11;
 			pos_bot.x = 5;
 			pos_bot.y = 13;
+			/*
+			pos_side.x = 7;
+			pos_side.y = 13;
+			pos_top.x = 7;
+			pos_top.y = 12;
+			pos_bot.x = 5;
+			pos_bot.y = 13;
+			*/
 			break;
 		}
 		case SUN:
 		{
-			pos_side.x = 14;
-			pos_side.y = 12;
+			pos_side.x = 13;
+			pos_side.y = 16;
 			pos_top = pos_side;
 			pos_bot = pos_top;
 			break;
 		}
 		case PLAYER:
 		{
-			pos_side.x = 13;
-			pos_side.y = 6;
+			pos_side.x = 14;
+			pos_side.y = 16;
 			pos_top = pos_side;
 			pos_bot = pos_top;
 			break;
