@@ -19,6 +19,8 @@ Game::Game()
 	_camera.changeView(_world->getPlayer()._pos);
 
 	_debug = true;
+	_jump = false;
+	_vjump = 0;
 }
 
 Game::~Game()
@@ -30,7 +32,7 @@ Game::~Game()
 
 
 
-void	Game::movePlayer(const glm::vec3 delta)
+void	Game::movePlayer(const glm::vec3 delta, float elapsed)
 {
 	glm::vec3&	apos(_world->getPlayer()._pos);
 	glm::vec3	next_pos(apos + delta);
@@ -38,6 +40,21 @@ void	Game::movePlayer(const glm::vec3 delta)
 	glm::vec3 deltaX(delta.x, 0, 0);
 	glm::vec3 deltaY(0, delta.y, 0);
 	glm::vec3 deltaZ(0, 0, delta.z); 
+
+	static float t = 0, g = 5, nextY;
+
+	if (delta == glm::vec3(0, 0, 0) && _jump == true)
+	{
+		t += elapsed;
+		nextY = ((_vjump * t) - (0.5 * g * t * t));
+		if (nextY > 0.1)
+			nextY = 0.1;
+		else if (nextY < -0.1)
+			nextY = -0.1;
+
+		deltaY = glm::vec3(0, nextY * 0.2, 0);
+		next_pos += deltaY;
+	}
 
 	if (_world->getBlockOnChunk(glm::vec3(next_pos.x + 1.f, apos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
 		_world->getBlockOnChunk(glm::vec3(next_pos.x,		apos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
@@ -66,6 +83,11 @@ void	Game::movePlayer(const glm::vec3 delta)
 		_camera.move(deltaY);
 		apos += deltaY;
 	}
+	else
+	{
+		_jump = false;
+		t = 0;
+	}
 
 	if (_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, apos.y + 1.f,	next_pos.z + 1.f)) <= cubeFactory::WATER &&
 		_world->getBlockOnChunk(glm::vec3(apos.x,		apos.y + 1.f,	next_pos.z + 1.f)) <= cubeFactory::WATER &&
@@ -89,19 +111,27 @@ void	Game::moveKeyboardCamera(float elapsed)
 	float	speedMove = elapsed * 20;
 
 	if (_inputManager.getRawKey(InputManager::Q))
-		this->movePlayer(-glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove);
+		this->movePlayer(-glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove, elapsed);
 	if (_inputManager.getRawKey(InputManager::D))
-		this->movePlayer(glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove);
+		this->movePlayer(glm::vec3(_camera._rightVec.x, 0, _camera._rightVec.z) * speedMove, elapsed);
 
 	if (_inputManager.getRawKey(InputManager::Z))
-		this->movePlayer(glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove);
+		this->movePlayer(glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove, elapsed);
 	if (_inputManager.getRawKey(InputManager::S))
-		this->movePlayer(-glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove);
+		this->movePlayer(-glm::vec3(_camera._dir.x, 0, _camera._dir.z) * speedMove, elapsed);
 
-	if (_inputManager.getRawKey(InputManager::SPACE))
+	if (_inputManager.getKeyDown(InputManager::SPACE))
+	{
+		_jump = true;
+		_vjump = 1;
+		this->movePlayer(glm::vec3(0, 0, 0), elapsed);
+	}
+
+		/*
 		this->movePlayer(glm::vec3(0, 1, 0) * speedMove);
 	if (_inputManager.getRawKey(InputManager::LCTRL))
 		this->movePlayer(-glm::vec3(0, 1, 0) * speedMove);
+		*/
 
 	if (_inputManager.getKeyDown(InputManager::LALT))
 		_camera.changeView(_world->getPlayer()._pos);
@@ -149,6 +179,19 @@ void Game::loop(void)
 		elapsed = _timer.getElapsedSeconds(true);
 		this->moveMouseCamera(elapsed);
 		this->moveKeyboardCamera(elapsed);
+
+		if (_jump == false &&
+			_world->getBlockOnChunk(glm::vec3(
+				_world->getPlayer()._pos.x,
+				_world->getPlayer()._pos.y - 1,
+				_world->getPlayer()._pos.z)) <= cubeFactory::WATER)
+		{
+			_jump = true;
+			_vjump = 0;
+		}
+
+		if (_jump == true)
+			this->movePlayer(glm::vec3(0, 0, 0), elapsed);
 		
 		_display->clear();
 		_world->update(elapsed, _camera, fps, _debug);

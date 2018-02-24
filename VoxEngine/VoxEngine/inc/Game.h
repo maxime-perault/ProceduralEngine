@@ -25,11 +25,14 @@ public:
 	int		_win_y;
 
 	bool	_debug;
+	bool	_jump;
+
+	float	_vjump;
 
 	void	loop(void);
 	void	moveMouseCamera(float elapsed);
 	void	moveKeyboardCamera(float elapsed);
-	void	movePlayer(const glm::vec3 delta);
+	void	movePlayer(const glm::vec3 delta, float elapsed);
 };
 
 #endif // !GAME_HH_ 
