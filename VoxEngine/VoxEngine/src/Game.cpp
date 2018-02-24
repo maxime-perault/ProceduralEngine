@@ -28,46 +28,59 @@ Game::~Game()
 	delete(_display);
 }
 
+
+
 void	Game::movePlayer(const glm::vec3 delta)
 {
 	glm::vec3&	apos(_world->getPlayer()._pos);
 	glm::vec3	next_pos(apos + delta);
 
-	
-	if (next_pos.x > apos.x)
-		next_pos.x += 1.f;
-	if (next_pos.y > apos.y)
-		next_pos.y += 1.f;
-	if (next_pos.z > apos.z)
-		next_pos.z += 1.f;
-	
-	if (_world->getBlockOnChunk(next_pos) <= cubeFactory::WATER)
-	{
-		_camera.move(delta);
-		apos += delta;
-	}
-	else
-	{
-		glm::vec3 deltaX(delta.x, 0, 0);
-		glm::vec3 deltaY(0, delta.y, 0);
-		glm::vec3 deltaZ(0, 0, delta.z);
+	glm::vec3 deltaX(delta.x, 0, 0);
+	glm::vec3 deltaY(0, delta.y, 0);
+	glm::vec3 deltaZ(0, 0, delta.z); 
 
-		if (_world->getBlockOnChunk(glm::vec3(next_pos.x, apos.y, apos.z)) <= cubeFactory::WATER)
-		{
-			_camera.move(deltaX);
-			apos += deltaX;
-		}
-		if (_world->getBlockOnChunk(glm::vec3(apos.x, next_pos.y, apos.z)) <= cubeFactory::WATER)
-		{
-			_camera.move(deltaY);
-			apos += deltaY;
-		}
-		if (_world->getBlockOnChunk(glm::vec3(apos.x, apos.y, next_pos.z)) <= cubeFactory::WATER)
-		{
-			_camera.move(deltaZ);
-			apos += deltaZ;
-		}
+	if (_world->getBlockOnChunk(glm::vec3(next_pos.x + 1.f, apos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x,		apos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x + 1.f, apos.y ,		apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x,		apos.y ,		apos.z + 1.f)) <= cubeFactory::WATER &&
+
+		_world->getBlockOnChunk(glm::vec3(next_pos.x + 1.f, apos.y + 1.f,	apos.z )) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x,		apos.y + 1.f,	apos.z )) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x + 1.f, apos.y ,		apos.z )) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(next_pos.x,		apos.y ,		apos.z )) <= cubeFactory::WATER)
+	{
+		_camera.move(deltaX);
+		apos += deltaX;
 	}
+
+	if (_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, next_pos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		next_pos.y + 1.f,	apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, next_pos.y,			apos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		next_pos.y,			apos.z + 1.f)) <= cubeFactory::WATER &&
+
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, next_pos.y + 1.f,	apos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		next_pos.y + 1.f,	apos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, next_pos.y,			apos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		next_pos.y,			apos.z)) <= cubeFactory::WATER)
+	{
+		_camera.move(deltaY);
+		apos += deltaY;
+	}
+
+	if (_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, apos.y + 1.f,	next_pos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		apos.y + 1.f,	next_pos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, apos.y,			next_pos.z + 1.f)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		apos.y,			next_pos.z + 1.f)) <= cubeFactory::WATER &&
+
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, apos.y + 1.f,	next_pos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		apos.y + 1.f,	next_pos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x + 1.f, apos.y,			next_pos.z)) <= cubeFactory::WATER &&
+		_world->getBlockOnChunk(glm::vec3(apos.x,		apos.y,			next_pos.z)) <= cubeFactory::WATER)
+	{
+		_camera.move(deltaZ);
+		apos += deltaZ;
+	}
+
 	_world->getPlayer().setModelMatrix();
 }
 
