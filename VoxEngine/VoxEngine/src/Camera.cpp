@@ -29,7 +29,7 @@ void	Camera::changeView(glm::vec3 playerPos)
 {
 	if (_tps == false)
 	{
-		_lookAt = playerPos + glm::vec3(0, 2, 0);
+		_lookAt = playerPos + glm::vec3(0, 1.3, 0);
 		_pos = _pos - glm::vec3(_dir.x * 10, 0, _dir.z * 10) + glm::vec3(0, 5, 0);
 	}
 	else

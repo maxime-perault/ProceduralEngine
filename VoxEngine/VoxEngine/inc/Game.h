@@ -25,9 +25,6 @@ public:
 	int		_win_y;
 
 	bool	_debug;
-	bool	_jump;
-
-	float	_vjump;
 
 	void	loop(void);
 	void	moveMouseCamera(float elapsed);

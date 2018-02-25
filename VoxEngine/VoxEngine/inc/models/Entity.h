@@ -8,6 +8,8 @@
 #include <glm/gtx/transform.hpp>
 #include <SDL2/SDL.h>
 
+class World;
+
 class	Entity
 {
 private:
@@ -28,12 +30,22 @@ public:
 
 	glm::vec3		_colour;
 
+	bool			_jump;
+	float			_v0;
+	float			_y0;
+	float			_g;
+	float			_t;
+
 	bool			_draw;
 
 	void			setModelMatrix(void);
 	glm::mat4		getModelMatrix(void);
 
 	glm::vec3&		getPos(void);
+
+	glm::vec3	move(const glm::vec3 delta, float elapsed, World *world);
+	void		jump(float h);
+	bool		isFalling(World *world);
 };
 
 #endif //!ENTITY_HH_
