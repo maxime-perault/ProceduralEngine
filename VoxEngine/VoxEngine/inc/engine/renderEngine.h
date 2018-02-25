@@ -27,6 +27,7 @@ public:
 	void	updateWindow(std::size_t win_x, std::size_t win_y);
 
 	void	renderVAO_oneTime(Entity& entity);
+	void	renderVAO_LINE_oneTime(Entity& entity);
 	void	renderVAO_multipleTime(std::vector<Entity>& entity);
 
 	void	renderAxis(std::vector<Entity> axis);

@@ -332,6 +332,45 @@ Entity	cubeFactory::getCube(const e_Type type, glm::vec3 pos, GLuint vao)
 	return (res);
 }
 
+Entity	cubeFactory::getWirelessCube(glm::vec3 colour, glm::vec3 pos, GLuint vao)
+{
+	std::vector<int>	ind;
+	std::vector<float>	vtx;
+
+	vtx.insert(vtx.end(), {
+		-0.5, -0.5, -0.5, -0.5, 0.5, -0.5, //FRONT
+		-0.5, 0.5, -0.5, 0.5, 0.5, -0.5,
+		0.5, 0.5, -0.5, 0.5, -0.5, -0.5,
+		0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
+		
+		-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, //BACK
+		-0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+		0.5, 0.5, 0.5, 0.5, -0.5, 0.5,
+		0.5, -0.5, 0.5, -0.5, -0.5, 0.5,
+		
+		-0.5, -0.5, -0.5, -0.5, -0.5, 0.5, //EDGES
+		-0.5, 0.5, -0.5, -0.5, 0.5, 0.5,
+		0.5, 0.5, -0.5, 0.5, 0.5, 0.5,
+		0.5, -0.5, -0.5, 0.5, -0.5, 0.5,
+	});
+	ind.insert(ind.end(), {
+		0, 1, 2, 3, 4, 5, 6, 7,
+		8, 9, 10, 11, 12, 13, 14, 15,
+		16, 17, 18, 19, 20, 21, 22, 23,
+	});
+
+	if (vao != -1)
+		_loader.deleteVAO(vao);
+	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, ind), Texture(-1)));
+
+	res._colour = colour;
+	res._pos = pos;
+
+	res.setModelMatrix();
+
+	return (res);
+}
+
 Entity	cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot, GLuint vao)
 {
 	std::vector<int>	ind;

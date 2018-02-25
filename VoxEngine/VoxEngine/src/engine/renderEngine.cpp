@@ -86,6 +86,20 @@ void	renderEngine::renderVAO_oneTime(Entity& entity)
 	glDrawElements(GL_TRIANGLES, entity._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 }
 
+void	renderEngine::renderVAO_LINE_oneTime(Entity& entity)
+{
+	this->createModelMatrix(entity, _staticShader);
+	_staticShader.loadRawColour(entity._colour);
+
+	glBindVertexArray(entity._model._rawModel._vao_id);
+
+	glEnableVertexAttribArray(0);
+
+	glDrawElements(GL_LINES, entity._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+
+	_staticShader.unloadRawColour();
+}
+
 void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 {
 	if (entities.size() == 0)
@@ -172,6 +186,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	Entity&					player = world->getPlayer();
 	std::vector<Entity>&	axis = world->getAxis();
 	std::vector<Entity>&	text = world->getText();
+	Entity&					wirelessCube = world->getWirelessCube();
 
 	_staticShader.start();
 
@@ -189,6 +204,9 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	//render chunk
 	this->renderChunks(world->_chunks);
+
+	//render wirelessCube
+	this->renderVAO_LINE_oneTime(wirelessCube);
 
 	//render Axis
 	if (debug == true)

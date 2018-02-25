@@ -66,6 +66,17 @@ void	Game::moveKeyboardCamera(float elapsed)
 		_world->getPlayer().jump(0);
 	}
 
+	if (_inputManager.getClic() == 1 &&
+		_world->getBlockOnChunk(_camera._lookAt + (_camera._dir * 2.f)) <= cubeFactory::WATER)
+	{
+		_world->updateBlock(_camera._lookAt + (_camera._dir * 2.f), cubeFactory::DIRT, true);
+	}
+	else if (_inputManager.getClic() == -1 &&
+		_world->getBlockOnChunk(_camera._lookAt + (_camera._dir * 2.f)) > cubeFactory::WATER)
+	{
+		_world->updateBlock(_camera._lookAt + (_camera._dir * 2.f), 0, false);
+	}
+
 	this->movePlayer(move, elapsed);
 	
 }

@@ -20,6 +20,7 @@ public:
 	chunkFactory	_chunkFactory;
 	FontFactory		_fontFactory;
 
+	Entity					_wirelessCube;
 	Light					_sun;
 	Entity					_player;
 	std::vector<Entity>		_axis;
@@ -31,9 +32,11 @@ public:
 
 	void	setWin(glm::vec2& win);
 	void	update(float elapsed, Camera& camera, const int fps, const bool debug);
+	void	updateBlock(glm::vec3 pos, int type, bool draw);
 
 	Light	&getSun(void);
 	Entity	&getPlayer(void);
+	Entity	&getWirelessCube(void);
 	int						getBlockOnChunk(glm::vec3 pos);
 	std::vector<Entity>		&getAxis(void);
 	std::vector<Entity>		&getText(void);

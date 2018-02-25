@@ -82,3 +82,15 @@ glm::vec2	InputManager::getMouseMotion(SDL_Window * win, int win_x, int win_y)
 	}
 	return glm::vec2(-1, -1);
 }
+
+int	InputManager::getClic(void)
+{
+	if (_event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (_event.button.button == SDL_BUTTON_LEFT)
+			return -1;
+		else if (_event.button.button == SDL_BUTTON_RIGHT)
+			return 1;
+	}
+	return 0;
+}

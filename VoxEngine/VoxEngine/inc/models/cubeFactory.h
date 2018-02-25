@@ -43,6 +43,7 @@ public:
 	cubeFactory();
 	~cubeFactory();
 
+	Entity	getWirelessCube(glm::vec3 colour, glm::vec3 pos, GLuint vao);
 	Entity	getCube(const e_Type type, glm::vec3 pos, GLuint vao);
 	Entity	getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[16][16][16], GLuint vao);
 	Entity	getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot, GLuint vao);

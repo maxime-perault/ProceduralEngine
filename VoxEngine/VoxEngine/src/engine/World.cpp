@@ -36,6 +36,8 @@ World::World()
 	_axis[2]._scale = glm::vec3(0.05, 0.05, 0.05);
 	_axis[2].setModelMatrix();
 
+	_wirelessCube = _cubeFactory.getWirelessCube(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1);
+
 	_win.x = 1280; _win.y = 720;
 
 	_text.push_back(_fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS));
@@ -67,9 +69,36 @@ std::vector<Entity>&	World::getText(void)
 	return _text;
 }
 
+Entity	&World::getWirelessCube(void)
+{
+	return _wirelessCube;
+}
+
 int	World::getBlockOnChunk(glm::vec3 pos)
 {
 	return (_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].first);
+}
+
+void	World::updateBlock(glm::vec3 pos, int type, bool draw)
+{
+	pos = glm::vec3((int)pos.x, (int)pos.y, (int)pos.z);
+
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].first = type;
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].second = true;
+
+	_chunks[(int)((pos.x + 1) / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)(pos.x + 1) % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].second = true;
+	_chunks[(int)((pos.x - 1) / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)(pos.x - 1) % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].second = true;
+	_chunks[(int)(pos.x / CHUNK_X)][(int)((pos.y + 1) / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)(pos.y + 1) % CHUNK_Y][(int)pos.z % CHUNK_Z].second = true;
+	_chunks[(int)(pos.x / CHUNK_X)][(int)((pos.y - 1) / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)(pos.y - 1) % CHUNK_Y][(int)pos.z % CHUNK_Z].second = true;
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)((pos.z + 1) / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)(pos.z + 1) % CHUNK_Z].second = true;
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)((pos.z - 1) / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)(pos.z - 1) % CHUNK_Z].second = true;
+
+
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
+		= _cubeFactory.getChunk(
+		glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
+		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
+		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
 }
 
 glm::vec3 World::getScreenPos(const glm::vec3 pos)
@@ -89,7 +118,11 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 {
 	if (debug == true)
 	{
-		glm::vec3 pos = _player._pos;
+		glm::vec3	pos = _player._pos;
+		glm::vec3	picking(cam._lookAt + (cam._dir * 2.f));
+
+		_wirelessCube._pos = glm::vec3((int)picking.x, (int)picking.y, (int)picking.z);
+		_wirelessCube.setModelMatrix();
 
 		_text[FontFactory::XYZ] = _fontFactory.getText(std::string("PLAYER XYZ: "
 			+ std::to_string(pos.x) + "; "
