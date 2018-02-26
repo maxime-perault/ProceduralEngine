@@ -95,6 +95,7 @@ void	renderEngine::renderVAO_LINE_oneTime(Entity& entity)
 
 	glEnableVertexAttribArray(0);
 
+	glLineWidth(2);
 	glDrawElements(GL_LINES, entity._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 
 	_staticShader.unloadRawColour();

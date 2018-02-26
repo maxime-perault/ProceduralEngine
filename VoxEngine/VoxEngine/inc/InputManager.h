@@ -29,7 +29,7 @@ public:
 	bool	getKeyUp(e_keys key);
 	bool	getRawKey(e_keys key);
 	bool	getEvent(SDL_EventType event);
-	int		getClic(void);
+	int		getClic(int button);
 
 	glm::vec2	getMouseMotion(SDL_Window * win, int win_x, int win_y);
 

@@ -46,6 +46,7 @@ public:
 	glm::vec3	move(const glm::vec3 delta, float elapsed, World *world);
 	void		jump(float h);
 	bool		isFalling(World *world);
+	bool		canMove(World *world);
 };
 
 #endif //!ENTITY_HH_

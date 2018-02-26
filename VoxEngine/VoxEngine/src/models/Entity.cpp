@@ -57,6 +57,49 @@ glm::mat4	Entity::getModelMatrix(void)
 	return(_modelMatrix);
 }
 
+bool		Entity::canMove(World *world)
+{
+	if (world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z)) > cubeFactory::WATER)
+	{
+		return false;
+	}
+
+	if (world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z)) > cubeFactory::WATER)
+	{
+		return false;
+	}
+
+	if (world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z + 1.f)) > cubeFactory::WATER ||
+
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y + 1.f, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x + 1.f, _pos.y, _pos.z)) > cubeFactory::WATER ||
+		world->getBlockOnChunk(glm::vec3(_pos.x, _pos.y, _pos.z)) > cubeFactory::WATER)
+	{
+		return false;
+	}
+	return true;
+}
+
 glm::vec3	Entity::move(const glm::vec3 delta, float elapsed, World *world)
 {
 	glm::vec3&	apos(_pos);

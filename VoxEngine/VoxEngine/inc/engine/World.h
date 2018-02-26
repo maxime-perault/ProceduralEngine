@@ -37,6 +37,8 @@ public:
 	Light	&getSun(void);
 	Entity	&getPlayer(void);
 	Entity	&getWirelessCube(void);
+	glm::vec3				getWirelessCubePos(Camera& cam);
+	std::pair<int, bool>&	getChunkInfos(glm::vec3 pos);
 	int						getBlockOnChunk(glm::vec3 pos);
 	std::vector<Entity>		&getAxis(void);
 	std::vector<Entity>		&getText(void);

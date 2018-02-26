@@ -28,8 +28,6 @@ Game::~Game()
 	delete(_display);
 }
 
-
-
 void	Game::movePlayer(const glm::vec3 delta, float elapsed)
 {
 	_camera.move(_world->getPlayer().move(delta, elapsed, _world));
@@ -66,15 +64,13 @@ void	Game::moveKeyboardCamera(float elapsed)
 		_world->getPlayer().jump(0);
 	}
 
-	if (_inputManager.getClic() == 1 &&
-		_world->getBlockOnChunk(_camera._lookAt + (_camera._dir * 2.f)) <= cubeFactory::WATER)
+	if (_inputManager.getClic(1) == 1)
 	{
-		_world->updateBlock(_camera._lookAt + (_camera._dir * 2.f), cubeFactory::DIRT, true);
+		_world->updateBlock(_world->getWirelessCubePos(_camera), cubeFactory::DIRT, true);
 	}
-	else if (_inputManager.getClic() == -1 &&
-		_world->getBlockOnChunk(_camera._lookAt + (_camera._dir * 2.f)) > cubeFactory::WATER)
+	else if (_inputManager.getClic(-1) == -1)
 	{
-		_world->updateBlock(_camera._lookAt + (_camera._dir * 2.f), 0, false);
+		_world->updateBlock(_world->getWirelessCubePos(_camera), 0, false);
 	}
 
 	this->movePlayer(move, elapsed);
