@@ -16,11 +16,12 @@
 class	World
 {
 public:
-	cubeFactory		_cubeFactory;
-	chunkFactory	_chunkFactory;
-	FontFactory		_fontFactory;
+	cubeFactory				_cubeFactory;
+	chunkFactory			_chunkFactory;
+	FontFactory				_fontFactory;
 
 	Entity					_wirelessCube;
+	int						_wirelessCubeFace;
 	Light					_sun;
 	Entity					_player;
 	std::vector<Entity>		_axis;

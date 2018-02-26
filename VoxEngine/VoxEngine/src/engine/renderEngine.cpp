@@ -201,6 +201,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	this->renderVAO_oneTime(sun._entity);
 
 	//render player
+	if (cam._tps == true)
 	this->renderVAO_oneTime(player);
 
 	//render chunk

@@ -86,30 +86,92 @@ std::pair<int, bool>& World::getChunkInfos(glm::vec3 pos)
 
 void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 {
-	this->getChunkInfos(pos).first = type;
-	this->getChunkInfos(pos).second = true;
-
-	if (_player.canMove(this) == false)
-	{
-		this->getChunkInfos(pos).first = 0;
-		this->getChunkInfos(pos).second = false;
+	if (pos == glm::vec3(0, 0, 0))
 		return;
+	if (draw == false)
+	{
+		this->getChunkInfos(pos).first = type;
+		this->getChunkInfos(pos).second = true;
+
+		if (_player.canMove(this) == false)
+		{
+			this->getChunkInfos(pos).first = 0;
+			this->getChunkInfos(pos).second = false;
+			return;
+		}
+
+		this->getChunkInfos(pos + glm::vec3(1, 0, 0)).second = true;
+		this->getChunkInfos(pos - glm::vec3(1, 0, 0)).second = true;
+
+		this->getChunkInfos(pos + glm::vec3(0, 1, 0)).second = true;
+		this->getChunkInfos(pos - glm::vec3(0, 1, 0)).second = true;
+
+		this->getChunkInfos(pos + glm::vec3(0, 0, 1)).second = true;
+		this->getChunkInfos(pos - glm::vec3(0, 0, 1)).second = true;
+
+		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
+			= _cubeFactory.getChunk(
+				glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
+				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
+				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
 	}
+	else
+	{
+		switch (_wirelessCubeFace)
+		{
+			case cubeFactory::RIGHT:
+			{
+				std::cout << "right" << std::endl;
+				pos += glm::vec3(1, 0, 0);
+				break;
+			}
+			case cubeFactory::LEFT:
+			{
+				std::cout << "left" << std::endl;
+				pos -= glm::vec3(1, 0, 0);
+				break;
+			}
+			case cubeFactory::TOP:
+			{
+				std::cout << "top" << std::endl;
+				pos += glm::vec3(0, 1, 0);
+				break;
+			}
+			case cubeFactory::BOT:
+			{
+				std::cout << "bot" << std::endl;
+				pos -= glm::vec3(0, 1, 0);
+				break;
+			}
+			case cubeFactory::FRONT:
+			{
+				std::cout << "front" << std::endl;
+				pos -= glm::vec3(0, 0, 1);
+				break;
+			}
+			case cubeFactory::BACK:
+			{
+				std::cout << "back" << std::endl;
+				pos += glm::vec3(0, 0, 1);
+				break;
+			}
+		}
+		this->getChunkInfos(pos).first = type;
+		this->getChunkInfos(pos).second = true;
 
-	this->getChunkInfos(pos + glm::vec3(1, 0, 0)).second = true;
-	this->getChunkInfos(pos - glm::vec3(1, 0, 0)).second = true;
+		if (_player.canMove(this) == false)
+		{
+			this->getChunkInfos(pos).first = 0;
+			this->getChunkInfos(pos).second = false;
+			return;
+		}
 
-	this->getChunkInfos(pos + glm::vec3(0, 1, 0)).second = true;
-	this->getChunkInfos(pos - glm::vec3(0, 1, 0)).second = true;
-
-	this->getChunkInfos(pos + glm::vec3(0, 0, 1)).second = true;
-	this->getChunkInfos(pos - glm::vec3(0, 0, 1)).second = true;
-
-	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
-		= _cubeFactory.getChunk(
-		glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
-		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
-		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
+		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
+			= _cubeFactory.getChunk(
+				glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
+				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
+				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
+	}
 }
 
 glm::vec3 World::getScreenPos(const glm::vec3 pos)
@@ -149,6 +211,44 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 		if (_player.canMove(this) == true && lastCube > cubeFactory::WATER)
 		{
 			this->getChunkInfos(picking).first = lastCube;
+
+			//SET FACE
+			static glm::vec3 dis;
+
+			if (cam._tps == true)
+			{
+				picking = glm::vec3(cam._lookAt + (cam._dir * i));
+				dis = picking - glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
+			}
+			else
+			{
+				picking = glm::vec3(cam._pos + (cam._dir * i));
+				dis = picking - glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
+			}
+			if (fabs(dis.x) > fabs(dis.y) && fabs(dis.x) > fabs(dis.z))
+			{
+				if (dis.x >= 0)
+					_wirelessCubeFace = cubeFactory::RIGHT;
+				else
+					_wirelessCubeFace = cubeFactory::LEFT;
+			}
+			else if (fabs(dis.y) > fabs(dis.x) && fabs(dis.y) > fabs(dis.z))
+			{
+				if (dis.y >= 0)
+					_wirelessCubeFace = cubeFactory::TOP;
+				else
+					_wirelessCubeFace = cubeFactory::BOT;
+			}
+			else if (fabs(dis.z) > fabs(dis.y) && fabs(dis.z) > fabs(dis.x))
+			{
+				if (dis.z >= 0)
+					_wirelessCubeFace = cubeFactory::BACK;
+				else
+					_wirelessCubeFace = cubeFactory::FRONT;
+			}
+			picking = glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
+			//!SET FACE
+
 			return picking;
 		}
 		this->getChunkInfos(picking).first = lastCube;
@@ -163,7 +263,7 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	{
 		glm::vec3	pos = _player._pos;
 
-		_wirelessCube._pos = this->getWirelessCubePos(cam);;
+		_wirelessCube._pos = this->getWirelessCubePos(cam);
 		_wirelessCube.setModelMatrix();
 
 		_text[FontFactory::XYZ] = _fontFactory.getText(std::string("PLAYER XYZ: "
