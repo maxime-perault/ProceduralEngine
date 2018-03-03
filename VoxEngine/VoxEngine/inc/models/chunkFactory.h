@@ -33,7 +33,7 @@ public:
 	~chunkFactory();
 
 	void		setCubeFactory(cubeFactory& cubeFactory);
-	s_chunk		getChunk(glm::vec3 pos);
+	s_chunk		getChunk(glm::vec3 pos, int vao);
 };
 
 #endif //!CHUNKFACTORY_HH_

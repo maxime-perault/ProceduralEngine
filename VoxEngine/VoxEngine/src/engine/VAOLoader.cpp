@@ -145,24 +145,20 @@ void	VAOLoader::unbindVAO(void)
 
 void	VAOLoader::deleteVAO(const GLuint vao)
 {
-	std::vector<GLuint>::iterator				vaoIT;
-	std::vector<std::vector<GLuint>>::iterator	vbosIT;
-
-	vbosIT = _vbos.begin();
-	for (vaoIT = _vaos.begin(); vaoIT != _vaos.end(); ++vaoIT)
+	for (std::size_t  vaoIT(0); vaoIT < _vaos.size(); ++vaoIT)
 	{
-		if (*vaoIT == vao)
+		if (_vaos[vaoIT] == vao)
 		{
-			for (std::size_t i = 0; i < (*vbosIT).size(); ++i)
-				glDeleteBuffers(1, &(*vbosIT)[i]);
-			glDeleteVertexArrays(1, &(*vaoIT));
-
-			_vaos.erase(vaoIT);
-			_vbos.erase(vbosIT);
+			for (std::size_t i = 0; i < _vbos.size(); ++i)
+			{
+				glDeleteBuffers(1, &(_vbos[vaoIT][i]));
+			}
+			_vbos.erase(_vbos.begin() + vaoIT);
+			glDeleteVertexArrays(1, &(_vaos[vaoIT]));
+			_vaos.erase(_vaos.begin() + vaoIT);
 
 			return;
 		}
-		++vbosIT;
 	}
 }
 

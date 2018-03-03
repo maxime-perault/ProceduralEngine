@@ -19,6 +19,8 @@ Game::Game()
 	_camera.changeView(_world->getPlayer()._pos);
 
 	_debug = true;
+	_fps = -1;
+	_elapsed = 0;
 }
 
 Game::~Game()
@@ -33,7 +35,6 @@ void	Game::movePlayer(const glm::vec3 delta, float elapsed)
 	_camera.move(_world->getPlayer().move(delta, elapsed, _world));
 }
 
-//call one time moveplayer fdp
 void	Game::moveKeyboardCamera(float elapsed)
 {
 	float		speedMove = elapsed * 6;
@@ -100,32 +101,31 @@ void	Game::moveMouseCamera(float elapsed)
 
 void Game::loop(void)
 {
-	float	elapsed, totalTime = 0;
+	float	totalTime = 0;
 	int		frame = 0;
-	int		fps = -1;
 
-	elapsed = _timer.getElapsedSeconds(true);
+	_elapsed = _timer.getElapsedSeconds(true);
 	while (true)
 	{
 		_inputManager.Update();
 
 		if (_inputManager.getEvent(SDL_QUIT) || _inputManager.getKeyDown(InputManager::ESCAPE))
 			return;
-		
-		elapsed = _timer.getElapsedSeconds(true);
-		this->moveMouseCamera(elapsed);
-		this->moveKeyboardCamera(elapsed);
-		
+
+		_elapsed = _timer.getElapsedSeconds(true);
+		this->moveMouseCamera(_elapsed);
+		this->moveKeyboardCamera(_elapsed);
+
 		_display->clear();
-		_world->update(elapsed, _camera, fps, _debug);
+		_world->update(_elapsed, _camera, _fps, _debug);
 		_renderEngine->renderWorld(_camera, _world, _debug);
 		_display->update();
 
 		++frame;
-		totalTime += elapsed;
+		totalTime += _elapsed;
 		if (totalTime >= 1)
 		{
-			fps = frame;
+			_fps = frame;
 			frame = 0;
 			totalTime = 0;
 		}

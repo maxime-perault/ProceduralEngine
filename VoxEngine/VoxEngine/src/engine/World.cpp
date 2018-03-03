@@ -7,7 +7,7 @@ World::World()
 	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
 			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
-				_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z));
+				_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z), -1);
 
 	_sun = Light(_cubeFactory.getCube(cubeFactory::SUN, glm::vec3(100, 100, 100), -1), glm::vec3(1, 1, 1), 50, 0.5);
 	_sun._entity.setModelMatrix();
@@ -43,6 +43,8 @@ World::World()
 	_text.push_back(_fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS));
 	_text.push_back(_fontFactory.getText(std::string("PLAYER XYZ: Loading"), this->getScreenPos(glm::vec3(10, 50, 0)), FontFactory::XYZ));
 	_text.push_back(_fontFactory.getText(std::string("CHUNK XYZ: Loading"), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::CHUNK));
+
+	_deltaPlayer = glm::vec3(0, 0, 0);
 }
 
 World::~World()
@@ -76,11 +78,13 @@ Entity	&World::getWirelessCube(void)
 
 int	World::getBlockOnChunk(glm::vec3 pos)
 {
+	pos += _deltaPlayer;
 	return (_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z].first);
 }
 
 std::pair<int, bool>& World::getChunkInfos(glm::vec3 pos)
 {
+	pos += _deltaPlayer;
 	return (_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z]);
 }
 
@@ -121,37 +125,31 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 		{
 			case cubeFactory::RIGHT:
 			{
-				std::cout << "right" << std::endl;
 				pos += glm::vec3(1, 0, 0);
 				break;
 			}
 			case cubeFactory::LEFT:
 			{
-				std::cout << "left" << std::endl;
 				pos -= glm::vec3(1, 0, 0);
 				break;
 			}
 			case cubeFactory::TOP:
 			{
-				std::cout << "top" << std::endl;
 				pos += glm::vec3(0, 1, 0);
 				break;
 			}
 			case cubeFactory::BOT:
 			{
-				std::cout << "bot" << std::endl;
 				pos -= glm::vec3(0, 1, 0);
 				break;
 			}
 			case cubeFactory::FRONT:
 			{
-				std::cout << "front" << std::endl;
 				pos -= glm::vec3(0, 0, 1);
 				break;
 			}
 			case cubeFactory::BACK:
 			{
-				std::cout << "back" << std::endl;
 				pos += glm::vec3(0, 0, 1);
 				break;
 			}
@@ -257,14 +255,118 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 	return glm::vec3(0, 0, 0);
 }
 
+void	World::updateChunksCenter(void)
+{
+	static glm::vec3 current_chunk = glm::vec3((int)(_player._pos.x / CHUNK_SIZE_X), (int)(_player._pos.y / CHUNK_SIZE_Y), (int)(_player._pos.z / CHUNK_SIZE_Z));
+	static glm::vec3 deltaChunk(0, 0, 0);
+
+
+	// X CHUNK changes
+	if ((int)(_player._pos.x / CHUNK_SIZE_X) > current_chunk.x)
+	{
+		_deltaPlayer.x -= CHUNK_X;
+		++deltaChunk.x;
+		
+		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+				for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+				{
+					if (x == 0)
+						_cubeFactory._loader.deleteVAO(_chunks[x][y][z].Chunk._model._rawModel._vao_id);
+					if (x < (CHUNK_SIZE_X - 1))
+					{
+						_chunks[x][y][z] = _chunks[x + 1][y][z];
+					}
+					else
+					{
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x + deltaChunk.x, y, z), -1);
+					}
+				}
+		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
+		std::cout << "test" << std::endl;
+	}
+	else if ((int)(_player._pos.x / CHUNK_SIZE_X) < current_chunk.x)
+	{
+		_deltaPlayer.x += CHUNK_X;
+		--deltaChunk.x;
+
+		for (std::size_t x(CHUNK_SIZE_X - 1); x > 0; --x)
+			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+				for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+				{
+					if (x == CHUNK_SIZE_X - 1)
+						_cubeFactory._loader.deleteVAO(_chunks[x][y][z].Chunk._model._rawModel._vao_id);
+					if (x > 1)
+					{
+						_chunks[x][y][z] = _chunks[x - 1][y][z];
+					}
+					else
+					{
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x + deltaChunk.x, y, z), -1);
+					}
+				}
+		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
+		std::cout << "test" << std::endl;
+	}
+	// Z CHUNK changes
+	if ((int)(_player._pos.z / CHUNK_SIZE_Z) > current_chunk.z)
+	{
+		_deltaPlayer.z -= CHUNK_Z;
+		++deltaChunk.z;
+
+		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+				for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+				{
+					if (z == 0)
+						_cubeFactory._loader.deleteVAO(_chunks[x][y][z].Chunk._model._rawModel._vao_id);
+					if (z < (CHUNK_SIZE_Z - 1))
+					{
+						_chunks[x][y][z] = _chunks[x][y][z + 1];
+					}
+					else
+					{
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z + deltaChunk.z), -1);
+					}
+				}
+		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
+		std::cout << "test" << std::endl;
+	}
+	else if ((int)(_player._pos.z / CHUNK_SIZE_Z) < current_chunk.z)
+	{
+		_deltaPlayer.z += CHUNK_Z;
+		--deltaChunk.z;
+
+		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+				for (std::size_t z(CHUNK_SIZE_Z - 1); z > 0; --z)
+				{
+					if (z == CHUNK_SIZE_Z - 1)
+						_cubeFactory._loader.deleteVAO(_chunks[x][y][z].Chunk._model._rawModel._vao_id);
+					if (z > 1)
+					{
+						_chunks[x][y][z] = _chunks[x][y][z - 1];
+					}
+					else
+					{
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z + deltaChunk.z), -1);
+					}
+				}
+		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
+		std::cout << "test" << std::endl;
+	}
+}
+
 void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 {
+	_wirelessCube._pos = this->getWirelessCubePos(cam);
+	_wirelessCube.setModelMatrix();
+
+	this->updateChunksCenter();
+
 	if (debug == true)
 	{
 		glm::vec3	pos = _player._pos;
-
-		_wirelessCube._pos = this->getWirelessCubePos(cam);
-		_wirelessCube.setModelMatrix();
 
 		_text[FontFactory::XYZ] = _fontFactory.getText(std::string("PLAYER XYZ: "
 			+ std::to_string(pos.x) + "; "
@@ -296,5 +398,4 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 		_axis[2]._pos = cam._pos + cam._dir;
 		_axis[2].setModelMatrix();
 	}
-	return;
 }

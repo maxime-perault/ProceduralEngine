@@ -1,6 +1,7 @@
 #ifndef GAME_HH_
 # define GAME_HH_
 
+# include <thread> 
 # include "Display.h"
 # include "InputManager.h"
 # include "renderEngine.h"
@@ -23,6 +24,10 @@ public:
 
 	int		_win_x;
 	int		_win_y;
+
+	float	_elapsed;
+
+	int		_fps;
 
 	bool	_debug;
 

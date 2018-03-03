@@ -293,14 +293,12 @@ Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[1
 						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
 				}
 			}
-
 	if (vao != -1)
 		_loader.deleteVAO(vao);
 	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
 
 	res._pos = pos;
 	res.setModelMatrix();
-
 	return (res);
 }
 

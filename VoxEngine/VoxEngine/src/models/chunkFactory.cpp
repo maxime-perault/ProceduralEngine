@@ -180,7 +180,7 @@ void	chunkFactory::mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUN
 }
 
 
-s_chunk chunkFactory::getChunk(glm::vec3 pos)
+s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao)
 {
 	s_chunk		res;
 
@@ -204,7 +204,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos)
 	this->setPile(res.chunkInfos, pos);
 	this->mixUpDirt(res.chunkInfos, pos);
 
-	res.Chunk = _cubeFactory.getChunk(glm::vec3(pos.x * CHUNK_X, pos.y * CHUNK_Y, pos.z * CHUNK_Z), res.chunkInfos, -1);
+	res.Chunk = _cubeFactory.getChunk(glm::vec3(pos.x * CHUNK_X, pos.y * CHUNK_Y, pos.z * CHUNK_Z), res.chunkInfos, vao);
 
 	return res;
 }

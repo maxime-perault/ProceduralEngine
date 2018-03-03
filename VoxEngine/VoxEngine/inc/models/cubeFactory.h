@@ -32,7 +32,6 @@ public:
 	};
 
 private:
-	VAOLoader	_loader;
 	Texture		_terrain;
 	
 	void	setFace(std::vector<int>& ind, std::vector<float>& uv, std::vector<float>& vtx, std::vector<float>& normals,
@@ -42,6 +41,8 @@ public:
 
 	cubeFactory();
 	~cubeFactory();
+
+	VAOLoader	_loader;
 
 	Entity	getWirelessCube(glm::vec3 colour, glm::vec3 pos, GLuint vao);
 	Entity	getCube(const e_Type type, glm::vec3 pos, GLuint vao);

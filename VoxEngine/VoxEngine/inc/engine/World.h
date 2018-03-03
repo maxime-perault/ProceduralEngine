@@ -34,10 +34,12 @@ public:
 	void	setWin(glm::vec2& win);
 	void	update(float elapsed, Camera& camera, const int fps, const bool debug);
 	void	updateBlock(glm::vec3 pos, int type, bool draw);
+	void	updateChunksCenter(void);
 
 	Light	&getSun(void);
 	Entity	&getPlayer(void);
 	Entity	&getWirelessCube(void);
+
 	glm::vec3				getWirelessCubePos(Camera& cam);
 	std::pair<int, bool>&	getChunkInfos(glm::vec3 pos);
 	int						getBlockOnChunk(glm::vec3 pos);
@@ -46,7 +48,8 @@ public:
 
 	glm::vec3	getScreenPos(const glm::vec3 pos);
 
-	glm::vec2				_win;
+	glm::vec2	_win;
+	glm::vec3	_deltaPlayer;
 
 	//std::vector<Entity*>	getWaters(void);
 	//std::vector<Entity*>	getClouds(void);
