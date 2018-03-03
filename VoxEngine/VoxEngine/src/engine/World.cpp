@@ -113,9 +113,14 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 		this->getChunkInfos(pos + glm::vec3(0, 0, 1)).second = true;
 		this->getChunkInfos(pos - glm::vec3(0, 0, 1)).second = true;
 
+		pos += _deltaPlayer;
+
 		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
 			= _cubeFactory.getChunk(
-				glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
+				glm::vec3(
+				(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
+				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
+				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
 	}
@@ -164,9 +169,14 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 			return;
 		}
 
+		pos += _deltaPlayer;
+
 		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
 			= _cubeFactory.getChunk(
-				glm::vec3((int)(pos.x / CHUNK_X) * CHUNK_X, (int)(pos.y / CHUNK_Y) * CHUNK_Y, (int)(pos.z / CHUNK_Z) * CHUNK_Z),
+				glm::vec3(
+				(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
+				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
+				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id);
 	}
@@ -258,14 +268,13 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 void	World::updateChunksCenter(void)
 {
 	static glm::vec3 current_chunk = glm::vec3((int)(_player._pos.x / CHUNK_SIZE_X), (int)(_player._pos.y / CHUNK_SIZE_Y), (int)(_player._pos.z / CHUNK_SIZE_Z));
-	static glm::vec3 deltaChunk(0, 0, 0);
 
 
 	// X CHUNK changes
 	if ((int)(_player._pos.x / CHUNK_SIZE_X) > current_chunk.x)
 	{
 		_deltaPlayer.x -= CHUNK_X;
-		++deltaChunk.x;
+		++_deltaChunk.x;
 		
 		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -279,16 +288,15 @@ void	World::updateChunksCenter(void)
 					}
 					else
 					{
-						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x + deltaChunk.x, y, z), -1);
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z) + _deltaChunk, -1);
 					}
 				}
 		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
-		std::cout << "test" << std::endl;
 	}
 	else if ((int)(_player._pos.x / CHUNK_SIZE_X) < current_chunk.x)
 	{
 		_deltaPlayer.x += CHUNK_X;
-		--deltaChunk.x;
+		--_deltaChunk.x;
 
 		for (std::size_t x(CHUNK_SIZE_X - 1); x > 0; --x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -302,17 +310,16 @@ void	World::updateChunksCenter(void)
 					}
 					else
 					{
-						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x + deltaChunk.x, y, z), -1);
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z) + _deltaChunk, -1);
 					}
 				}
 		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
-		std::cout << "test" << std::endl;
 	}
 	// Z CHUNK changes
 	if ((int)(_player._pos.z / CHUNK_SIZE_Z) > current_chunk.z)
 	{
 		_deltaPlayer.z -= CHUNK_Z;
-		++deltaChunk.z;
+		++_deltaChunk.z;
 
 		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -326,16 +333,15 @@ void	World::updateChunksCenter(void)
 					}
 					else
 					{
-						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z + deltaChunk.z), -1);
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z) + _deltaChunk, -1);
 					}
 				}
 		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
-		std::cout << "test" << std::endl;
 	}
 	else if ((int)(_player._pos.z / CHUNK_SIZE_Z) < current_chunk.z)
 	{
 		_deltaPlayer.z += CHUNK_Z;
-		--deltaChunk.z;
+		--_deltaChunk.z;
 
 		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -349,11 +355,10 @@ void	World::updateChunksCenter(void)
 					}
 					else
 					{
-						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z + deltaChunk.z), -1);
+						_chunks[x][y][z] = _chunkFactory.getChunk(glm::vec3(x, y, z) + _deltaChunk, -1);
 					}
 				}
 		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
-		std::cout << "test" << std::endl;
 	}
 }
 

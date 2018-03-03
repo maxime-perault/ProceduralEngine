@@ -50,6 +50,7 @@ public:
 
 	glm::vec2	_win;
 	glm::vec3	_deltaPlayer;
+	glm::vec3	_deltaChunk;
 
 	//std::vector<Entity*>	getWaters(void);
 	//std::vector<Entity*>	getClouds(void);
