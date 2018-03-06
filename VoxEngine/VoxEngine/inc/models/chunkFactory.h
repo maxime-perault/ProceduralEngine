@@ -18,7 +18,7 @@ struct	s_chunk
 class	chunkFactory
 {
 private:
-	cubeFactory	_cubeFactory;
+	cubeFactory*	_cubeFactory;
 	PerlinNoise _perlin;
 
 	bool	isSolid(glm::vec3 pos, glm::vec3 chunk_pos);
@@ -32,8 +32,8 @@ public:
 	chunkFactory();
 	~chunkFactory();
 
-	void		setCubeFactory(cubeFactory& cubeFactory);
-	s_chunk		getChunk(glm::vec3 pos, int vao);
+	void		setCubeFactory(cubeFactory* cubeFactory);
+	s_chunk		getChunk(glm::vec3 pos, int vao, bool reload);
 };
 
 #endif //!CHUNKFACTORY_HH_

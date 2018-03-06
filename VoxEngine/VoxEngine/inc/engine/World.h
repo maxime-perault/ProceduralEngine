@@ -1,6 +1,8 @@
 #ifndef WORLD_H_
 # define WORLD_H_
 
+# include <thread>
+# include <future>
 # include "VAOLoader.h"
 # include "Entity.h"
 # include "cubeFactory.h"
@@ -13,11 +15,11 @@
 # define CHUNK_SIZE_Y 6
 # define CHUNK_SIZE_Z 13
 
+void	initThread();
+
 class	World
 {
 public:
-	cubeFactory				_cubeFactory;
-	chunkFactory			_chunkFactory;
 	FontFactory				_fontFactory;
 
 	Entity					_wirelessCube;
@@ -26,6 +28,7 @@ public:
 	Entity					_player;
 	std::vector<Entity>		_axis;
 	std::vector<Entity>		_text;
+	s_chunk					_gen_chunks[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
 	s_chunk					_chunks[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
 
 	World();
@@ -34,7 +37,7 @@ public:
 	void	setWin(glm::vec2& win);
 	void	update(float elapsed, Camera& camera, const int fps, const bool debug);
 	void	updateBlock(glm::vec3 pos, int type, bool draw);
-	void	updateChunksCenter(void);
+	int		checkForChunksMove();
 
 	Light	&getSun(void);
 	Entity	&getPlayer(void);

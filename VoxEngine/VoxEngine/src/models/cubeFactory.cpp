@@ -3,12 +3,17 @@
 
 cubeFactory::cubeFactory()
 {
-	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2_256.png"));
+
 }
 
 cubeFactory::~cubeFactory()
 {
 	_loader.cleanUp();
+}
+
+void	cubeFactory::setTerrain(void)
+{
+	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2_256.png"));
 }
 
 void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::vector<float>& vtx,
@@ -263,7 +268,7 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 	}
 }
 
-Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[16][16][16], GLuint vao)
+Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[16][16][16], GLuint vao, bool reload)
 {
 	std::vector<int>	ind;
 	std::vector<float>	uv;
@@ -277,25 +282,31 @@ Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[1
 			{
 				if (chunkInfos[x][y][z].first != VOID && chunkInfos[x][y][z].first != WATER && chunkInfos[x][y][z].second == true)
 				{
-					if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), FRONT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-					if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BACK, (e_Type)chunkInfos[x][y][z].first, false, i++);
-
 					if (x == 15 || (chunkInfos[x + 1][y][z].first == VOID || chunkInfos[x + 1][y][z].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), RIGHT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), RIGHT, (e_Type)chunkInfos[x][y][z].first, false, i++);
 					if (x == 0 || (chunkInfos[x - 1][y][z].first == VOID || chunkInfos[x - 1][y][z].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), LEFT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), LEFT, (e_Type)chunkInfos[x][y][z].first, false, i++);
 
 					if (y == 15 || (chunkInfos[x][y + 1][z].first == VOID || chunkInfos[x][y + 1][z].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), TOP, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), TOP, (e_Type)chunkInfos[x][y][z].first, false, i++);
 					if (y == 0 || (chunkInfos[x][y - 1][z].first == VOID || chunkInfos[x][y - 1][z].first == WATER))
-						this->setFace(ind, uv, vtx, normals, glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+
+					if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER))
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), FRONT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+					if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER))
+						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BACK, (e_Type)chunkInfos[x][y][z].first, false, i++);
 				}
 			}
-	if (vao != -1)
-		_loader.deleteVAO(vao);
-	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
+	static Entity res;
+
+	if (reload == true)
+	{
+		res = Entity(texturedModel(rawModel(vao, ind.size()), _terrain));
+		_loader.stockFrags(vtx, normals, uv, ind, vao);
+	}
+	else
+		res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
 
 	res._pos = pos;
 	res.setModelMatrix();

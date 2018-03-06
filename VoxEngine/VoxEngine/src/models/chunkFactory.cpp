@@ -9,9 +9,10 @@ chunkFactory::chunkFactory()
 
 chunkFactory::~chunkFactory() {}
 
-void		chunkFactory::setCubeFactory(cubeFactory& cubeFactory)
+void		chunkFactory::setCubeFactory(cubeFactory* cubeFactory)
 {
 	_cubeFactory = cubeFactory;
+	_cubeFactory->setTerrain();
 }
 
 //determine if the block is Air or Solid
@@ -180,9 +181,11 @@ void	chunkFactory::mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUN
 }
 
 
-s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao)
+s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao, bool reload)
 {
 	s_chunk		res;
+
+	//std::cout << "res: " << pos.x << "; " << pos.y << "; " << pos.z << "; " << std::endl;
 
 	for (float x = 0; x < CHUNK_X; x++)
 		for (float y = 0; y < CHUNK_Y; y++)
@@ -204,7 +207,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao)
 	this->setPile(res.chunkInfos, pos);
 	this->mixUpDirt(res.chunkInfos, pos);
 
-	res.Chunk = _cubeFactory.getChunk(glm::vec3(pos.x * CHUNK_X, pos.y * CHUNK_Y, pos.z * CHUNK_Z), res.chunkInfos, vao);
+	res.Chunk = _cubeFactory->getChunk(glm::vec3(pos.x * CHUNK_X, pos.y * CHUNK_Y, pos.z * CHUNK_Z), std::ref(res.chunkInfos), vao, reload);
 
 	return res;
 }

@@ -24,6 +24,8 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	_win_y = win_y;
 
 	createProjectionMatrix(_staticShader);
+
+	_vaosRendering = false;
 }
 
 renderEngine::~renderEngine()
@@ -77,7 +79,7 @@ void	renderEngine::renderVAO_oneTime(Entity& entity)
 		return;
 	this->createModelMatrix(entity, _staticShader);
 
-	glBindVertexArray(entity._model._rawModel._vao_id);
+	this->bindVAO(entity._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -91,7 +93,7 @@ void	renderEngine::renderVAO_LINE_oneTime(Entity& entity)
 	this->createModelMatrix(entity, _staticShader);
 	_staticShader.loadRawColour(entity._colour);
 
-	glBindVertexArray(entity._model._rawModel._vao_id);
+	this->bindVAO(entity._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 
@@ -106,7 +108,7 @@ void	renderEngine::renderVAO_multipleTime(std::vector<Entity>& entities)
 	if (entities.size() == 0)
 		return;
 
-	glBindVertexArray(entities[0]._model._rawModel._vao_id);
+	this->bindVAO(entities[0]._model._rawModel._vao_id);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -127,7 +129,7 @@ void	renderEngine::renderAxis(std::vector<Entity> axis)
 	if (axis.size() == 0)
 		return;
 
-	glBindVertexArray(axis[0]._model._rawModel._vao_id);
+	this->bindVAO(axis[0]._model._rawModel._vao_id);
 	glEnableVertexAttribArray(0);
 
 	for (std::size_t i(0); i < axis.size(); ++i)
@@ -147,7 +149,7 @@ void	renderEngine::renderText(std::vector<Entity> text)
 		_fontShader.loadColour(text[i]._colour);
 		_fontShader.loadPos(glm::vec2(text[i]._pos.x, text[i]._pos.y));
 
-		glBindVertexArray(text[i]._model._rawModel._vao_id);
+		this->bindVAO(text[i]._model._rawModel._vao_id);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -162,6 +164,23 @@ void	renderEngine::stop(void)
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
+	_vaosRendering = false;
+}
+
+void	renderEngine::bindVAO(GLuint vao)
+{
+	static GLint current_vao;
+
+	if (_vaosRendering == false)
+	{
+		glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &current_vao);
+		while (current_vao != 0)
+		{
+			glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &current_vao);
+		}
+		_vaosRendering = true;
+	}
+	glBindVertexArray(vao);
 }
 
 void	renderEngine::renderChunks(s_chunk(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z])
@@ -170,7 +189,7 @@ void	renderEngine::renderChunks(s_chunk(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHU
 		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
 			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
 			{
-				glBindVertexArray(chunks[x][y][z].Chunk._model._rawModel._vao_id);
+				this->bindVAO(chunks[x][y][z].Chunk._model._rawModel._vao_id);
 
 				glEnableVertexAttribArray(0);
 				glEnableVertexAttribArray(1);

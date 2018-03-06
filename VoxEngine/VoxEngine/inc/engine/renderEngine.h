@@ -30,6 +30,8 @@ public:
 	void	renderVAO_LINE_oneTime(Entity& entity);
 	void	renderVAO_multipleTime(std::vector<Entity>& entity);
 
+	void	bindVAO(GLuint vao);
+
 	void	renderAxis(std::vector<Entity> axis);
 	void	renderText(std::vector<Entity> text);
 	void	renderEngine::renderChunks(s_chunk (&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z]);
@@ -49,6 +51,8 @@ public:
 	float		_fov;
 	float		_near;
 	float		_far;
+
+	bool		_vaosRendering;
 
 	staticShader	_staticShader;
 	fontShader		_fontShader;
