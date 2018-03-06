@@ -145,6 +145,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
+		g_cubeFactory->_loader.loadFrags();
 	}
 	else
 	{
@@ -201,6 +202,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
+		g_cubeFactory->_loader.loadFrags();
 	}
 }
 
