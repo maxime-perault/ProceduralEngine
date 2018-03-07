@@ -50,7 +50,7 @@ public:
 		const std::vector<float> &texture_coord,
 		const std::vector<int> &indices, GLuint vao);
 
-	void	loadFrags(void);
+	void	loadFrags(std::size_t count);
 
 	rawModel	loadtoVAO(const std::vector<float> &pos,
 		const std::vector<float> &normals,

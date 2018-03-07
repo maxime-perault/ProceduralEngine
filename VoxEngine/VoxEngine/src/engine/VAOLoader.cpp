@@ -64,13 +64,22 @@ void	VAOLoader::stockFrags(	const std::vector<float> &pos,
 	_tmpFrags.push_back(tmp);
 }
 
-void	VAOLoader::loadFrags(void)
+void	VAOLoader::loadFrags(std::size_t count)
 {
+	static std::size_t max;
+
+	if (_tmpFrags.empty() == true)
+		return;
+
+	if (_tmpFrags.size() > count)
+		max = count;
+	else
+		max = _tmpFrags.size();
+		
 	for (std::size_t i(0); i < _tmpFrags.size(); ++i)
-	{
 		this->updateVAO(_tmpFrags[i].pos, _tmpFrags[i].normals, _tmpFrags[i].texture_coord, _tmpFrags[i].indices, _tmpFrags[i].vao);
-	}
-	_tmpFrags.clear();
+
+	_tmpFrags.erase(_tmpFrags.begin(), _tmpFrags.begin() + max);
 }
 
 rawModel	VAOLoader::updateVAO(const std::vector<float> &pos,

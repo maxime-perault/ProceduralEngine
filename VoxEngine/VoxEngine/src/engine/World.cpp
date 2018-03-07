@@ -145,7 +145,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
-		g_cubeFactory->_loader.loadFrags();
+		g_cubeFactory->_loader.loadFrags(1);
 	}
 	else
 	{
@@ -202,7 +202,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
 				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
-		g_cubeFactory->_loader.loadFrags();
+		g_cubeFactory->_loader.loadFrags(1);
 	}
 }
 
@@ -407,7 +407,7 @@ int	World::checkForChunksMove()
 		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
 		return cubeFactory::LEFT;
 	}
-	if ((int)(_player._pos.z / CHUNK_SIZE_Z) > current_chunk.z)
+	else if ((int)(_player._pos.z / CHUNK_SIZE_Z) > current_chunk.z)
 	{
 		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
 		return cubeFactory::FRONT;
@@ -423,9 +423,9 @@ int	World::checkForChunksMove()
 
 void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 {
-	static std::future<void> asyncFunc;
-	static bool	threading = false;
-	int			dir = -1;
+	static std::future<void>	asyncFunc;
+	static bool					threading = false;
+	int							dir = -1;
 
 	_wirelessCube._pos = this->getWirelessCubePos(cam);
 	_wirelessCube.setModelMatrix();
@@ -458,9 +458,11 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 		_deltaPlayer += g_tmpDeltaPlayer;
 		_deltaChunk += g_tmpDeltaChunk;
 
-		g_cubeFactory->_loader.loadFrags();
 		threading = false;
 	}
+
+	if (threading == false)
+		g_cubeFactory->_loader.loadFrags(1);
 
 	if (debug == true)
 	{
