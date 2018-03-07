@@ -8,8 +8,8 @@ renderEngine::renderEngine() {}
 
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
-	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	/*
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

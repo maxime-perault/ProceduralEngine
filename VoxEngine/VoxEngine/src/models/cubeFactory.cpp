@@ -72,7 +72,7 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 		case FOLIAGE_R:
 		{
 			pos_side.x = 0;
-			pos_side.y = 8;
+			pos_side.y = 9;
 			pos_top = pos_side;
 			pos_bot = pos_top;
 			break;
@@ -80,7 +80,7 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 		case FOLIAGE_G:
 		{
 			pos_side.x = 1;
-			pos_side.y = 8;
+			pos_side.y = 9;
 			pos_top = pos_side;
 			pos_bot = pos_top;
 			break;
@@ -88,7 +88,7 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 		case FOLIAGE_Y:
 		{
 			pos_side.x = 2;
-			pos_side.y = 8;
+			pos_side.y = 9;
 			pos_top = pos_side;
 			pos_bot = pos_top;
 			break;
@@ -96,9 +96,9 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 		case WOOD:
 		{
 			pos_side.x = 0;
-			pos_side.y = 12;
+			pos_side.y = 13;
 			pos_top.x = 0;
-			pos_top.y = 13;
+			pos_top.y = 14;
 			pos_bot = pos_top;
 			break;
 		}
@@ -315,20 +315,32 @@ Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[1
 			{
 				if (chunkInfos[x][y][z].first != VOID && chunkInfos[x][y][z].first != WATER && chunkInfos[x][y][z].second == true)
 				{
-					if (x == 15 || (chunkInfos[x + 1][y][z].first == VOID || chunkInfos[x + 1][y][z].first == WATER))
+					if (chunkInfos[x][y][z].first == WOOD)
+					{
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), RIGHT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-					if (x == 0 || (chunkInfos[x - 1][y][z].first == VOID || chunkInfos[x - 1][y][z].first == WATER))
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), LEFT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-
-					if (y == 15 || (chunkInfos[x][y + 1][z].first == VOID || chunkInfos[x][y + 1][z].first == WATER))
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), TOP, (e_Type)chunkInfos[x][y][z].first, false, i++);
-					if (y == 0 || (chunkInfos[x][y - 1][z].first == VOID || chunkInfos[x][y - 1][z].first == WATER))
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-
-					if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER))
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), FRONT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-					if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER))
 						this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BACK, (e_Type)chunkInfos[x][y][z].first, false, i++);
+					}
+					else
+					{
+						if (x == 15 || (chunkInfos[x + 1][y][z].first == VOID || chunkInfos[x + 1][y][z].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), RIGHT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						if (x == 0 || (chunkInfos[x - 1][y][z].first == VOID || chunkInfos[x - 1][y][z].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), LEFT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+
+						if (y == 15 || (chunkInfos[x][y + 1][z].first == VOID || chunkInfos[x][y + 1][z].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), TOP, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						if (y == 0 || (chunkInfos[x][y - 1][z].first == VOID || chunkInfos[x][y - 1][z].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+
+						if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), FRONT, (e_Type)chunkInfos[x][y][z].first, false, i++);
+						if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER))
+							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BACK, (e_Type)chunkInfos[x][y][z].first, false, i++);
+					}
 				}
 			}
 	static Entity res;

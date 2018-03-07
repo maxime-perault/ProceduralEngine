@@ -15,12 +15,17 @@ void		chunkFactory::setCubeFactory(cubeFactory* cubeFactory)
 	_cubeFactory->setTerrain();
 }
 
+float	chunkFactory::getPerlin(glm::vec3 pos, glm::vec3 chunk_pos)
+{
+	return powf(((_perlin.octaveNoise((pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
+		(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
+		(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f);
+}
+
 //determine if the block is Air or Solid
 bool	chunkFactory::isSolid(glm::vec3 pos, glm::vec3 chunk_pos)
 {
-	if (powf(((_perlin.octaveNoise(	(pos.x + (chunk_pos.x * CHUNK_X)) / (CHUNK_X * 4) * 2,
-									(pos.y + (chunk_pos.y * CHUNK_Y)) / (CHUNK_Y * 4) * 2,
-									(pos.z + (chunk_pos.z * CHUNK_Z)) / (CHUNK_Z * 4) * 2, 2) + 1.f) / 2.f), (pos.y + (chunk_pos.y * CHUNK_Y)) / 15.f) > 0.5)
+	if (this->getPerlin(pos, chunk_pos) > 0.5)
 		return true;
 	return false;
 }
@@ -124,6 +129,112 @@ void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHU
 			}
 }
 
+void	chunkFactory::genTree(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos)
+{
+	static int rand_val;
+	static int foliage;
+
+	int inc(1);
+	int init_y(pos.y);
+
+	if ((rand_val = (rand() % 3)) <= 1)
+		foliage = cubeFactory::FOLIAGE_R;
+	else if (rand_val == 2)
+		foliage = cubeFactory::FOLIAGE_G;
+	else
+		foliage = cubeFactory::FOLIAGE_Y;
+
+	while (inc <= 7)
+	{
+		if (inc <= 6)
+		{
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first = cubeFactory::WOOD;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].second = true;
+		}
+		if (inc == 7)
+		{
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first = foliage;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].second = true;
+		}
+
+		if (inc >= 4)
+		{
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z].first = foliage;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z].second = true;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z].first = foliage;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z].second = true;
+
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 1].first = foliage;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 1].second = true;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 1].first = foliage;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 1].second = true;
+		}
+
+		if (inc >= 4 && inc <= 6)
+		{
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 1].first = foliage;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 1].second = true;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 1].first = foliage;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 1].second = true;
+
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 1].first = foliage;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 1].second = true;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 1].first = foliage;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 1].second = true;
+		}
+
+		if (inc == 4 || inc == 5)
+		{
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z].first = foliage;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z].second = true;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 1].first = foliage;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 1].second = true;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 1].first = foliage;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 1].second = true;
+
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z].first = foliage;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z].second = true;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 1].first = foliage;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 1].second = true;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 1].first = foliage;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 1].second = true;
+
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 2].first = foliage;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 2].second = true;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 2].first = foliage;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 2].second = true;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 2].first = foliage;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 2].second = true;
+
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 2].first = foliage;
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 2].second = true;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 2].first = foliage;
+			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 2].second = true;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 2].first = foliage;
+			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 2].second = true;
+		}
+
+		if (inc == 4)
+		{
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 2].first = foliage;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 2].second = true;
+
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 2].first = foliage;
+			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 2].second = true;
+
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 2].first = foliage;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 2].second = true;
+
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 2].first = foliage;
+			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 2].second = true;
+		}
+		
+		
+		pos.y = init_y + inc;
+		++inc;
+	}
+}
+
 //Set grass top of the dirt pile
 void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos)
 {
@@ -142,6 +253,13 @@ void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK
 				else if ((y < (CHUNK_Y - 1) && chunk[(int)x][(int)y][(int)z].first == cubeFactory::DIRT && chunk[(int)x][(int)y + 1][(int)z].first == cubeFactory::VOID))
 				{
 					chunk[(int)x][(int)y][(int)z].first = cubeFactory::GRASS;
+					if ((rand() % 100) <= 1
+						&& ((int)x <= (CHUNK_X - 3)) && ((int)x >= 2)
+						&& ((int)z <= (CHUNK_Z - 3)) && ((int)z >= 2)
+						&& ((int)y + 1) <= (CHUNK_Y - 7))
+					{
+						this->genTree(chunk, glm::vec3((int)x, (int)y + 1, (int)z));
+					}
 				}
 			}
 }
@@ -188,8 +306,6 @@ void	chunkFactory::perlinWorm(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHU
 s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao, bool reload)
 {
 	s_chunk		res;
-
-	//std::cout << "res: " << pos.x << "; " << pos.y << "; " << pos.z << "; " << std::endl;
 
 	for (float x = 0; x < CHUNK_X; x++)
 		for (float y = 0; y < CHUNK_Y; y++)

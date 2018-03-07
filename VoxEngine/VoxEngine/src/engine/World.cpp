@@ -35,9 +35,10 @@ World::World()
 	int onGrass = 0;
 
 	for (int y(CHUNK_SIZE_Y * CHUNK_Y - 1); y > 0; --y)
-		if (this->getBlockOnChunk(glm::vec3((CHUNK_X * CHUNK_SIZE_X) / 2, y, (CHUNK_Z * CHUNK_SIZE_Z) / 2)) == cubeFactory::GRASS)
+		if (this->getBlockOnChunk(glm::vec3((CHUNK_X * CHUNK_SIZE_X) / 2, y, (CHUNK_Z * CHUNK_SIZE_Z) / 2)) > cubeFactory::WATER)
 		{
 			onGrass = y + 1;
+			break;
 		}
 
 	_player = g_cubeFactory->getCube(cubeFactory::PLAYER, glm::vec3(
