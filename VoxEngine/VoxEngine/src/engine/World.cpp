@@ -395,26 +395,26 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 
 int	World::checkForChunksMove()
 {
-	static glm::vec3 current_chunk = glm::vec3((int)(_player._pos.x / CHUNK_SIZE_X), (int)(_player._pos.y / CHUNK_SIZE_Y), (int)(_player._pos.z / CHUNK_SIZE_Z));
+	static glm::vec3 current_chunk = glm::vec3((int)(_player._pos.x / CHUNK_X), (int)(_player._pos.y / CHUNK_Y), (int)(_player._pos.z / CHUNK_Z));
 
-	if ((int)(_player._pos.x / CHUNK_SIZE_X) > current_chunk.x)
+	if ((int)(_player._pos.x / CHUNK_X) > current_chunk.x)
 	{
-		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
+		current_chunk.x = (int)(_player._pos.x / CHUNK_X);
 		return cubeFactory::RIGHT;
 	}
-	else if ((int)(_player._pos.x / CHUNK_SIZE_X) < current_chunk.x)
+	else if ((int)(_player._pos.x / CHUNK_X) < current_chunk.x)
 	{
-		current_chunk.x = (int)(_player._pos.x / CHUNK_SIZE_X);
+		current_chunk.x = (int)(_player._pos.x / CHUNK_X);
 		return cubeFactory::LEFT;
 	}
-	else if ((int)(_player._pos.z / CHUNK_SIZE_Z) > current_chunk.z)
+	else if ((int)(_player._pos.z / CHUNK_Z) > current_chunk.z)
 	{
-		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
+		current_chunk.z = (int)(_player._pos.z / CHUNK_Z);
 		return cubeFactory::FRONT;
 	}
-	else if ((int)(_player._pos.z / CHUNK_SIZE_Z) < current_chunk.z)
+	else if ((int)(_player._pos.z / CHUNK_Z) < current_chunk.z)
 	{
-		current_chunk.z = (int)(_player._pos.z / CHUNK_SIZE_Z);
+		current_chunk.z = (int)(_player._pos.z / CHUNK_Z);
 		return cubeFactory::BACK;
 	}
 

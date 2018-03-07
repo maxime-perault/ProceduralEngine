@@ -4,7 +4,7 @@
 
 chunkFactory::chunkFactory()
 {
-	srand(time(NULL));
+	_perlin.reseed(time(NULL));
 }
 
 chunkFactory::~chunkFactory() {}
@@ -128,7 +128,7 @@ void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHU
 void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos)
 {
 	int res = -1;
-
+	
 	for (float x = 0; x < CHUNK_X; x++)
 		for (float y = 0; y < CHUNK_Y; y++)
 			for (float z = 0; z < CHUNK_Z; z++)
@@ -180,6 +180,10 @@ void	chunkFactory::mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUN
 			}
 }
 
+void	chunkFactory::perlinWorm(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos)
+{
+
+}
 
 s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao, bool reload)
 {
@@ -202,7 +206,7 @@ s_chunk chunkFactory::getChunk(glm::vec3 pos, int vao, bool reload)
 					res.chunkInfos[(int)x][(int)y][(int)z].second = false;
 				}
 			}
-	
+	this->perlinWorm(res.chunkInfos, pos);
 	this->disableHiddenCubes(res.chunkInfos, pos);
 	this->setPile(res.chunkInfos, pos);
 	this->mixUpDirt(res.chunkInfos, pos);
