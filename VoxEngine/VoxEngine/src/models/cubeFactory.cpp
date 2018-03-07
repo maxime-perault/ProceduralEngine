@@ -69,6 +69,39 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 			*/
 			break;
 		}
+		case FOLIAGE_R:
+		{
+			pos_side.x = 0;
+			pos_side.y = 8;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case FOLIAGE_G:
+		{
+			pos_side.x = 1;
+			pos_side.y = 8;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case FOLIAGE_Y:
+		{
+			pos_side.x = 2;
+			pos_side.y = 8;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
+		case WOOD:
+		{
+			pos_side.x = 0;
+			pos_side.y = 12;
+			pos_top.x = 0;
+			pos_top.y = 13;
+			pos_bot = pos_top;
+			break;
+		}
 		case SUN:
 		{
 			pos_side.x = 13;

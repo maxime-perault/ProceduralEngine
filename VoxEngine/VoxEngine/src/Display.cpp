@@ -43,7 +43,7 @@ void	Display::clear(void)
 {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0, 0, 0, 1);
+	glClearColor(0.59, 0.83, 0.94, 1);
 }
 
 void	Display::update(void)

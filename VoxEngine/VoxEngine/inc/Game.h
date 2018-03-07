@@ -34,6 +34,7 @@ public:
 	void	loop(void);
 	void	moveMouseCamera(float elapsed);
 	void	moveKeyboardCamera(float elapsed);
+	void	KeyboardAction(void);
 	void	movePlayer(const glm::vec3 delta, float elapsed);
 };
 

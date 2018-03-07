@@ -64,7 +64,11 @@ void	Game::moveKeyboardCamera(float elapsed)
 	{
 		_world->getPlayer().jump(0);
 	}
+	this->movePlayer(move, elapsed);
+}
 
+void	Game::KeyboardAction(void)
+{
 	if (_inputManager.getClic(1) == 1)
 	{
 		_world->updateBlock(_world->getWirelessCubePos(_camera), cubeFactory::DIRT, true);
@@ -73,9 +77,6 @@ void	Game::moveKeyboardCamera(float elapsed)
 	{
 		_world->updateBlock(_world->getWirelessCubePos(_camera), 0, false);
 	}
-
-	this->movePlayer(move, elapsed);
-	
 }
 
 void	Game::moveMouseCamera(float elapsed)
@@ -118,6 +119,7 @@ void Game::loop(void)
 
 		_display->clear();
 		_world->update(_elapsed, _camera, _fps, _debug);
+		this->KeyboardAction();
 		_renderEngine->renderWorld(_camera, _world, _debug);
 		_display->update();
 

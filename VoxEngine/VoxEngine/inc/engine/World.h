@@ -49,6 +49,8 @@ public:
 	std::vector<Entity>		&getAxis(void);
 	std::vector<Entity>		&getText(void);
 
+	void	updateChunk(glm::vec3 pos, bool recursive);
+
 	glm::vec3	getScreenPos(const glm::vec3 pos);
 
 	glm::vec2	_win;

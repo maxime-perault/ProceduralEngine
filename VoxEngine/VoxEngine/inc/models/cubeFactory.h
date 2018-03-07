@@ -17,6 +17,10 @@ public:
 		STONE,
 		COAL,
 		SUN,
+		FOLIAGE_R,
+		FOLIAGE_Y,
+		FOLIAGE_G,
+		WOOD,
 		PLAYER,
 		LINE
 	};

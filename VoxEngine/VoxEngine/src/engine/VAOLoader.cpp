@@ -76,10 +76,11 @@ void	VAOLoader::loadFrags(std::size_t count)
 	else
 		max = _tmpFrags.size();
 		
-	for (std::size_t i(0); i < _tmpFrags.size(); ++i)
-		this->updateVAO(_tmpFrags[i].pos, _tmpFrags[i].normals, _tmpFrags[i].texture_coord, _tmpFrags[i].indices, _tmpFrags[i].vao);
-
-	_tmpFrags.erase(_tmpFrags.begin(), _tmpFrags.begin() + max);
+	for (std::size_t i(0); i < max; ++i)
+	{
+		this->updateVAO(_tmpFrags.back().pos, _tmpFrags.back().normals, _tmpFrags.back().texture_coord, _tmpFrags.back().indices, _tmpFrags.back().vao);
+		_tmpFrags.pop_back();
+	}
 }
 
 rawModel	VAOLoader::updateVAO(const std::vector<float> &pos,

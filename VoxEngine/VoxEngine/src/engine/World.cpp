@@ -110,6 +110,43 @@ std::pair<int, bool>& World::getChunkInfos(glm::vec3 pos)
 	return (_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos[(int)pos.x % CHUNK_X][(int)pos.y % CHUNK_Y][(int)pos.z % CHUNK_Z]);
 }
 
+void	World::updateChunk(glm::vec3 pos, bool recursive)
+{
+	if (((int)((pos.y / CHUNK_Y) - _deltaChunk.y) < 0) || ((int)((pos.y / CHUNK_Y) - _deltaChunk.y) >= CHUNK_SIZE_Y))
+		return;
+
+	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
+		= g_cubeFactory->getChunk(
+			glm::vec3(
+			(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
+				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
+				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
+			_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
+			_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
+
+	if (recursive == false)
+		return;
+
+	//LEFT
+	if ((int)(pos.x / CHUNK_X) != (int)((pos.x - 1) / CHUNK_X))
+		this->updateChunk(glm::vec3(pos.x - 1, pos.y, pos.z), false);
+	//RIGHT
+	if ((int)(pos.x / CHUNK_X) != (int)((pos.x + 1) / CHUNK_X))
+		this->updateChunk(glm::vec3(pos.x + 1, pos.y, pos.z), false);
+	//BACK
+	if ((int)(pos.z / CHUNK_Z) != (int)((pos.z + 1) / CHUNK_Z))
+		this->updateChunk(glm::vec3(pos.x, pos.y, pos.z + 1), false);
+	//FRONT
+	if ((int)(pos.z / CHUNK_Z) != (int)((pos.z - 1) / CHUNK_Z))
+		this->updateChunk(glm::vec3(pos.x, pos.y, pos.z - 1), false);
+	//TOP
+	if ((int)(pos.y / CHUNK_Y) != (int)((pos.y + 1) / CHUNK_Y))
+		this->updateChunk(glm::vec3(pos.x, pos.y + 1, pos.z), false);
+	//BOT
+	if ((int)(pos.y / CHUNK_Y) != (int)((pos.y - 1) / CHUNK_Y))
+		this->updateChunk(glm::vec3(pos.x, pos.y - 1, pos.z), false);
+}
+
 void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 {
 	if (pos == glm::vec3(0, 0, 0))
@@ -137,15 +174,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 
 		pos += _deltaPlayer;
 
-		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
-			= g_cubeFactory->getChunk(
-				glm::vec3(
-				(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
-				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
-				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
-				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
-				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
-		g_cubeFactory->_loader.loadFrags(1);
+		this->updateChunk(pos, true);
 	}
 	else
 	{
@@ -194,15 +223,7 @@ void	World::updateBlock(glm::vec3 pos, int type, bool draw)
 
 		pos += _deltaPlayer;
 
-		_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
-			= g_cubeFactory->getChunk(
-				glm::vec3(
-				(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
-				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
-				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
-				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
-				_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
-		g_cubeFactory->_loader.loadFrags(1);
+		this->updateChunk(pos, true);
 	}
 }
 
@@ -462,7 +483,7 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	}
 
 	if (threading == false)
-		g_cubeFactory->_loader.loadFrags(1);
+		g_cubeFactory->_loader.loadFrags(4);
 
 	if (debug == true)
 	{
