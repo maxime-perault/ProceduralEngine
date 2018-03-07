@@ -346,7 +346,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 	else if (g_dir == cubeFactory::LEFT)
 	{
 		--g_tmpDeltaChunk.x;
-		for (std::size_t x(CHUNK_SIZE_X - 1); x > 0; --x)
+		for (int x(CHUNK_SIZE_X - 1); x >= 0; --x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
 				for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
 				{
@@ -354,7 +354,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 					{
 						tmp_chunks[y][z] = chunks[x][y][z];
 					}
-					if (x > 1)
+					if (x > 0)
 					{
 						chunks[x][y][z] = chunks[x - 1][y][z];
 					}
@@ -395,13 +395,13 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 		--g_tmpDeltaChunk.z;
 		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
-				for (std::size_t z(CHUNK_SIZE_Z - 1); z > 0; --z)
+				for (int z(CHUNK_SIZE_Z - 1); z >= 0; --z)
 				{
 					if (z == CHUNK_SIZE_Z - 1)
 					{
 						tmp_chunks[y][x] = chunks[x][y][z];
 					}
-					if (z > 1)
+					if (z > 0)
 					{
 						chunks[x][y][z] = chunks[x][y][z - 1];
 					}

@@ -66,9 +66,9 @@ void	FontFactory::initText(const std::string txt, bool create, const e_texts typ
 		text_ind.push_back(1 + i * 4);
 		text_ind.push_back(3 + i * 4);
 
-		text_ind.push_back(1 + i * 4);
-		text_ind.push_back(3 + i * 4);
 		text_ind.push_back(2 + i * 4);
+		text_ind.push_back(3 + i * 4);
+		text_ind.push_back(1 + i * 4);
 
 		xad += _fnt->_infos[ascii].xa;
 	}

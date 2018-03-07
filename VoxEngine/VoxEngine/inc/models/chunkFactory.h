@@ -29,6 +29,7 @@ private:
 	void	setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos);
 	void	mixUpDirt(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos);
 
+	void	genTreeBlock(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos, int type);
 	void	genTree(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos);
 
 	void	perlinWorm(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& chunk_pos);

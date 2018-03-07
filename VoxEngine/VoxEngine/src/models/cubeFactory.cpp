@@ -177,8 +177,8 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
 				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
-				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
-				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+				3 + nbFace * 4, 1 + nbFace * 4, 0 + nbFace * 4,
+				2 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4 });
 			break;
 		}
 		case RIGHT:
@@ -235,8 +235,8 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 				(pos_side.x + 1.f) * (1.f / 16.f), (pos_side.y + 1.f) * (1.f / 17.f),
 				(pos_side.x + 1.f) * (1.f / 16.f), pos_side.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
-				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
-				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+				3 + nbFace * 4, 1 + nbFace * 4, 0 + nbFace * 4,
+				2 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4 });
 			break;
 		}
 		case TOP:
@@ -293,8 +293,8 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 				(pos_bot.x + 1.f) * (1.f / 16.f), (pos_bot.y + 1.f) * (1.f / 17.f),
 				(pos_bot.x + 1.f) * (1.f / 16.f), pos_bot.y * (1.f / 17.f) });
 			ind.insert(ind.end(), {
-				0 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4,
-				3 + nbFace * 4, 1 + nbFace * 4, 2 + nbFace * 4 });
+				3 + nbFace * 4, 1 + nbFace * 4, 0 + nbFace * 4,
+				2 + nbFace * 4, 1 + nbFace * 4, 3 + nbFace * 4 });
 			break;
 		}
 		default: break;
@@ -326,19 +326,25 @@ Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[1
 					}
 					else
 					{
-						if (x == 15 || (chunkInfos[x + 1][y][z].first == VOID || chunkInfos[x + 1][y][z].first == WATER))
+						if (x == 15 || (chunkInfos[x + 1][y][z].first == VOID || chunkInfos[x + 1][y][z].first == WATER)
+							|| chunkInfos[x + 1][y][z].first == FOLIAGE_R || chunkInfos[x + 1][y][z].first == FOLIAGE_G || chunkInfos[x + 1][y][z].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), RIGHT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-						if (x == 0 || (chunkInfos[x - 1][y][z].first == VOID || chunkInfos[x - 1][y][z].first == WATER))
+						if (x == 0 || (chunkInfos[x - 1][y][z].first == VOID || chunkInfos[x - 1][y][z].first == WATER)
+							|| chunkInfos[x - 1][y][z].first == FOLIAGE_R || chunkInfos[x - 1][y][z].first == FOLIAGE_G || chunkInfos[x - 1][y][z].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), LEFT, (e_Type)chunkInfos[x][y][z].first, false, i++);
 
-						if (y == 15 || (chunkInfos[x][y + 1][z].first == VOID || chunkInfos[x][y + 1][z].first == WATER))
+						if (y == 15 || (chunkInfos[x][y + 1][z].first == VOID || chunkInfos[x][y + 1][z].first == WATER)
+							|| chunkInfos[x][y + 1][z].first == FOLIAGE_R || chunkInfos[x][y + 1][z].first == FOLIAGE_G || chunkInfos[x][y + 1][z].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), TOP, (e_Type)chunkInfos[x][y][z].first, false, i++);
-						if (y == 0 || (chunkInfos[x][y - 1][z].first == VOID || chunkInfos[x][y - 1][z].first == WATER))
+						if (y == 0 || (chunkInfos[x][y - 1][z].first == VOID || chunkInfos[x][y - 1][z].first == WATER)
+							|| chunkInfos[x][y - 1][z].first == FOLIAGE_R || chunkInfos[x][y - 1][z].first == FOLIAGE_G || chunkInfos[x][y - 1][z].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BOT, (e_Type)chunkInfos[x][y][z].first, false, i++);
 
-						if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER))
+						if (z == 0 || (chunkInfos[x][y][z - 1].first == VOID || chunkInfos[x][y][z - 1].first == WATER)
+							|| chunkInfos[x][y][z - 1].first == FOLIAGE_R || chunkInfos[x][y][z - 1].first == FOLIAGE_G || chunkInfos[x][y][z - 1].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), FRONT, (e_Type)chunkInfos[x][y][z].first, false, i++);
-						if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER))
+						if (z == 15 || (chunkInfos[x][y][z + 1].first == VOID || chunkInfos[x][y][z + 1].first == WATER)
+							|| chunkInfos[x][y][z + 1].first == FOLIAGE_R || chunkInfos[x][y][z + 1].first == FOLIAGE_G || chunkInfos[x][y][z + 1].first == FOLIAGE_Y)
 							this->setFace(std::ref(ind), std::ref(uv), std::ref(vtx), std::ref(normals), glm::vec3(x, y, z), BACK, (e_Type)chunkInfos[x][y][z].first, false, i++);
 					}
 				}
@@ -351,7 +357,9 @@ Entity	cubeFactory::getChunk(glm::vec3 pos, std::pair<int, bool> (&chunkInfos)[1
 		_loader.stockFrags(vtx, normals, uv, ind, vao);
 	}
 	else
+	{
 		res = Entity(texturedModel(_loader.loadtoVAO(vtx, normals, uv, ind), _terrain));
+	}
 
 	res._pos = pos;
 	res.setModelMatrix();

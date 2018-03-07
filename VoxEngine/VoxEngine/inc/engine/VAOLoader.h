@@ -57,7 +57,7 @@ public:
 		const std::vector<float> &texture_coord,
 		const std::vector<int> &indices);
 
-	rawModel	updateVAO(const std::vector<float> &pos,
+	void	updateVAO(const std::vector<float> &pos,
 		const std::vector<float> &normals,
 		const std::vector<float> &texture_coord,
 		const std::vector<int> &indices, GLuint vao);

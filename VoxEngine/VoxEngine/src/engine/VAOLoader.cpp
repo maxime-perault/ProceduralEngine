@@ -83,7 +83,7 @@ void	VAOLoader::loadFrags(std::size_t count)
 	}
 }
 
-rawModel	VAOLoader::updateVAO(const std::vector<float> &pos,
+void	VAOLoader::updateVAO(const std::vector<float> &pos,
 	const std::vector<float> &normals,
 	const std::vector<float> &texture_coord,
 	const std::vector<int> &indices,
@@ -109,7 +109,7 @@ rawModel	VAOLoader::updateVAO(const std::vector<float> &pos,
 			this->updateData_attrList(2, 3, normals, _vbos[vaoIT][3]);
 
 			this->unbindVAO();
-			return (rawModel(vao, indices.size()));
+			return ;
 		}
 	}
 	std::cout << "can't update this VAO" << std::endl;

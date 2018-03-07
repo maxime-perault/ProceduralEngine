@@ -129,6 +129,19 @@ void	chunkFactory::disableHiddenCubes(std::pair<int, bool> (&chunk)[CHUNK_X][CHU
 			}
 }
 
+void	chunkFactory::genTreeBlock(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos, int type)
+{
+	if (chunk[(int)pos.x][(int)pos.y][(int)pos.z].first == cubeFactory::VOID ||
+		(type == cubeFactory::WOOD && (
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first == cubeFactory::FOLIAGE_R ||
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first == cubeFactory::FOLIAGE_G ||
+			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first == cubeFactory::FOLIAGE_Y)))
+	{
+		chunk[(int)pos.x][(int)pos.y][(int)pos.z].first = type;
+		chunk[(int)pos.x][(int)pos.y][(int)pos.z].second = true;
+	}
+}
+
 void	chunkFactory::genTree(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_Z], glm::vec3& pos)
 {
 	static int rand_val;
@@ -137,9 +150,9 @@ void	chunkFactory::genTree(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_
 	int inc(1);
 	int init_y(pos.y);
 
-	if ((rand_val = (rand() % 3)) <= 1)
+	if ((rand_val = (rand() % 3)) <= 0)
 		foliage = cubeFactory::FOLIAGE_R;
-	else if (rand_val == 2)
+	else if (rand_val == 1)
 		foliage = cubeFactory::FOLIAGE_G;
 	else
 		foliage = cubeFactory::FOLIAGE_Y;
@@ -148,85 +161,56 @@ void	chunkFactory::genTree(std::pair<int, bool>(&chunk)[CHUNK_X][CHUNK_Y][CHUNK_
 	{
 		if (inc <= 6)
 		{
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first = cubeFactory::WOOD;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z].second = true;
+			this->genTreeBlock(chunk, pos, cubeFactory::WOOD);
 		}
 		if (inc == 7)
 		{
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z].first = foliage;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z].second = true;
+			this->genTreeBlock(chunk, pos, foliage);
 		}
 
 		if (inc >= 4)
 		{
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z].first = foliage;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z].second = true;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z].first = foliage;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(-1, 0, 0), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(1, 0, 0), foliage);
 
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 1].first = foliage;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 1].second = true;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 1].first = foliage;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 1].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(0, 0, -1), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(0, 0, 1), foliage);
 		}
 
 		if (inc >= 4 && inc <= 6)
 		{
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 1].first = foliage;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 1].second = true;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 1].first = foliage;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 1].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(-1, 0, -1), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(1, 0, 1), foliage);
 
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 1].first = foliage;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 1].second = true;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 1].first = foliage;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 1].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(-1, 0, 1), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(1, 0, -1), foliage);
 		}
 
 		if (inc == 4 || inc == 5)
 		{
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z].first = foliage;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z].second = true;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 1].first = foliage;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 1].second = true;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 1].first = foliage;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 1].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(-2, 0, 0), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(-2, 0, -1), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(-2, 0, 1), foliage);
 
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z].first = foliage;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z].second = true;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 1].first = foliage;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 1].second = true;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 1].first = foliage;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 1].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(2, 0, 0), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(2, 0, -1), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(2, 0, 1), foliage);
 
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 2].first = foliage;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z - 2].second = true;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 2].first = foliage;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z - 2].second = true;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 2].first = foliage;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z - 2].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(0, 0, 2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(-1, 0, 2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(1, 0, 2), foliage);
 
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 2].first = foliage;
-			chunk[(int)pos.x][(int)pos.y][(int)pos.z + 2].second = true;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 2].first = foliage;
-			chunk[(int)pos.x - 1][(int)pos.y][(int)pos.z + 2].second = true;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 2].first = foliage;
-			chunk[(int)pos.x + 1][(int)pos.y][(int)pos.z + 2].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(0, 0, -2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(-1, 0, -2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(1, 0, -2), foliage);
 		}
 
 		if (inc == 4)
 		{
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 2].first = foliage;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z - 2].second = true;
-
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 2].first = foliage;
-			chunk[(int)pos.x - 2][(int)pos.y][(int)pos.z + 2].second = true;
-
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 2].first = foliage;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z - 2].second = true;
-
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 2].first = foliage;
-			chunk[(int)pos.x + 2][(int)pos.y][(int)pos.z + 2].second = true;
+			this->genTreeBlock(chunk, pos + glm::vec3(-2, 0, -2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(-2, 0, 2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(2, 0, -2), foliage);
+			this->genTreeBlock(chunk, pos + glm::vec3(2, 0, 2), foliage);
 		}
 		
 		

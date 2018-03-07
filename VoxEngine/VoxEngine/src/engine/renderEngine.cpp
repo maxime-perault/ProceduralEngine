@@ -8,13 +8,6 @@ renderEngine::renderEngine() {}
 
 renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 {
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	/*
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	*/
-
 	_projMat = glm::mat4(1.0);
 
 	_fov = 70;
@@ -24,6 +17,15 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	_win_y = win_y;
 
 	createProjectionMatrix(_staticShader);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	
 
 	_vaosRendering = false;
 }
@@ -189,14 +191,17 @@ void	renderEngine::renderChunks(s_chunk(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHU
 		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
 			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
 			{
-				this->bindVAO(chunks[x][y][z].Chunk._model._rawModel._vao_id);
+				if (chunks[x][y][z].Chunk._draw == true)
+				{
+					this->bindVAO(chunks[x][y][z].Chunk._model._rawModel._vao_id);
 
-				glEnableVertexAttribArray(0);
-				glEnableVertexAttribArray(1);
-				glEnableVertexAttribArray(2);
+					glEnableVertexAttribArray(0);
+					glEnableVertexAttribArray(1);
+					glEnableVertexAttribArray(2);
 
-				this->createModelMatrix(chunks[x][y][z].Chunk, _staticShader);
-				glDrawElements(GL_TRIANGLES, chunks[x][y][z].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+					this->createModelMatrix(chunks[x][y][z].Chunk, _staticShader);
+					glDrawElements(GL_TRIANGLES, chunks[x][y][z].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+				}
 			}
 }
 
@@ -245,7 +250,6 @@ void	renderEngine::fontRender(World *world, const bool debug)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, text[0]._model._texture._id);
-
 	this->renderText(text);
 
 	_fontShader.stop();
