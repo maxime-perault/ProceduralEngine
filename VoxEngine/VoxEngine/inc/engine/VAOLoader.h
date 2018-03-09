@@ -69,7 +69,8 @@ public:
 	rawModel	loadtoVAO(const std::vector<float> &pos,
 		const std::vector<int> &indices);
 
-	int	loadTexture(const std::string &file);
+	void	setTexture(const std::string &file, GLint level);
+	int		loadTexture(const std::string &file, bool own_mipmap = false);
 
 	void	cleanUp(void);
 	void	deleteVAO(const GLuint vao);

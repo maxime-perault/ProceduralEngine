@@ -1,10 +1,7 @@
 
 #include "cubeFactory.h"
 
-cubeFactory::cubeFactory()
-{
-
-}
+cubeFactory::cubeFactory() {}
 
 cubeFactory::~cubeFactory()
 {
@@ -13,7 +10,7 @@ cubeFactory::~cubeFactory()
 
 void	cubeFactory::setTerrain(void)
 {
-	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2_256.png"));
+	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2", true));
 }
 
 void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::vector<float>& vtx,

@@ -25,8 +25,8 @@ void main(void)
 		out_Color = vec4(colour, 1.0);
 	else
 	{
-		if (texture(textureSampler, pass_textureCoords).a < 0.5)
-			discard;
+		//if (texture(textureSampler, pass_textureCoords).a < 0.5)
+			//discard;
 	 /*
 	 ** normalize the light and normal vectors to compare them
 	 */
