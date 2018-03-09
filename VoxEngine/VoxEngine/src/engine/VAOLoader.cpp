@@ -220,7 +220,8 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 		if (own_mipmap == true)
 			current_file.append("_256.png");
 		this->setTexture(current_file, 0);
-		/*
+		
+		
 		current_file = file;
 		if (own_mipmap == true)
 			current_file.append("_128.png");
@@ -239,17 +240,27 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 		current_file = file;
 		if (own_mipmap == true)
 			current_file.append("_16.png");
-		this->setTexture(current_file, 4);*/
+		this->setTexture(current_file, 4);
 
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+		current_file = file;
+		if (own_mipmap == true)
+			current_file.append("_8.png");
+		this->setTexture(current_file, 5);
+
+		current_file = file;
+		if (own_mipmap == true)
+			current_file.append("_4.png");
+		this->setTexture(current_file, 6);
+		
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 1);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.6);
