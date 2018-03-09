@@ -113,17 +113,17 @@ std::pair<int, bool>& World::getChunkInfos(glm::vec3 pos)
 
 void	World::updateChunk(glm::vec3 pos, bool recursive)
 {
-	if (((int)((pos.y / CHUNK_Y) - _deltaChunk.y) < 0) || ((int)((pos.y / CHUNK_Y) - _deltaChunk.y) >= CHUNK_SIZE_Y))
+	if ((((int)(pos.y / CHUNK_Y) - _deltaChunk.y) < 0) || (((int)(pos.y / CHUNK_Y) - _deltaChunk.y) >= CHUNK_SIZE_Y))
 		return;
 
 	_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk
 		= g_cubeFactory->getChunk(
 			glm::vec3(
-			(int)((pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
-				(int)((pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
-				(int)((pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
+			((int)(pos.x / CHUNK_X) + _deltaChunk.x) * CHUNK_X,
+			((int)(pos.y / CHUNK_Y) + _deltaChunk.y) * CHUNK_Y,
+			((int)(pos.z / CHUNK_Z) + _deltaChunk.z) * CHUNK_Z),
 			_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].chunkInfos,
-			_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true);
+			_chunks[(int)(pos.x / CHUNK_X)][(int)(pos.y / CHUNK_Y)][(int)(pos.z / CHUNK_Z)].Chunk._model._rawModel._vao_id, true, true);
 
 	if (recursive == false)
 		return;
@@ -245,18 +245,26 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 {
 	static glm::vec3	picking;
 	int					lastCube;
+	glm::vec3			dir = cam._dir;
+	glm::vec3			pos;
+	glm::vec3			delta_picking(0.5, 0.5, 0.5);
+
+	if (cam._tps == true)
+		pos = cam._lookAt;
+	else
+		pos = cam._pos;
+
+	if (pos.x < 0)
+		delta_picking.x *= -1;
+	if (pos.y < 0)
+		delta_picking.y *= -1;
+	if (pos.z < 0)
+		delta_picking.z *= -1;
 
 	for (float i(0); i <= 5; i+= 0.05f)
 	{
-		if (cam._tps == true)
-		{
-			picking = glm::vec3(cam._lookAt + (cam._dir * i));
-		}
-		else
-		{
-			picking = glm::vec3(cam._pos + (cam._dir * i));
-		}
-		picking = glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
+		picking = glm::vec3(pos + (dir * i));
+		picking = glm::vec3((int)(picking.x + delta_picking.x), (int)(picking.y + delta_picking.y), (int)(picking.z + delta_picking.z));
 
 		lastCube = this->getChunkInfos(picking).first;
 
@@ -269,16 +277,9 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 			//SET FACE
 			static glm::vec3 dis;
 
-			if (cam._tps == true)
-			{
-				picking = glm::vec3(cam._lookAt + (cam._dir * i));
-				dis = picking - glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
-			}
-			else
-			{
-				picking = glm::vec3(cam._pos + (cam._dir * i));
-				dis = picking - glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
-			}
+			picking = glm::vec3(pos + (dir * i));
+			dis = picking - glm::vec3((int)(picking.x + delta_picking.x), (int)(picking.y + delta_picking.y), (int)(picking.z + delta_picking.z));
+
 			if (fabs(dis.x) > fabs(dis.y) && fabs(dis.x) > fabs(dis.z))
 			{
 				if (dis.x >= 0)
@@ -300,7 +301,7 @@ glm::vec3	World::getWirelessCubePos(Camera& cam)
 				else
 					_wirelessCubeFace = cubeFactory::FRONT;
 			}
-			picking = glm::vec3((int)(picking.x + 0.5f), (int)(picking.y + 0.5f), (int)(picking.z + 0.5f));
+			picking = glm::vec3((int)(picking.x + delta_picking.x), (int)(picking.y + delta_picking.y), (int)(picking.z + delta_picking.z));
 			//!SET FACE
 
 			return picking;
@@ -452,7 +453,9 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	_wirelessCube._pos = this->getWirelessCubePos(cam);
 	_wirelessCube.setModelMatrix();
 	
-	if (threading == false && (dir = this->checkForChunksMove()) != -1)
+	if (threading == false &&
+		g_cubeFactory->_loader.loadFrags(4) == false &&
+		(dir = this->checkForChunksMove()) != -1)
 	{
 		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -482,9 +485,7 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 
 		threading = false;
 	}
-
-	if (threading == false)
-		g_cubeFactory->_loader.loadFrags(4);
+		
 
 	if (debug == true)
 	{
@@ -496,9 +497,9 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 			+ std::to_string(pos.z)), this->getScreenPos(glm::vec3(10, 50, 0)), FontFactory::XYZ);
 
 		_text[FontFactory::CHUNK] = _fontFactory.getText(std::string("CHUNK XYZ: "
-			+ std::to_string((int)(pos.x / CHUNK_X)) + "; "
-			+ std::to_string((int)(pos.y / CHUNK_Y)) + "; "
-			+ std::to_string((int)(pos.z / CHUNK_Z))), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::CHUNK);
+			+ std::to_string((pos.x / CHUNK_X)) + "; "
+			+ std::to_string((pos.y / CHUNK_Y)) + "; "
+			+ std::to_string((pos.z / CHUNK_Z))), this->getScreenPos(glm::vec3(10, 30, 0)), FontFactory::CHUNK);
 		
 		if (fps == -1)
 			_text[FontFactory::FPS] = _fontFactory.getText(std::string("FPS: Loading"), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS);

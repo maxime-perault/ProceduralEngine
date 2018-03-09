@@ -51,10 +51,24 @@ rawModel	VAOLoader::loadtoVAO(const std::vector<float> &pos,
 void	VAOLoader::stockFrags(	const std::vector<float> &pos,
 								const std::vector<float> &normals,
 								const std::vector<float> &texture_coord,
-								const std::vector<int> &indices, GLuint vao)
+								const std::vector<int> &indices, GLuint vao, bool update)
 {
 	static s_frag tmp;
 
+	if (update == true)
+	{
+		for (std::size_t i(0); i < _tmpFrags.size(); ++i)
+		{
+			if (vao == _tmpFrags[i].vao)
+			{
+				_tmpFrags[i].pos = pos;
+				_tmpFrags[i].normals = normals;
+				_tmpFrags[i].texture_coord = texture_coord;
+				_tmpFrags[i].indices = indices;
+				return;
+			}
+		}
+	}
 	tmp.pos = pos;
 	tmp.normals = normals;
 	tmp.texture_coord = texture_coord;
@@ -64,12 +78,12 @@ void	VAOLoader::stockFrags(	const std::vector<float> &pos,
 	_tmpFrags.push_back(tmp);
 }
 
-void	VAOLoader::loadFrags(std::size_t count)
+bool	VAOLoader::loadFrags(std::size_t count)
 {
 	static std::size_t max;
 
 	if (_tmpFrags.empty() == true)
-		return;
+		return false;
 
 	if (_tmpFrags.size() > count)
 		max = count;
@@ -81,6 +95,8 @@ void	VAOLoader::loadFrags(std::size_t count)
 		this->updateVAO(_tmpFrags.back().pos, _tmpFrags.back().normals, _tmpFrags.back().texture_coord, _tmpFrags.back().indices, _tmpFrags.back().vao);
 		_tmpFrags.pop_back();
 	}
+
+	return true;
 }
 
 void	VAOLoader::updateVAO(const std::vector<float> &pos,

@@ -48,9 +48,9 @@ public:
 	void	stockFrags(const std::vector<float> &pos,
 		const std::vector<float> &normals,
 		const std::vector<float> &texture_coord,
-		const std::vector<int> &indices, GLuint vao);
+		const std::vector<int> &indices, GLuint vao, bool update = false);
 
-	void	loadFrags(std::size_t count);
+	bool	loadFrags(std::size_t count);
 
 	rawModel	loadtoVAO(const std::vector<float> &pos,
 		const std::vector<float> &normals,
