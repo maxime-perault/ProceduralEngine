@@ -10,7 +10,7 @@ cubeFactory::~cubeFactory()
 
 void	cubeFactory::setTerrain(void)
 {
-	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain2", true));
+	_terrain = Texture(_loader.loadTexture("assets/minecraft/terrain", true));
 }
 
 void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::vector<float>& vtx,
