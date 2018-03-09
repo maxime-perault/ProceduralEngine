@@ -46,6 +46,11 @@ World::World()
 		onGrass,
 		(CHUNK_Z * CHUNK_SIZE_Z) / 2), -1);
 
+	while (_player.canMove(this) == false)
+	{
+		_player._pos.y += 1;
+	}
+
 	_axis.push_back(g_cubeFactory->getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2), -1));
 	_axis.push_back(g_cubeFactory->getLine(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1));
 	_axis.push_back(g_cubeFactory->getLine(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0), -1));

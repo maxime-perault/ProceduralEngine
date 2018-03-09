@@ -12,13 +12,12 @@ void	printError(void)
 
 		switch (err)
 		{
-		case GL_INVALID_OPERATION:      error = "INVALID_OPERATION";      break;
-		case GL_INVALID_ENUM:           error = "INVALID_ENUM";           break;
-		case GL_INVALID_VALUE:          error = "INVALID_VALUE";          break;
-		case GL_OUT_OF_MEMORY:          error = "OUT_OF_MEMORY";          break;
-		case GL_INVALID_FRAMEBUFFER_OPERATION:  error = "INVALID_FRAMEBUFFER_OPERATION";  break;
+			case GL_INVALID_OPERATION:      error = "INVALID_OPERATION";      break;
+			case GL_INVALID_ENUM:           error = "INVALID_ENUM";           break;
+			case GL_INVALID_VALUE:          error = "INVALID_VALUE";          break;
+			case GL_OUT_OF_MEMORY:          error = "OUT_OF_MEMORY";          break;
+			case GL_INVALID_FRAMEBUFFER_OPERATION:  error = "INVALID_FRAMEBUFFER_OPERATION";  break;
 		}
-
 		std::cout << error.c_str() << std::endl;
 	}
 }
@@ -253,7 +252,7 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 		this->setTexture(current_file, 6);
 		
 		//glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
