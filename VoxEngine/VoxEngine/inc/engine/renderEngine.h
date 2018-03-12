@@ -9,6 +9,7 @@
 # include <vector>
 # include "staticShader.h"
 # include "fontShader.h"
+# include "shadowShader.h"
 # include "Camera.h"
 # include "Entity.h"
 # include "World.h"
@@ -56,6 +57,7 @@ public:
 
 	staticShader	_staticShader;
 	fontShader		_fontShader;
+	shadowShader		_shadowShader;
 };
 
 #endif //!RENDERENGINE_HH_

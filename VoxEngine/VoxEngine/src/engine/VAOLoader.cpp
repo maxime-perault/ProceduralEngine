@@ -2,6 +2,9 @@
 #include "SOIL/SOIL.h"
 #include "rawModel.h"
 
+/*
+** TOOLS
+*/
 void	printError(void)
 {
 	GLenum err(glGetError());
@@ -22,6 +25,39 @@ void	printError(void)
 	}
 }
 
+int gltIsExtSupported(const char *extension)
+{
+	GLubyte *extensions = NULL;
+	const GLubyte *start;
+	GLubyte *where, *terminator;
+
+	where = (GLubyte *)strchr(extension, ' ');
+	if (where || *extension == '\0')
+		return 0;
+
+	extensions = (GLubyte *)glGetString(GL_EXTENSIONS);
+
+	start = extensions;
+	for (;;)
+	{
+		where = (GLubyte *)strstr((const char *)start, extension);
+
+		if (!where)
+			break;
+
+		terminator = where + strlen(extension);
+
+		if (where == start || *(where - 1) == ' ')
+		{
+			if (*terminator == ' ' || *terminator == '\0')
+				return 1;
+		}
+		start = terminator;
+	}
+}
+/*
+** !TOOLS
+*/
 
 VAOLoader::VAOLoader() {}
 
@@ -43,6 +79,8 @@ rawModel	VAOLoader::loadtoVAO(const std::vector<float> &pos,
 	_vbos.push_back(vbos);
 
 	this->unbindVAO();
+
+	printError();
 
 	return (rawModel(vaoID, indices.size()));
 }
@@ -220,7 +258,6 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 			current_file.append("_256.png");
 		this->setTexture(current_file, 0);
 		
-		
 		current_file = file;
 		if (own_mipmap == true)
 			current_file.append("_128.png");
@@ -251,18 +288,32 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 			current_file.append("_4.png");
 		this->setTexture(current_file, 6);
 		
-		//glGenerateMipmap(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 1);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.6);
+
+		/*
+		if (gltIsExtSupported("GL_EXT_texture_filter_anisotropic"))
+		{
+			static float ani_level;
+
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &ani_level);
+			ani_level = fmin(2.f, ani_level);
+
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, ani_level);
+		}
+		else
+			std::cout << "anisotropic filtering not supported" << std::endl;
+			*/
+
 	}
 	
 	return (textureID);

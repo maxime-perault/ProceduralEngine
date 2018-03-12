@@ -23,6 +23,10 @@ void	initThread()
 World::World()
 {
 	initThread();
+
+	_fbo.setCubeFactory(g_cubeFactory);
+	_depth = _fbo.CreateDepthVAO(1280, 720);
+
 	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
 			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
@@ -45,6 +49,10 @@ World::World()
 		(CHUNK_X * CHUNK_SIZE_X) / 2,
 		onGrass,
 		(CHUNK_Z * CHUNK_SIZE_Z) / 2), -1);
+
+	_depth._pos = _player._pos;
+
+	_depth.setModelMatrix();
 
 	while (_player.canMove(this) == false)
 	{
@@ -72,12 +80,12 @@ World::World()
 
 	_deltaPlayer = glm::vec3(0, 0, 0);
 	_deltaChunk = glm::vec3(0, 0, 0);
-
 }
 
 World::~World()
 {
-
+	delete (g_cubeFactory);
+	delete (g_chunkFactory);
 }
 
 Entity&		World::getPlayer(void)

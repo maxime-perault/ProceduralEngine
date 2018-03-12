@@ -96,6 +96,12 @@
     <ClCompile Include="src\models\chunkFactory.cpp">
       <Filter>Fichiers sources\models</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\FBO.cpp">
+      <Filter>Fichiers sources\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\shadowShader.cpp">
+      <Filter>Fichiers sources\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Game.h">
@@ -160,6 +166,12 @@
     </ClInclude>
     <ClInclude Include="inc\InputManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\engine\FBO.h">
+      <Filter>Fichiers d%27en-tête\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\shaders\shadowShader.h">
+      <Filter>Fichiers d%27en-tête\shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

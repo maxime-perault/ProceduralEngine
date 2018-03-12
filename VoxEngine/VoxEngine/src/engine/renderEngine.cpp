@@ -25,7 +25,6 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	glFrontFace(GL_CW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
-	
 
 	_vaosRendering = false;
 }
@@ -34,6 +33,7 @@ renderEngine::~renderEngine()
 {
 	_staticShader.cleanUp();
 	_fontShader.cleanUp();
+	_shadowShader.cleanUp();
 }
 
 void	renderEngine::updateWindow(std::size_t win_x, std::size_t win_y)
@@ -213,6 +213,9 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	std::vector<Entity>&	text = world->getText();
 	Entity&					wirelessCube = world->getWirelessCube();
 
+	
+	///////////////////////////////////////
+
 	_staticShader.start();
 
 	this->createViewMatrix(cam, _staticShader);
@@ -230,13 +233,51 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	//render chunk
 	this->renderChunks(world->_chunks);
-
+	
 	//render wirelessCube
 	this->renderVAO_LINE_oneTime(wirelessCube);
 
 	//render Axis
 	if (debug == true)
 		this->renderAxis(axis);
+
+	_staticShader.stop();
+
+	/////////////////////////////////
+
+	world->_fbo.bind(world->_fbo._depthFBO);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	_staticShader.start();
+
+	this->createViewMatrix(cam, _staticShader);
+	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, player._model._texture._id);
+
+	//render player
+	if (cam._tps == true)
+		this->renderVAO_oneTime(player);
+
+	this->renderChunks(world->_chunks);
+
+	_staticShader.stop();
+
+	world->_fbo.unbind();
+
+	/////////////////////////////////
+
+	_staticShader.start();
+
+	this->createViewMatrix(cam, _staticShader);
+	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, world->_fbo._depthTexture._id);
+
+	this->renderVAO_oneTime(world->_depth);
 
 	_staticShader.stop();
 }

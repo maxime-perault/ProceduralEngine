@@ -10,6 +10,7 @@
 # include "FontFactory.h"
 # include "Light.h"
 # include "Camera.h"
+# include "FBO.h"
 
 # define CHUNK_SIZE_X 13
 # define CHUNK_SIZE_Y 6
@@ -21,6 +22,8 @@ class	World
 {
 public:
 	FontFactory				_fontFactory;
+	
+	FBO		_fbo;
 
 	Entity					_wirelessCube;
 	int						_wirelessCubeFace;
@@ -30,6 +33,8 @@ public:
 	std::vector<Entity>		_text;
 	s_chunk					_gen_chunks[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
 	s_chunk					_chunks[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
+
+	Entity		_depth;
 
 	World();
 	~World();
@@ -56,11 +61,6 @@ public:
 	glm::vec2	_win;
 	glm::vec3	_deltaPlayer;
 	glm::vec3	_deltaChunk;
-
-	//std::vector<Entity*>	getWaters(void);
-	//std::vector<Entity*>	getClouds(void);
-	//std::vector<Entity*>	getFlora(void);
-	//std::vector<Entity*>	getFauna(void);
 };
 
 #endif //!WORLD_H_

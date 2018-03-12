@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Display.cpp" />
+    <ClCompile Include="src\engine\FBO.cpp" />
     <ClCompile Include="src\engine\FntParser.cpp" />
     <ClCompile Include="src\engine\renderEngine.cpp" />
     <ClCompile Include="src\engine\Timer.cpp" />
@@ -148,11 +149,13 @@
     <ClCompile Include="src\models\texturedModel.cpp" />
     <ClCompile Include="src\shaders\AShader.cpp" />
     <ClCompile Include="src\shaders\fontShader.cpp" />
+    <ClCompile Include="src\shaders\shadowShader.cpp" />
     <ClCompile Include="src\shaders\staticShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Display.h" />
+    <ClInclude Include="inc\engine\FBO.h" />
     <ClInclude Include="inc\engine\FntParser.h" />
     <ClInclude Include="inc\engine\perlin.h" />
     <ClInclude Include="inc\engine\renderEngine.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="inc\models\texturedModel.h" />
     <ClInclude Include="inc\shaders\AShader.h" />
     <ClInclude Include="inc\shaders\fontShader.h" />
+    <ClInclude Include="inc\shaders\shadowShader.h" />
     <ClInclude Include="inc\shaders\staticShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
