@@ -4,7 +4,11 @@
 
 chunkFactory::chunkFactory()
 {
-	_perlin.reseed(time(NULL));
+	float seed = 1.85;
+
+	_perlin.reseed(seed);
+
+	std::cout << "seed: " << seed << std::endl;
 }
 
 chunkFactory::~chunkFactory() {}

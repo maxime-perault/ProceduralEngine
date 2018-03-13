@@ -12,7 +12,7 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 
 	_fov = 70;
 	_near = (float)0.1;
-	_far = 1000;
+	_far = 200;
 	_win_x = win_x;
 	_win_y = win_y;
 
@@ -21,10 +21,11 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	
+	/*
 	glFrontFace(GL_CW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
+	*/
 
 	_vaosRendering = false;
 }
@@ -218,6 +219,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	_staticShader.start();
 
+	_staticShader.loadProjectionMatrix(_projMat);
 	this->createViewMatrix(cam, _staticShader);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -244,26 +246,87 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	_staticShader.stop();
 
 	/////////////////////////////////
-
+	
 	world->_fbo.bind(world->_fbo._depthFBO);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_staticShader.start();
+	_shadowShader.start();
 
-	this->createViewMatrix(cam, _staticShader);
-	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
+	///////////////////////////// GET THE VIEW FRUSTUM CORNER //////////////////////////////////
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, player._model._texture._id);
+	float	hnear = 2.f * tanf(_fov / 2.f) * _near;
+	float	wnear = hnear * ((float)_win_x / (float)_win_y);
 
-	//render player
-	if (cam._tps == true)
-		this->renderVAO_oneTime(player);
+	float	hfar = 2.f * tanf(_fov / 2.f) * _far;
+	float	wfar = hfar * ((float)_win_x / (float)_win_y);
 
-	this->renderChunks(world->_chunks);
+	glm::vec3	cnear = cam._pos + cam._dir * _near;
+	glm::vec3	cfar = cam._pos + cam._dir * _far;
 
-	_staticShader.stop();
+	glm::vec3	near_topleft = cnear + (cam._UpVec * (hnear / 2.f)) - (cam._rightVec * (wnear / 2.f));
+	glm::vec3	near_topright = cnear + (cam._UpVec * (hnear / 2.f)) + (cam._rightVec * (wnear / 2.f));
+
+	glm::vec3	near_botleft = cnear - (cam._UpVec * (hnear / 2.f)) - (cam._rightVec * (wnear / 2.f));
+	glm::vec3	near_botright = cnear - (cam._UpVec * (hnear / 2.f)) + (cam._rightVec * (wnear / 2.f));
+
+	glm::vec3	far_topleft = cfar + (cam._UpVec * (hfar / 2.f)) - (cam._rightVec * (wfar / 2.f));
+	glm::vec3	far_topright = cfar + (cam._UpVec * (hfar / 2.f)) + (cam._rightVec * (wfar / 2.f));
+
+	glm::vec3	far_botleft = cfar - (cam._UpVec * (hfar / 2.f)) - (cam._rightVec * (wfar / 2.f));
+	glm::vec3	far_botright = cfar - (cam._UpVec * (hfar / 2.f)) + (cam._rightVec * (wfar / 2.f));
+
+	///////////////////////////// !GET THE VIEW FRUSTUM CORNER //////////////////////////////////
+
+	// Find the centroid
+	glm::vec3 frustumCentroid =
+		(near_topleft + near_topright + near_botleft + near_botright
+			+ far_topleft + far_topright + far_botleft + far_botright) / 8.f;
+
+	float distFromCentroid = fabs(cfar.z - cnear.z) + _near;
+
+	glm::vec3 sun_dir = sun._entity._pos;
+	sun_dir *= -1;
+	sun_dir = glm::normalize(sun_dir);
+
+	glm::mat4 depthViewMatrix = glm::lookAt(frustumCentroid - (sun_dir * distFromCentroid), frustumCentroid, glm::vec3(0, 1, 0));
+
+
+	///////////////////////////////////////////////////////////////
+
+
+	glm::mat4 depthProjectionMatrix = glm::mat4(1.0);
+
+	depthProjectionMatrix[0][0] = 2.f / fabs(far_botright.x - far_botleft.x);
+	depthProjectionMatrix[1][1] = 2.f / fabs(far_botright.y - far_topright.y);
+	depthProjectionMatrix[2][2] = -2.f / fabs(cfar.z - cnear.z);
+	depthProjectionMatrix[3][3] = 1.0;
+
+	glm::mat4 depthModelMatrix = glm::mat4(1.0);
+
+	glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+
+	//render
+	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+			for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+			{
+				if (world->_chunks[x][y][z].Chunk._draw == true)
+				{
+					depthModelMatrix = world->_chunks[x][y][z].Chunk.getModelMatrix();
+					depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+					_shadowShader.loadMVP(depthMVP);
+
+					this->bindVAO(world->_chunks[x][y][z].Chunk._model._rawModel._vao_id);
+
+					glEnableVertexAttribArray(0);
+
+					glDrawElements(GL_TRIANGLES, world->_chunks[x][y][z].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+				}
+			}
+	//!render
+
+	_shadowShader.stop();
 
 	world->_fbo.unbind();
 
@@ -271,7 +334,9 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	_staticShader.start();
 
+	_staticShader.loadProjectionMatrix(_projMat);
 	this->createViewMatrix(cam, _staticShader);
+
 	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -280,6 +345,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	this->renderVAO_oneTime(world->_depth);
 
 	_staticShader.stop();
+
 }
 
 void	renderEngine::fontRender(World *world, const bool debug)

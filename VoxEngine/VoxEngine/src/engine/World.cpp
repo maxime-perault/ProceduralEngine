@@ -33,7 +33,7 @@ World::World()
 			{
 				_chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z), -1, false);
 			}
-	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(100, 100, 100), -1), glm::vec3(1, 1, 1), 50, 0.5);
+	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(-500, 100, -500), -1), glm::vec3(1, 1, 1), 50, 0.5);
 	_sun._entity.setModelMatrix();
 
 	int onGrass = 0;

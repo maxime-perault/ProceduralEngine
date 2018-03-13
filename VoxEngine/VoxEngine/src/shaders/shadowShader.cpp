@@ -30,7 +30,7 @@ void	shadowShader::bindAttributes(void)
 
 void	shadowShader::getAllUniformLocations(void)
 {
-	//_location_depthMVP = getUniformLocation("depthMVP");
+	_location_depthMVP = getUniformLocation("depthMVP");
 }
 
 void	shadowShader::loadMVP(const glm::mat4 mvp)

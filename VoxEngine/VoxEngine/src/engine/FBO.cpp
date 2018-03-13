@@ -4,8 +4,12 @@
 FBO::FBO()
 {
 	_depthFBO = this->createFB();
+/*
 	_depthTexture = Texture(this->CreateColorTexture(1280, 720));
 	_depthBuffer = this->CreateDepthBuffer(1280, 720);
+*/
+
+	_depthTexture = Texture(this->CreateDepthTexture(1280, 720));
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Error: FBO ctor" << std::endl;
@@ -40,6 +44,9 @@ Entity	FBO::CreateDepthVAO(int w, int h)
 	std::vector<float>	vtx;
 	std::vector<float>	normals;
 
+	//SHADOWMAP
+	h = w;
+
 	vtx.insert(vtx.end(), {
 		0, 0, 0,
 		(float)w / 100.f, 0, 0,
@@ -72,22 +79,22 @@ GLuint	FBO::CreateDepthTexture(int w, int h)
 {
 	GLuint	id;
 
+	//SHADOWMAP
+	h = w;
+
 	glGenTextures(1, &id);
 
 	glBindTexture(GL_TEXTURE_2D, id);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, w, h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, id, 0);
-	glDrawBuffer(GL_NONE);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "can't create Depth Texture" << std::endl;
+	glDrawBuffer(GL_NONE);
 
 	return (id);
 }
