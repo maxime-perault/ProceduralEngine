@@ -12,7 +12,7 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 
 	_fov = 70;
 	_near = (float)0.1;
-	_far = 200;
+	_far = 100;
 	_win_x = win_x;
 	_win_y = win_y;
 
@@ -215,38 +215,8 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	Entity&					wirelessCube = world->getWirelessCube();
 
 	
-	///////////////////////////////////////
-
-	_staticShader.start();
-
-	_staticShader.loadProjectionMatrix(_projMat);
-	this->createViewMatrix(cam, _staticShader);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, player._model._texture._id);
-
-	//render sun
-	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
-	this->renderVAO_oneTime(sun._entity);
-
-	//render player
-	if (cam._tps == true)
-	this->renderVAO_oneTime(player);
-
-	//render chunk
-	this->renderChunks(world->_chunks);
-	
-	//render wirelessCube
-	this->renderVAO_LINE_oneTime(wirelessCube);
-
-	//render Axis
-	if (debug == true)
-		this->renderAxis(axis);
-
-	_staticShader.stop();
-
 	/////////////////////////////////
-	
+
 	world->_fbo.bind(world->_fbo._depthFBO);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -289,7 +259,32 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	sun_dir *= -1;
 	sun_dir = glm::normalize(sun_dir);
 
+	// Random google method
+
 	glm::mat4 depthViewMatrix = glm::lookAt(frustumCentroid - (sun_dir * distFromCentroid), frustumCentroid, glm::vec3(0, 1, 0));
+
+	/////////////////////
+
+	//thin matrix method
+
+	depthViewMatrix = glm::mat4(1.0);
+
+	glm::vec3 center = frustumCentroid;
+
+	center *= -1;
+
+	float pitch = (float)acosf(glm::length(glm::vec2(sun_dir.x, sun_dir.z)));
+
+	depthViewMatrix = glm::rotate(depthViewMatrix, pitch, glm::vec3(1, 0, 0));
+
+	float yaw = (float)(((float)atanf((float)sun_dir.x / (float)sun_dir.z)) * 180.f / M_PI);
+
+	yaw = sun_dir.z > 0 ? yaw - 180.f : yaw;
+
+	yaw = -(yaw * M_PI / 180.f);
+
+	depthViewMatrix = glm::rotate(depthViewMatrix, yaw, glm::vec3(0, 1, 0));
+	depthViewMatrix = glm::translate(depthViewMatrix, center);
 
 
 	///////////////////////////////////////////////////////////////
@@ -331,6 +326,59 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	world->_fbo.unbind();
 
 	/////////////////////////////////
+
+
+	///////////////////////////////////////
+
+	_staticShader.start();
+
+	_staticShader.attTextures();
+
+	_staticShader.loadProjectionMatrix(_projMat);
+
+	glm::mat4 shadowProjViewMatrix;
+
+	shadowProjViewMatrix = depthViewMatrix * depthProjectionMatrix;
+
+	glm::mat4 biasMatrix(
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0
+	);
+
+	shadowProjViewMatrix *= biasMatrix;
+
+	_staticShader.loadShadowMatrix(shadowProjViewMatrix);
+
+	_staticShader.loadProjectionMatrix(_projMat);
+	this->createViewMatrix(cam, _staticShader);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, player._model._texture._id);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, world->_fbo._depthTexture._id);
+
+	//render sun
+	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);
+	this->renderVAO_oneTime(sun._entity);
+
+	//render player
+	if (cam._tps == true)
+	this->renderVAO_oneTime(player);
+
+	//render chunk
+	this->renderChunks(world->_chunks);
+	
+	//render wirelessCube
+	this->renderVAO_LINE_oneTime(wirelessCube);
+
+	//render Axis
+	if (debug == true)
+		this->renderAxis(axis);
+
+	_staticShader.stop();
 
 	_staticShader.start();
 

@@ -36,6 +36,10 @@ void		staticShader::getAllUniformLocations(void)
 	_location_transformation_matrix = getUniformLocation("transformationMatrix");
 	_location_projection_matrix = getUniformLocation("projectionMatrix");
 	_location_view_matrix = getUniformLocation("viewMatrix");
+	_location_shadow_matrix = getUniformLocation("shadowMapSpace");
+
+	_location_Atlas = getUniformLocation("textureSampler");
+	_location_shadowMap = getUniformLocation("shadowMap");
 
 	_location_lightPos = getUniformLocation("lightPosition");
 	_location_lightColour = getUniformLocation("lightColour");
@@ -44,6 +48,12 @@ void		staticShader::getAllUniformLocations(void)
 
 	_location_rawColour = getUniformLocation("rawColour");
 	_location_colour = getUniformLocation("colour");
+}
+
+void	staticShader::attTextures(void)
+{
+	this->loadFloat(_location_Atlas, 0);
+	this->loadFloat(_location_shadowMap, 1);
 }
 
 
@@ -78,6 +88,17 @@ void	staticShader::loadViewMatrix(const glm::mat4 m) const
 	std::cout << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << ", " << std::endl;
 	*/
 	this->loadMatrix(_location_view_matrix, m);
+}
+
+void	staticShader::loadShadowMatrix(const glm::mat4 m) const
+{
+	/*
+	std::cout << m[0][0] << ", " << m[0][1] << ", " << m[0][2] << ", " << m[0][3] << ", " << std::endl;
+	std::cout << m[1][0] << ", " << m[1][1] << ", " << m[1][2] << ", " << m[1][3] << ", " << std::endl;
+	std::cout << m[2][0] << ", " << m[2][1] << ", " << m[2][2] << ", " << m[2][3] << ", " << std::endl;
+	std::cout << m[3][0] << ", " << m[3][1] << ", " << m[3][2] << ", " << m[3][3] << ", " << std::endl;
+	*/
+	this->loadMatrix(_location_shadow_matrix, m);
 }
 
 void	staticShader::loadLight(const glm::vec3 pos, const glm::vec3 colour, const float damper, const float ambientLevel) const

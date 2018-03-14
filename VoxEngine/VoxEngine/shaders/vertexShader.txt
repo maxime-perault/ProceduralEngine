@@ -9,15 +9,21 @@ out vec3 surfaceNormal;
 out vec3 toLightVector;
 out vec3 toCameraVector;
 
+out vec4 shadowCoords;
+
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 
+uniform mat4 shadowMapSpace;
+
 void main(void)
 {
  	vec4 worldPos = transformationMatrix * vec4(position, 1.0);
   	gl_Position = projectionMatrix * viewMatrix * worldPos;
+
+  	shadowCoords = shadowMapSpace * worldPos;
 
   	pass_textureCoords = textureCoords;
 
