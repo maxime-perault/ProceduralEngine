@@ -52,8 +52,8 @@ void		staticShader::getAllUniformLocations(void)
 
 void	staticShader::attTextures(void)
 {
-	this->loadFloat(_location_Atlas, 0);
-	this->loadFloat(_location_shadowMap, 1);
+	glUniform1i(_location_Atlas, 0);
+	glUniform1i(_location_shadowMap, 1);
 }
 
 

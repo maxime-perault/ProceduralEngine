@@ -25,7 +25,7 @@ World::World()
 	initThread();
 
 	_fbo.setCubeFactory(g_cubeFactory);
-	_depth = _fbo.CreateDepthVAO(1280, 720);
+	_depth = _fbo.CreateDepthVAO(2048, 2048);
 
 	for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
 		for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
@@ -33,7 +33,7 @@ World::World()
 			{
 				_chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z), -1, false);
 			}
-	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(-500, 100, -500), -1), glm::vec3(1, 1, 1), 50, 0.5);
+	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(-500, 1000, -500), -1), glm::vec3(1, 1, 1), 50, 0.5);
 	_sun._entity.setModelMatrix();
 
 	int onGrass = 0;

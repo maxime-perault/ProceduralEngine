@@ -12,7 +12,7 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 
 	_fov = 70;
 	_near = (float)0.1;
-	_far = 100;
+	_far = 120;
 	_win_x = win_x;
 	_win_y = win_y;
 
@@ -225,14 +225,21 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	///////////////////////////// GET THE VIEW FRUSTUM CORNER //////////////////////////////////
 
+	glm::vec3 sun_dir = sun._entity._pos;
+	sun_dir *= -1;
+	sun_dir = glm::normalize(sun_dir);
+
+	glm::vec3 sun_right = glm::normalize(glm::cross(sun_dir, glm::normalize(glm::vec3(0, 1, 0))));
+	glm::vec3 sun_up = glm::cross(sun_right, sun_dir);
+
 	float	hnear = 2.f * tanf(_fov / 2.f) * _near;
 	float	wnear = hnear * ((float)_win_x / (float)_win_y);
 
 	float	hfar = 2.f * tanf(_fov / 2.f) * _far;
 	float	wfar = hfar * ((float)_win_x / (float)_win_y);
 
-	glm::vec3	cnear = cam._pos + cam._dir * _near;
-	glm::vec3	cfar = cam._pos + cam._dir * _far;
+	glm::vec3	cnear = cam._pos + cam._dir * _near; // OK
+	glm::vec3	cfar = cam._pos + cam._dir * _far; // OK
 
 	glm::vec3	near_topleft = cnear + (cam._UpVec * (hnear / 2.f)) - (cam._rightVec * (wnear / 2.f));
 	glm::vec3	near_topright = cnear + (cam._UpVec * (hnear / 2.f)) + (cam._rightVec * (wnear / 2.f));
@@ -246,29 +253,24 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	glm::vec3	far_botleft = cfar - (cam._UpVec * (hfar / 2.f)) - (cam._rightVec * (wfar / 2.f));
 	glm::vec3	far_botright = cfar - (cam._UpVec * (hfar / 2.f)) + (cam._rightVec * (wfar / 2.f));
 
-	///////////////////////////// !GET THE VIEW FRUSTUM CORNER //////////////////////////////////
 
+
+	///////////////////////////// !GET THE VIEW FRUSTUM CORNER //////////////////////////////////
+	glm::mat4 depthViewMatrix;
+
+	
 	// Find the centroid
-	glm::vec3 frustumCentroid =
+	
+	glm::vec3 frustumCentroid = 
 		(near_topleft + near_topright + near_botleft + near_botright
 			+ far_topleft + far_topright + far_botleft + far_botright) / 8.f;
 
-	float distFromCentroid = fabs(cfar.z - cnear.z) + _near;
-
-	glm::vec3 sun_dir = sun._entity._pos;
-	sun_dir *= -1;
-	sun_dir = glm::normalize(sun_dir);
-
-	// Random google method
-
-	glm::mat4 depthViewMatrix = glm::lookAt(frustumCentroid - (sun_dir * distFromCentroid), frustumCentroid, glm::vec3(0, 1, 0));
-
-	/////////////////////
 
 	//thin matrix method
-
+	
 	depthViewMatrix = glm::mat4(1.0);
 
+	
 	glm::vec3 center = frustumCentroid;
 
 	center *= -1;
@@ -277,7 +279,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	depthViewMatrix = glm::rotate(depthViewMatrix, pitch, glm::vec3(1, 0, 0));
 
-	float yaw = (float)(((float)atanf((float)sun_dir.x / (float)sun_dir.z)) * 180.f / M_PI);
+	float yaw = (float)(atanf(sun_dir.x / sun_dir.z) * 180.f / M_PI);
 
 	yaw = sun_dir.z > 0 ? yaw - 180.f : yaw;
 
@@ -285,20 +287,91 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	depthViewMatrix = glm::rotate(depthViewMatrix, yaw, glm::vec3(0, 1, 0));
 	depthViewMatrix = glm::translate(depthViewMatrix, center);
+	
+	///////////////////////////////////////////////////////////////
+	
+	hnear = 2.f * tanf(_fov / 2.f) * _near;
+	wnear = hnear * ((float)_win_x / (float)_win_y);
 
+	hfar = 2.f * tanf(_fov / 2.f) * _far;
+	wfar = hfar * ((float)_win_x / (float)_win_y);
+
+	cnear = sun._entity._pos + sun_dir * _near;
+	cfar = sun._entity._pos + sun_dir * _far;
+
+	near_topleft = cnear + (sun_up * (hnear / 2.f)) - (sun_right * (wnear / 2.f));
+	near_topright = cnear + (sun_up * (hnear / 2.f)) + (sun_right * (wnear / 2.f));
+
+	near_botleft = cnear - (sun_up * (hnear / 2.f)) - (sun_right * (wnear / 2.f));
+	near_botright = cnear - (sun_up * (hnear / 2.f)) + (sun_right * (wnear / 2.f));
+
+	far_topleft = cfar + (sun_up * (hfar / 2.f)) - (sun_right * (wfar / 2.f));
+	far_topright = cfar + (sun_up * (hfar / 2.f)) + (sun_right * (wfar / 2.f));
+
+	far_botleft = cfar - (sun_up * (hfar / 2.f)) - (sun_right * (wfar / 2.f));
+	far_botright = cfar - (sun_up * (hfar / 2.f)) + (sun_right * (wfar / 2.f));
 
 	///////////////////////////////////////////////////////////////
 
+	std::vector<glm::vec3> points;
+
+	points.push_back(near_topleft);
+	points.push_back(near_topright);
+	points.push_back(near_botleft);
+	points.push_back(near_botright);
+
+	points.push_back(far_topleft);
+	points.push_back(far_topright);
+	points.push_back(far_botleft);
+	points.push_back(far_botright);
+
+	float minX, maxX, minY, maxY, minZ, maxZ;
+
+	bool first = true;
+
+	for (glm::vec3 point : points) {
+		if (first) {
+			minX = point.x;
+			maxX = point.x;
+			minY = point.y;
+			maxY = point.y;
+			minZ = point.z;
+			maxZ = point.z;
+			first = false;
+			continue;
+		}
+		if (point.x > maxX) {
+			maxX = point.x;
+		}
+		else if (point.x < minX) {
+			minX = point.x;
+		}
+		if (point.y > maxY) {
+			maxY = point.y;
+		}
+		else if (point.y < minY) {
+			minY = point.y;
+		}
+		if (point.z > maxZ) {
+			maxZ = point.z;
+		}
+		else if (point.z < minZ) {
+			minZ = point.z;
+		}
+	}
+
+	/////////////////////////////////////////////
 
 	glm::mat4 depthProjectionMatrix = glm::mat4(1.0);
 
-	depthProjectionMatrix[0][0] = 2.f / fabs(far_botright.x - far_botleft.x);
-	depthProjectionMatrix[1][1] = 2.f / fabs(far_botright.y - far_topright.y);
-	depthProjectionMatrix[2][2] = -2.f / fabs(cfar.z - cnear.z);
+	depthProjectionMatrix[0][0] = 2.f / (maxX - minX);
+	depthProjectionMatrix[1][1] = 2.f / (maxY - minY);
+	depthProjectionMatrix[2][2] = -2.f / (maxZ - minZ);
 	depthProjectionMatrix[3][3] = 1.0;
 
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
 
+	
 	glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 
 	//render
@@ -327,18 +400,15 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	/////////////////////////////////
 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	///////////////////////////////////////
 
 	_staticShader.start();
 
-	_staticShader.attTextures();
-
 	_staticShader.loadProjectionMatrix(_projMat);
 
 	glm::mat4 shadowProjViewMatrix;
-
-	shadowProjViewMatrix = depthViewMatrix * depthProjectionMatrix;
 
 	glm::mat4 biasMatrix(
 		0.5, 0.0, 0.0, 0.0,
@@ -347,7 +417,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 		0.5, 0.5, 0.5, 1.0
 	);
 
-	shadowProjViewMatrix *= biasMatrix;
+	shadowProjViewMatrix = biasMatrix * depthProjectionMatrix * depthViewMatrix;
 
 	_staticShader.loadShadowMatrix(shadowProjViewMatrix);
 
@@ -359,6 +429,8 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, world->_fbo._depthTexture._id);
+
+	_staticShader.attTextures();
 
 	//render sun
 	_staticShader.loadLight(sun._entity._pos, sun._colour, sun._damper, sun._ambientLevel);

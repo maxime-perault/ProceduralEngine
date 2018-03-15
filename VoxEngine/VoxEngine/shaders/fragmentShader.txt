@@ -1,4 +1,4 @@
-#version 140
+#version 330
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
@@ -32,13 +32,13 @@ void main(void)
 		if (texture(textureSampler, pass_textureCoords).a < 0.5)
 			discard;
 
+	float bias = 0.005;
 	float lightFactor = 1.0;
 
-	if (texture(shadowMap, shadowCoords.xy).r < shadowCoords.z)
-	{
-		lightFactor = 0.5;
-	}
-
+  	if (texture(shadowMap, shadowCoords.xy).r < (shadowCoords.z - bias))
+  	{
+  		lightFactor = 0.5;
+  	}
 
 	 /*
 	 ** normalize the light and normal vectors to compare them
