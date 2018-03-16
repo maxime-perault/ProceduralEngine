@@ -289,7 +289,7 @@ int	VAOLoader::loadTexture(const std::string &file, bool own_mipmap)
 		this->setTexture(current_file, 6);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);

@@ -18,6 +18,7 @@ uniform vec3 lightPosition;
 
 uniform mat4 shadowMapSpace;
 
+
 void main(void)
 {
  	vec4 worldPos = transformationMatrix * vec4(position, 1.0);
@@ -31,4 +32,5 @@ void main(void)
   	toLightVector = lightPosition - worldPos.xyz;
 
   	toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPos.xyz;
-}
+  }
+

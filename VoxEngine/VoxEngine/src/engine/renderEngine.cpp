@@ -392,6 +392,20 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 					glDrawElements(GL_TRIANGLES, world->_chunks[x][y][z].Chunk._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
 				}
 			}
+	//render player
+	if (cam._tps == true)
+	{
+		depthModelMatrix = player.getModelMatrix();
+		depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+		_shadowShader.loadMVP(depthMVP);
+
+		this->bindVAO(player._model._rawModel._vao_id);
+
+		glEnableVertexAttribArray(0);
+
+		glDrawElements(GL_TRIANGLES, player._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+	}
+
 	//!render
 
 	_shadowShader.stop();

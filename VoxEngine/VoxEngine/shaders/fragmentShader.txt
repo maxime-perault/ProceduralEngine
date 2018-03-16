@@ -19,6 +19,11 @@ uniform float AmbientLevel;
 uniform	float rawColour;
 uniform vec3 colour;
 
+const int pcfCount = 4;
+const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+const float mapSize = 2048.0;
+const float texelSize = 1.0 / mapSize;
+
 /*
 ** dot product for a and b
 ** -> a.x * b.x + a.y * b.y + a.z * b.z
@@ -29,16 +34,28 @@ void main(void)
 		out_Color = vec4(colour, 1.0);
 	else
 	{
-		if (texture(textureSampler, pass_textureCoords).a < 0.5)
+		if (texture(textureSampler, pass_textureCoords).a != 1.0)
 			discard;
 
 	float bias = 0.005;
 	float lightFactor = 1.0;
+	float objectNearestLight;
+	float totalshadow = 0.0;
 
-  	if (texture(shadowMap, shadowCoords.xy).r < (shadowCoords.z - bias))
-  	{
-  		lightFactor = 0.5;
-  	}
+	for (int x = -pcfCount; x <= pcfCount; ++x)
+	{
+		for (int y = -pcfCount; y <= pcfCount; ++y)
+		{
+			objectNearestLight = texture(shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+			if (objectNearestLight < (shadowCoords.z - bias))
+		  	{
+		  		totalshadow += 1;
+		  	}
+		}
+	}
+	totalshadow /= totalTexels;
+	lightFactor = 1.0 - (totalshadow * shadowCoords.w);
+  	
 
 	 /*
 	 ** normalize the light and normal vectors to compare them
@@ -56,7 +73,7 @@ void main(void)
 
 	 vec4 totalDiffuse = vec4(diffuse * (1 - AmbientLevel) + AmbientLevel, 1.0);
 
-	 totalDiffuse.rgb *= lightFactor;
+	 totalDiffuse.rgb = max(lightFactor * totalDiffuse.rgb, 0.4);
 
 	 /*
 	 ** normalize vector from the vertex to the camera
