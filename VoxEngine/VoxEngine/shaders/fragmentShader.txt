@@ -17,7 +17,7 @@ uniform float shineDamper;
 uniform float AmbientLevel;
 
 uniform	float rawColour;
-uniform vec3 colour;
+uniform vec4 colour;
 
 const int pcfCount = 4;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
@@ -31,7 +31,7 @@ const float texelSize = 1.0 / mapSize;
 void main(void)
 {
 	if (rawColour != 0)
-		out_Color = vec4(colour, 1.0);
+		out_Color = colour;
 	else
 	{
 		if (texture(textureSampler, pass_textureCoords).a != 1.0)

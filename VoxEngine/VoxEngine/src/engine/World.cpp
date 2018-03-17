@@ -33,8 +33,6 @@ World::World()
 			{
 				_chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z), -1, false);
 			}
-	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(-500, 1000, -500), -1), glm::vec3(1, 1, 1), 50, 0.5);
-	_sun._entity.setModelMatrix();
 
 	int onGrass = 0;
 
@@ -59,9 +57,16 @@ World::World()
 		_player._pos.y += 1;
 	}
 
-	_axis.push_back(g_cubeFactory->getLine(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2), -1));
-	_axis.push_back(g_cubeFactory->getLine(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1));
-	_axis.push_back(g_cubeFactory->getLine(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0), -1));
+	_sun = Light(g_cubeFactory->getCube(cubeFactory::SUN, glm::vec3(_player._pos.x - 50, _player._pos.y +  100, _player._pos.z - 50), -1), glm::vec3(1, 1, 1), 50, 0.5);
+	_sun._entity.setModelMatrix();
+
+	_water = g_cubeFactory->getWater(CHUNK_X * CHUNK_SIZE_X / 2);
+	_water._pos = glm::vec3(_player._pos.x, (CHUNK_Y / 4 * 3) - 1.f, _player._pos.z);
+	_water.setModelMatrix();
+
+	_axis.push_back(g_cubeFactory->getLine(glm::vec4(1, 0, 0, 0.9), glm::vec3(0, 0, 0), glm::vec3(0, 0, -M_PI / 2), -1));
+	_axis.push_back(g_cubeFactory->getLine(glm::vec4(0, 1, 0, 0.9), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1));
+	_axis.push_back(g_cubeFactory->getLine(glm::vec4(0, 0, 1, 0.9), glm::vec3(0, 0, 0), glm::vec3(M_PI / 2, 0, 0), -1));
 
 	_axis[0]._scale = glm::vec3(0.05, 0.05, 0.05);
 	_axis[0].setModelMatrix();
@@ -70,7 +75,7 @@ World::World()
 	_axis[2]._scale = glm::vec3(0.05, 0.05, 0.05);
 	_axis[2].setModelMatrix();
 
-	_wirelessCube = g_cubeFactory->getWirelessCube(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), -1);
+	_wirelessCube = g_cubeFactory->getWirelessCube(glm::vec4(0, 0, 0, 1), glm::vec3(0, 0, 0), -1);
 
 	_win.x = 1280; _win.y = 720;
 
@@ -110,6 +115,11 @@ std::vector<Entity>&	World::getText(void)
 Entity	&World::getWirelessCube(void)
 {
 	return _wirelessCube;
+}
+
+Entity	&World::getWater(void)
+{
+	return _water;
 }
 
 int	World::getBlockOnChunk(glm::vec3 pos)
@@ -465,6 +475,9 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 
 	_wirelessCube._pos = this->getWirelessCubePos(cam);
 	_wirelessCube.setModelMatrix();
+
+	_sun._entity._pos = glm::vec3(_player._pos.x - 50, _player._pos.y + 100, _player._pos.z - 50);
+	_sun._entity.setModelMatrix();
 	
 	if (threading == false &&
 		g_cubeFactory->_loader.loadFrags(4) == false &&
@@ -496,6 +509,9 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 		_deltaPlayer += g_tmpDeltaPlayer;
 		_deltaChunk += g_tmpDeltaChunk;
 
+		_water._pos = glm::vec3(_player._pos.x, (CHUNK_Y / 4 * 3) - 1.f, _player._pos.z);
+		_water.setModelMatrix();
+
 		threading = false;
 	}
 		
@@ -519,13 +535,13 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 		else
 			_text[FontFactory::FPS] = _fontFactory.getText(std::string("FPS: " + std::to_string(fps)), this->getScreenPos(glm::vec3(10, 10, 0)), FontFactory::FPS);
 		if (fps > 200)
-			_text[FontFactory::FPS]._colour = glm::vec3(0, 1, 0);
+			_text[FontFactory::FPS]._colour = glm::vec4(0, 1, 0, 1);
 		else if (fps > 100)
-			_text[FontFactory::FPS]._colour = glm::vec3(1, 0.8, 0);
+			_text[FontFactory::FPS]._colour = glm::vec4(1, 0.8, 0, 1);
 		else if (fps == -1)
-			_text[FontFactory::FPS]._colour = glm::vec3(0.1, 0, 1);
+			_text[FontFactory::FPS]._colour = glm::vec4(0.1, 0, 1, 1);
 		else
-			_text[FontFactory::FPS]._colour = glm::vec3(1, 0, 0);
+			_text[FontFactory::FPS]._colour = glm::vec4(1, 0, 0, 1);
 
 		_axis[0]._pos = cam._pos + cam._dir;
 		_axis[0].setModelMatrix();

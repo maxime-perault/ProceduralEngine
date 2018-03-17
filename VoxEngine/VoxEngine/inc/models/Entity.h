@@ -28,7 +28,7 @@ public:
 	glm::vec3		_rot;
 	glm::vec3		_scale;
 
-	glm::vec3		_colour;
+	glm::vec4		_colour;
 
 	bool			_jump;
 	float			_v0;

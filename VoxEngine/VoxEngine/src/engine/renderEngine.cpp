@@ -213,6 +213,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	std::vector<Entity>&	axis = world->getAxis();
 	std::vector<Entity>&	text = world->getText();
 	Entity&					wirelessCube = world->getWirelessCube();
+	Entity&					water = world->getWater();
 
 	
 	/////////////////////////////////
@@ -225,7 +226,7 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	///////////////////////////// GET THE VIEW FRUSTUM CORNER //////////////////////////////////
 
-	glm::vec3 sun_dir = sun._entity._pos;
+	glm::vec3 sun_dir = glm::vec3(-50, 100, -50);
 	sun_dir *= -1;
 	sun_dir = glm::normalize(sun_dir);
 
@@ -456,6 +457,18 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 
 	//render chunk
 	this->renderChunks(world->_chunks);
+
+	//render water
+
+	this->bindVAO(water._model._rawModel._vao_id);
+	glEnableVertexAttribArray(0);
+
+	this->createModelMatrix(water, _staticShader);
+
+	_staticShader.loadRawColour(water._colour);
+	glDrawElements(GL_TRIANGLES, water._model._rawModel._vertex_count, GL_UNSIGNED_INT, 0);
+
+	_staticShader.unloadRawColour();
 	
 	//render wirelessCube
 	this->renderVAO_LINE_oneTime(wirelessCube);

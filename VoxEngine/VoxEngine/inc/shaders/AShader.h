@@ -31,6 +31,7 @@ public:
 
 	void		loadFloat(const int location, const float value) const;
 	void		loadBool(const int location, const bool value) const;
+	void		loadVector(const int location, const glm::vec4 v) const;
 	void		loadVector(const int location, const glm::vec3 v) const;
 	void		loadVector(const int location, const glm::vec2 v) const;
 	void		loadMatrix(const int location, const glm::mat4 m) const;

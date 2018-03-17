@@ -109,7 +109,7 @@ void	staticShader::loadLight(const glm::vec3 pos, const glm::vec3 colour, const 
 	this->loadFloat(_location_ambientLevel, ambientLevel);
 }
 
-void	staticShader::loadRawColour(glm::vec3(colour)) const
+void	staticShader::loadRawColour(glm::vec4 colour) const
 {
 	this->loadBool(_location_rawColour, true);
 	this->loadVector(_location_colour, colour);

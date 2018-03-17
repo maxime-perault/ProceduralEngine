@@ -244,10 +244,15 @@ void	chunkFactory::setPile(std::pair<int, bool> (&chunk)[CHUNK_X][CHUNK_Y][CHUNK
 					if ((rand() % 100) <= 1
 						&& ((int)x <= (CHUNK_X - 3)) && ((int)x >= 2)
 						&& ((int)z <= (CHUNK_Z - 3)) && ((int)z >= 2)
-						&& ((int)y + 1) <= (CHUNK_Y - 7))
+						&& ((int)y + 1) <= (CHUNK_Y - 7)
+						&& chunk_pos.y != 0)
 					{
 						this->genTree(chunk, glm::vec3((int)x, (int)y + 1, (int)z));
 					}
+				}
+				if (chunk_pos.y == 0 && y < (CHUNK_Y / 4 * 3) && chunk[(int)x][(int)y][(int)z].first > cubeFactory::WATER)
+				{
+					chunk[(int)x][(int)y][(int)z].first = cubeFactory::SAND;
 				}
 			}
 }

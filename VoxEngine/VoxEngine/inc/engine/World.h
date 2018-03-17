@@ -29,6 +29,7 @@ public:
 	int						_wirelessCubeFace;
 	Light					_sun;
 	Entity					_player;
+	Entity					_water;
 	std::vector<Entity>		_axis;
 	std::vector<Entity>		_text;
 	s_chunk					_gen_chunks[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
@@ -47,6 +48,7 @@ public:
 	Light	&getSun(void);
 	Entity	&getPlayer(void);
 	Entity	&getWirelessCube(void);
+	Entity	&getWater(void);
 
 	glm::vec3				getWirelessCubePos(Camera& cam);
 	std::pair<int, bool>&	getChunkInfos(glm::vec3 pos);

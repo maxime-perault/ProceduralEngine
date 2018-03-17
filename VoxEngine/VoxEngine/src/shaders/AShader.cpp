@@ -56,6 +56,11 @@ void	AShader::loadBool(const int location, const bool value) const
 	glUniform1f(location, tmp);
 }
 
+void	AShader::loadVector(const int location, const glm::vec4 v) const
+{
+	glUniform4fv(location, 1, glm::value_ptr(v));
+}
+
 void	AShader::loadVector(const int location, const glm::vec3 v) const
 {
 	glUniform3fv(location, 1, glm::value_ptr(v));

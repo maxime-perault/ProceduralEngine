@@ -39,7 +39,7 @@ public:
 	void		loadShadowMatrix(const glm::mat4 m) const;
 
 	void		loadLight(const glm::vec3 pos, const glm::vec3 colour, const float damper, const float ambientLevel) const;
-	void		loadRawColour(glm::vec3(colour)) const;
+	void		loadRawColour(glm::vec4 colour) const;
 	void		unloadRawColour(void) const;
 };
 

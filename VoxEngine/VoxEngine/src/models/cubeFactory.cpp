@@ -99,6 +99,14 @@ void	cubeFactory::setFace(std::vector<int>& ind, std::vector<float>& uv, std::ve
 			pos_bot = pos_top;
 			break;
 		}
+		case SAND:
+		{
+			pos_side.x = 14;
+			pos_side.y = 6;
+			pos_top = pos_side;
+			pos_bot = pos_top;
+			break;
+		}
 		case SUN:
 		{
 			pos_side.x = 13;
@@ -397,7 +405,31 @@ Entity	cubeFactory::getCube(const e_Type type, glm::vec3 pos, GLuint vao)
 	return (res);
 }
 
-Entity	cubeFactory::getWirelessCube(glm::vec3 colour, glm::vec3 pos, GLuint vao)
+Entity	cubeFactory::getWater(float size)
+{
+	std::vector<int>	ind;
+	std::vector<float>	vtx;
+
+	std::cout << size << std::endl;
+
+	vtx.insert(vtx.end(), {
+		-size, 0, size,
+		-size, 0, -size,
+		size, 0, -size,
+		size, 0, size});
+
+	ind.insert(ind.end(), {
+		0, 1, 3,
+		3, 1, 2});
+
+	Entity res = Entity(texturedModel(_loader.loadtoVAO(vtx, ind), Texture(-1)));
+
+	res._colour = glm::vec4(0.25, 0.41, 0.64, 0.5);
+
+	return (res);
+}
+
+Entity	cubeFactory::getWirelessCube(glm::vec4 colour, glm::vec3 pos, GLuint vao)
 {
 	std::vector<int>	ind;
 	std::vector<float>	vtx;
@@ -436,7 +468,7 @@ Entity	cubeFactory::getWirelessCube(glm::vec3 colour, glm::vec3 pos, GLuint vao)
 	return (res);
 }
 
-Entity	cubeFactory::getLine(glm::vec3 colour, glm::vec3 pos, glm::vec3 rot, GLuint vao)
+Entity	cubeFactory::getLine(glm::vec4 colour, glm::vec3 pos, glm::vec3 rot, GLuint vao)
 {
 	std::vector<int>	ind;
 	std::vector<float>	vtx;
