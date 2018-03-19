@@ -9,7 +9,7 @@ Light::Light(Entity &entity, glm::vec3 colour, float damper, float ambientLevel)
 	_colour = colour;
 	_damper = damper;
 	_ambientLevel = ambientLevel;
-	_entity._scale = glm::vec3(5, 5, 5);
+	_entity._scale = glm::vec3(20, 20, 20);
 }
 
 Light::~Light()

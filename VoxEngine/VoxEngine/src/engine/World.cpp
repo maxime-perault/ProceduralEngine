@@ -362,6 +362,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 					{
 						chunks[x][y][z] = tmp_chunks[y][z];
 						chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z) + g_deltaChunk + g_tmpDeltaChunk, chunks[x][y][z].Chunk._model._rawModel._vao_id, true);
+						chunks[x][y][z].Chunk._draw = false;
 					}
 				}
 		g_tmpDeltaPlayer.x -= CHUNK_X;
@@ -386,6 +387,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 					{
 						chunks[x][y][z] = tmp_chunks[y][z];
 						chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z) + g_deltaChunk + g_tmpDeltaChunk, chunks[x][y][z].Chunk._model._rawModel._vao_id, true);
+						chunks[x][y][z].Chunk._draw = false;
 					}
 				}
 		g_tmpDeltaPlayer.x += CHUNK_X;
@@ -410,6 +412,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 					{
 						chunks[x][y][z] = tmp_chunks[y][x];
 						chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z) + g_deltaChunk + g_tmpDeltaChunk, chunks[x][y][z].Chunk._model._rawModel._vao_id, true);
+						chunks[x][y][z].Chunk._draw = false;
 					}
 				}
 		g_tmpDeltaPlayer.z -= CHUNK_Z;
@@ -433,6 +436,7 @@ void	updateChunksCenter(s_chunk	(&chunks)[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE
 					{
 						chunks[x][y][z] = tmp_chunks[y][x];
 						chunks[x][y][z] = g_chunkFactory->getChunk(glm::vec3(x, y, z) + g_deltaChunk + g_tmpDeltaChunk, chunks[x][y][z].Chunk._model._rawModel._vao_id, true);
+						chunks[x][y][z].Chunk._draw = false;
 					}
 				}
 		g_tmpDeltaPlayer.z += CHUNK_Z;
@@ -472,6 +476,7 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	static std::future<void>	asyncFunc;
 	static bool					threading = false;
 	int							dir = -1;
+	static bool					waitforChunksUpdate = false;
 
 	_wirelessCube._pos = this->getWirelessCubePos(cam);
 	_wirelessCube.setModelMatrix();
@@ -480,22 +485,35 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 	_sun._entity.setModelMatrix();
 	
 	if (threading == false &&
-		g_cubeFactory->_loader.loadFrags(4) == false &&
-		(dir = this->checkForChunksMove()) != -1)
+		g_cubeFactory->_loader.loadFrags(4) == false)
 	{
-		for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
-			for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
-				for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
-				{
-					_gen_chunks[x][y][z] = _chunks[x][y][z];
-				}
+		if (waitforChunksUpdate == true)
+		{
+			for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+				for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+					for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+					{
+						_chunks[x][y][z].Chunk._draw = true;
+					}
+			waitforChunksUpdate = false;
+		}
+		
+		if ((dir = this->checkForChunksMove()) != -1)
+		{
+			for (std::size_t x(0); x < CHUNK_SIZE_X; ++x)
+				for (std::size_t y(0); y < CHUNK_SIZE_Y; ++y)
+					for (std::size_t z(0); z < CHUNK_SIZE_Z; ++z)
+					{
+						_gen_chunks[x][y][z] = _chunks[x][y][z];
+					}
 
-		g_dir = dir;
-		g_deltaChunk = _deltaChunk;
+			g_dir = dir;
+			g_deltaChunk = _deltaChunk;
 
-		asyncFunc = std::async(std::launch::async, updateChunksCenter, std::ref(_gen_chunks));
+			asyncFunc = std::async(std::launch::async, updateChunksCenter, std::ref(_gen_chunks));
 
-		threading = true;
+			threading = true;
+		}
 	}
 	if (threading == true && (asyncFunc.wait_for(std::chrono::seconds(0)) == std::future_status::ready))
 	{
@@ -513,6 +531,7 @@ void	World::update(float elapsed, Camera& cam, const int fps, const bool debug)
 		_water.setModelMatrix();
 
 		threading = false;
+		waitforChunksUpdate = true;
 	}
 		
 

@@ -12,7 +12,8 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 
 	_fov = 70;
 	_near = (float)0.1;
-	_far = 120;
+	_far = 1000;
+	_farshadow = 120;
 	_win_x = win_x;
 	_win_y = win_y;
 
@@ -21,11 +22,11 @@ renderEngine::renderEngine(std::size_t win_x, std::size_t win_y)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	/*
+	
 	glFrontFace(GL_CW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
-	*/
+	
 
 	_vaosRendering = false;
 }
@@ -236,11 +237,11 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	float	hnear = 2.f * tanf(_fov / 2.f) * _near;
 	float	wnear = hnear * ((float)_win_x / (float)_win_y);
 
-	float	hfar = 2.f * tanf(_fov / 2.f) * _far;
+	float	hfar = 2.f * tanf(_fov / 2.f) * _farshadow;
 	float	wfar = hfar * ((float)_win_x / (float)_win_y);
 
 	glm::vec3	cnear = cam._pos + cam._dir * _near; // OK
-	glm::vec3	cfar = cam._pos + cam._dir * _far; // OK
+	glm::vec3	cfar = cam._pos + cam._dir * _farshadow; // OK
 
 	glm::vec3	near_topleft = cnear + (cam._UpVec * (hnear / 2.f)) - (cam._rightVec * (wnear / 2.f));
 	glm::vec3	near_topright = cnear + (cam._UpVec * (hnear / 2.f)) + (cam._rightVec * (wnear / 2.f));
@@ -294,11 +295,11 @@ void	renderEngine::staticRender(Camera& cam, World *world, const bool debug)
 	hnear = 2.f * tanf(_fov / 2.f) * _near;
 	wnear = hnear * ((float)_win_x / (float)_win_y);
 
-	hfar = 2.f * tanf(_fov / 2.f) * _far;
+	hfar = 2.f * tanf(_fov / 2.f) * _farshadow;
 	wfar = hfar * ((float)_win_x / (float)_win_y);
 
 	cnear = sun._entity._pos + sun_dir * _near;
-	cfar = sun._entity._pos + sun_dir * _far;
+	cfar = sun._entity._pos + sun_dir * _farshadow;
 
 	near_topleft = cnear + (sun_up * (hnear / 2.f)) - (sun_right * (wnear / 2.f));
 	near_topright = cnear + (sun_up * (hnear / 2.f)) + (sun_right * (wnear / 2.f));

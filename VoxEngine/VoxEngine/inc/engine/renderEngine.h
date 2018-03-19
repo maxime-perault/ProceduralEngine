@@ -52,6 +52,7 @@ public:
 	float		_fov;
 	float		_near;
 	float		_far;
+	float		_farshadow;
 
 	bool		_vaosRendering;
 
