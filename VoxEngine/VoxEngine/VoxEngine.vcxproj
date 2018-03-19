@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\models;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\models;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\models;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\Lib;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\models;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\models;C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\engine;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\models;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc\shaders;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\inc;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\maxime.perault\Desktop\GIT-PROJECTS\ProceduralEngine\VoxEngine\VoxEngine\Lib;D:\GIT-PROJECT\ProceduralEngine\VoxEngine\VoxEngine\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
